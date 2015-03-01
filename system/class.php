@@ -1,6 +1,6 @@
 <?php
 
-function reg_error($errno, $errstr, $errfile, $errline){
+function reg_error($errno, $errstr, $errfile, $errline){ // Обработчик ошибок для вывода их в системный лог
     $LOG='[ERROR LOG START HERE]';
     switch ($errno) {
         case E_USER_ERROR:
