@@ -68,6 +68,7 @@ CREATE TABLE IF NOT EXISTS `project` (
   `nameproject` varchar(100) NOT NULL COMMENT 'Имя проекта',
   `date_start` datetime NOT NULL COMMENT 'Дата старта',
   `date_finish` datetime NOT NULL COMMENT 'Дата финиша',
+  `fact_finish` datetime NOT NULL COMMENT 'Фактическое завершение проекта',
   `initiator` int(10) NOT NULL COMMENT 'Инициатор',
   `parentproject` int(10) NOT NULL COMMENT 'Родительский проект',
   `description` varchar(1500) NOT NULL COMMENT 'Описание проекта'
@@ -88,6 +89,7 @@ CREATE TABLE IF NOT EXISTS `task` (
   `description` varchar(1000) NOT NULL COMMENT 'Описание(необязательное поле)',
   `date_start` datetime NOT NULL COMMENT 'Дата старта',
   `date_finish` datetime NOT NULL COMMENT 'Дедлайн',
+  `fact_finish` datetime NOT NULL COMMENT 'Время фактического завершения задачи',
   `parentask` int(10) NOT NULL COMMENT 'Родительская задача'
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Таблица задач';
 
