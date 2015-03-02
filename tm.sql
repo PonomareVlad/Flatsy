@@ -19,6 +19,14 @@
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `auth`
+--
+
+CREATE TABLE IF NOT EXISTS `auth` (
+  `iduser` int(10) NOT NULL COMMENT 'ID юзера',
+  `hash` varchar(32) NOT NULL COMMENT 'Хэш юзера'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+--
 -- Структура таблицы `comments`
 --
 
@@ -170,6 +178,12 @@ CREATE TABLE IF NOT EXISTS `vistaskuser` (
 --
 -- Индексы сохранённых таблиц
 --
+
+--
+-- Индексы таблицы `auth`
+--
+ALTER TABLE `auth`
+ ADD PRIMARY KEY (`iduser`);
 
 --
 -- Индексы таблицы `comments`
