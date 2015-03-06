@@ -59,12 +59,12 @@ class Route
 
         //if(method_exists($controller, $action))
         //{
-            // вызываем действие контроллера
-            //$controller->$action();
+        // вызываем действие контроллера
+        //$controller->$action();
         //}
         //else
         //{
-            // здесь также разумнее было бы кинуть исключение
+        // здесь также разумнее было бы кинуть исключение
         //    Route::ErrorPage404();
         //}
 
@@ -150,29 +150,117 @@ class DB {
     }
 }
 
-function reg_error($errno, $errstr, $errfile, $errline){ // Обработчик ошибок для вывода их в системный лог
-    $LOG='[ERROR LOG START HERE]';
+class User extends DB
+{
+
+    public function init()
+    {
+
+        session_start();
+
+        if (isset($_SESSION['HASH'])) { // Если обнаружен авторизованный пользователь
+
+            //$DB['USER_DATA'] = mysql_query('SELECT * FROM users WHERE id="' . $_SESSION['ID'] . '"', $DB['CONNECT']); // Запрашиваем данные пользователя
+
+            $res = $this->select('auth', array('iduser', 'hash'), 'hash=' . $_SESSION['HASH']);
+
+            $USERA = mysql_fetch_array($res); // Переводим ответ БД в массив
+
+            if ($_SESSION['HASH'] !== $USERA['hash']) { // Если полученный из БД ID не совпадает с хранимым в сессии (такое происходит если в одном браузере в разных вкладках авторизованы разные пользователи)
+
+                session_destroy(); // Удаление всех данных сессии
+
+                header('location:/index.php'); // Перенаправление на главную страницу
+
+                exit;
+
+            }
+
+            $res = $this->select('users', '*', 'id=' . $USERA['iduser']);
+
+            $USER = mysql_fetch_array($res); // Переводим ответ БД в массив
+
+            $USER['FULL_NAME'] = $USER['lastname'] . ' ' . $USER['firstname']; // Генерация полного имени для заголовка
+
+            define('USER_NAME', $USER['FULL_NAME']);
+
+            define('USER_ID', $USER['id']);
+
+            //$DB['USER_CONF'] = mysql_query('SELECT * FROM `users`.`config_id'.$_SESSION['ID'].'`', $DB['CONNECT']); // Запрос таблицы настроек пользователя
+
+            //$res  = $this->select('users.config_id'.$USER['id'],'*');
+
+            //$USER['CONF'] = mysql_fetch_array($res); // Запись всех настроек как массив
+
+        }
+
+    }
+
+    public function auth($login, $password)
+    {
+
+        if (!defined('USER_ID')) {
+
+            $res = $this->select('users', '*', 'mail="' . strtolower($login) . '"');
+
+            $user = mysql_fetch_array($res);
+
+            if ($user['password'] == md5(strtolower($password))) {
+
+                $hash = genHash();
+
+                if ($this->insert('auth', array('iduser' => $user['id'], 'hash' => $hash))) {
+
+                    $_SESSION['HASH'] = $hash;
+
+                    return $user['id'];
+
+                }
+
+            }
+
+        }
+
+        return false;
+
+    }
+
+}
+
+function reg_error($errno, $errstr, $errfile, $errline)
+{ // Обработчик ошибок для вывода их в системный лог
+    $LOG = '[ERROR LOG START HERE]';
     switch ($errno) {
         case E_USER_ERROR:
-            $LOG.= "<b>My ERROR</b> [$errno] $errstr<br />\n";
-            $LOG.= "  Фатальная ошибка в строке $errline файла $errfile";
-            $LOG.= ", PHP " . PHP_VERSION . " (" . PHP_OS . ")<br />\n";
-            $LOG.= "Завершение работы...<br />\n";
+            $LOG .= "<b>My ERROR</b> [$errno] $errstr<br />\n";
+            $LOG .= "  Фатальная ошибка в строке $errline файла $errfile";
+            $LOG .= ", PHP " . PHP_VERSION . " (" . PHP_OS . ")<br />\n";
+            $LOG .= "Завершение работы...<br />\n";
             exit(1);
             break;
 
         case E_USER_WARNING:
-            $LOG.= "<b>My WARNING</b> [$errno] $errstr<br />\n";
+            $LOG .= "<b>My WARNING</b> [$errno] $errstr<br />\n";
             break;
 
         case E_USER_NOTICE:
-            $LOG.= "<b>My NOTICE</b> [$errno] $errstr<br />\n";
+            $LOG .= "<b>My NOTICE</b> [$errno] $errstr<br />\n";
             break;
 
         default:
-            $LOG.= "Неизвестная ошибка: [$errno] $errstr<br />\n";
+            $LOG .= "Неизвестная ошибка: [$errno] $errstr<br />\n";
             break;
     }
-    $LOG.='[ERROR LOG END HERE]';
+    $LOG .= '[ERROR LOG END HERE]';
     return true;
+}
+
+function genHash($length = 8){
+    $chars = 'abdefhiknrstyzABDEFGHKNQRSTYZ23456789';
+    $numChars = strlen($chars);
+    $string = '';
+    for ($i = 0; $i < $length; $i++) {
+        $string .= substr($chars, rand(1, $numChars) - 1, 1);
+    }
+    return $string;
 }

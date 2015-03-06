@@ -4,7 +4,7 @@
     <?=$head?>
     <link href="<?=DIR_TMPL?>styles/style.css" rel="stylesheet" type="text/css" />
 </head>
-<body>
+<body onload="init()">
     <header>
         <ul>
             <li>
@@ -21,7 +21,7 @@
             </li>
         </ul>
         <div class="user_menu">
-            Александр Ларионов
+            <span id="username"><?=USER_NAME?></span>
             <ul>
                 <li>
                     <a>Мои данные</a>
