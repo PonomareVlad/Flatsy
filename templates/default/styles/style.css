@@ -3,6 +3,28 @@ html, body{
     margin: 0;
     min-width: 800px;
     padding: 0;
+    position: relative;
+    height: 3000px;
+}
+.auth{
+    background: #bcbcbc;
+    padding: 10px 30px 30px;
+    position: absolute;
+    top: 300px;
+    left: 43%;
+    right: 50%;
+    z-index: 100;
+    width: 180px;
+}
+.auth input:last-child{
+    width: 100%;
+}
+.wrapper{
+    -webkit-filter: blur(2px);
+    -moz-filter: blur(2px);
+    -o-filter: blur(2px);
+    -ms-filter: blur(2px);
+    filter: blur(2px);
 }
 /* Header */
 header{
