@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Титл</title>
-    <meta charset="utf-8" />
+    <?=$head?>
     <link href="<?=DIR_TMPL?>styles/style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
