@@ -4,6 +4,7 @@ html, body{
     min-width: 800px;
     padding: 0;
 }
+/* Header */
 header{
     background: #D0D0D0;
     font-size: 18px;
@@ -12,46 +13,168 @@ header{
     line-height: 67px;
     margin: 0;
 }
-header ul {
+.menu{
     float: left;
     margin: 0;
     padding: 0;
 }
-header ul li{
+.menu li{
     display: inline-block;
-    padding: 0 30px;
 }
-header ul li a{
+.menu li a{
     color: #929292;
+    padding: 22px 30px;
     text-decoration: none;
+    transition-duration: 150ms;
 }
-header .user_menu{
+.menu li a:hover{
+    color: #ffffff;
+    transition-duration: 150ms;
+}
+
+.user_menu{
     color: #929292;
     float: right;
-    margin-right: 30px;
+    padding-right: 20px;
+    position: relative;
+}
+
+
+.user_menu div{
+    float: left;
+    background:  #D0D0D0;
+    position: relative;
+    z-index: 100;
+}
+.user_menu #arrow{
+    border: 10px solid transparent;
+    border-top-color:#929292;
+    top:30px;
+    height: 0;
+    width: 0;
+    transition-duration: 80ms;
+}
+
+.user_menu:hover #arrow{
+    border: 10px solid transparent;
+    border-bottom-color:#929292;
+    top:20px;
+    height: 0;
+    width: 0;
+    transition-duration: 180ms;
 
 }
-header .user_menu ul {
-    display: none;
-    transition-duration: 500ms;
-
-}
-header .user_menu:hover ul{
-    display: block;
-    transition-duration: 500ms;
-}
-header .user_menu ul li{
+.user_menu ul {
     background: #D0D0D0;
-    float: none;
-    font-weight: normal;
-    line-height: 18px;
     list-style: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    transition-duration: 300ms;
+    top: -167px;
+    width: 100%;
+    z-index: 2;
+}
+
+.user_menu:hover ul{
+    top: 67px;
+    transition-duration: 300ms;
+}
+
+.user_menu li{
+    font-weight: normal;
+    line-height: 14px;
     padding: 10px;
-    transition-duration: 500ms;
+    transition-duration: 300ms;
+}
+.user_menu li:hover{
+    color: #ffffff;
+    background: #c2c2c2;
+    transition-duration: 300ms;
+}
+
+/* Header - end */
+
+
+/* Calendar */
+.calendar{
+    border-bottom: 3px solid #D0D0D0;
+}
+.calendar ul li{
+    color: #bcbcbc;
+    display: inline-block;
+    text-align: center;
+    padding: 0 14px;
+}
+.calendar li .month{
+
+}
+.calendar li .day{
+font-size: 25px;
+}
+.calendar li .week_day{
+
+}
+/* Calendar - end */
+
+/* Left_bar */
+.left_bar{
+    border-right: 1px solid #929292;
+    height: 100px;
+    width: 545px;
+}
+
+.action_bar{
+    height: 40px;
+    line-height: 40px;
     width: 100%;
 }
-header .user_menu ul li:hover{
-    background: #c2c2c2;
-    transition-duration: 500ms;
+
+.add_task{
+    color: #929292;
+    font-weight: bold;
+    float: left;
+
+    margin-left: 10px;
+    width: 200px;
+    outline: 1px solid red;
+}
+.plus{
+    background: #929292;
+    height: 14px;
+    float: left;
+    width: 14px;
+    position: relative;
+    margin: 13px 3px 3px 3px;
+
+}
+#p1,#p2,#p3,#p4{
+    background: #ffffff;
+    height: 5px;
+    position: absolute;
+    width: 5px;
+}
+#p2{
+    top: 0;
+    right: 0;
+}
+#p3{
+    bottom: 0;
+    right: 0;
+}
+#p4{
+    bottom: 0;
+    left: 0;
+}
+.action_bar select{
+    border: none;
+    outline: none;
+    background: #e4e4e4;
+    padding: 5px;
 }
 
+.action_bar select option{
+    margin: 5px;
+}
+
+/* Left_bar - end */

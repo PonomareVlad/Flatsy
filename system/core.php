@@ -1,6 +1,6 @@
 <?php
 defined('ROOT') or header('Location: /');
-error_reporting(1);
+//error_reporting(1);
 
 require_once(ROOT . 'system/func.php'); // Подключаем вспомогательные функции
 
@@ -12,7 +12,8 @@ for ($i = 2; $i < count($cfg_dir); $i++){
     }
 }
 
-require_once(ROOT.'system/class/User.php');User::init(); // Запуск подсистемы пользователей и проверка статуса авторизации
+require_once(ROOT.'system/class/User.php');
+User::init(); // Запуск подсистемы пользователей и проверка статуса авторизации
 
 if(defined('CORE_MODE')&&CORE_MODE=='light'){ // Сокращенный режим работы ядра (Для Ajax)
 
@@ -28,8 +29,7 @@ if(defined('CORE_MODE')&&CORE_MODE=='light'){ // Сокращенный режи
         }
     }
 
-    $head = '<title>EasyTM</title><meta charset="utf-8" /><script src="/js/main.js"></script>';
-    // MVC
+
 
     //define('MODEL', ROOT.'system/model/model.php'); // Обявление модели
     //define('DB', ROOT.'system/model/MySQL.php'); // Обявление базы данных

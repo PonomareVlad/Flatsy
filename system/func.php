@@ -1,5 +1,9 @@
 <?php
 
+function head(){
+    echo '<title>EasyTM</title><meta charset="utf-8" /><script src="/js/main.js"></script>';
+}
+
 function reg_error($errno, $errstr, $errfile, $errline)
 { // Обработчик ошибок для вывода их в системный лог
     $LOG = '[ERROR LOG START HERE]';
