@@ -41,7 +41,7 @@ if(defined('CORE_MODE')&&CORE_MODE=='light'){ // Сокращенный режи
     define('DIR_TMPL', 'templates/' . CUR_TMPL);
     define('TMPL', ROOT . DIR_TMPL);
 
-    Route::start();
+    MVC::start(); // Запуск MVC
     $model = new Model(); // Вызов модели
-    Route::view();
+    MVC::view(); // Процесс вывода
 }

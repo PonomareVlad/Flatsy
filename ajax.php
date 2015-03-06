@@ -8,6 +8,9 @@ $RESPONSE=array();
 
 if(defined('USER_ID')) { // Статус авторизации
     $RESPONSE['auth']=true;
+
+
+
 }else{
     $RESPONSE['auth']=false;
 }

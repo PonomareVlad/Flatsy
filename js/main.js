@@ -18,8 +18,22 @@ function Ajax(method,url,callback){
     xmlhttp.open(method,url,true);
     xmlhttp.send();
 }
+auth=false;
+
+function handler(response){
+    response=JSON.parse(response);
+    //alert(response['auth']);
+}
+
+function check(mode){
+    send={"check":mode||"all"}
+    query=JSON.stringify(send);
+    Ajax('GET','/ajax.php?query='+query+'&rand='+new Date().getTime(),'handler');
+}
 
 function main(){
+
+    check();
 
 }
 
