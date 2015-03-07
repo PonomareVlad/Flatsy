@@ -90,6 +90,7 @@ CREATE TABLE IF NOT EXISTS `project` (
 
 CREATE TABLE IF NOT EXISTS `task` (
 `id` int(10) NOT NULL,
+  `idproject` int(10) NOT NULL COMMENT 'Привязка к проекту',
   `finished` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Статус задачи',
   `name` varchar(500) NOT NULL COMMENT 'Название/Описание',
   `initiator` int(10) NOT NULL COMMENT 'Инициатор',
