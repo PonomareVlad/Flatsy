@@ -4,27 +4,16 @@ html, body{
     min-width: 800px;
     padding: 0;
     position: relative;
-    height: 3000px;
 }
-.auth{
-    background: #bcbcbc;
-    padding: 10px 30px 30px;
-    position: absolute;
-    top: 300px;
-    left: 43%;
-    right: 50%;
-    z-index: 100;
-    width: 180px;
-}
-.auth input:last-child{
-    width: 100%;
-}
+
 .wrapper{
+    /*
     -webkit-filter: blur(2px);
     -moz-filter: blur(2px);
     -o-filter: blur(2px);
     -ms-filter: blur(2px);
     filter: blur(2px);
+    */
 }
 /* Header */
 header{
@@ -141,25 +130,25 @@ font-size: 25px;
 
 /* Left_bar */
 .left_bar{
-    border-right: 1px solid #929292;
-    height: 100px;
+    border-right: 3px solid #D0D0D0;
+    float: left;
+    height: 100%;
     width: 545px;
 }
 
 .action_bar{
     height: 40px;
     line-height: 40px;
-    width: 100%;
+    margin: 0 auto;
+    width: 410px;
 }
 
 .add_task{
     color: #929292;
     font-weight: bold;
     float: left;
-
     margin-left: 10px;
     width: 200px;
-    outline: 1px solid red;
 }
 .plus{
     background: #929292;
@@ -188,15 +177,49 @@ font-size: 25px;
     bottom: 0;
     left: 0;
 }
+.action_bar .select{
+    float: left;
+}
 .action_bar select{
     border: none;
     outline: none;
     background: #e4e4e4;
     padding: 5px;
+    margin-top: 8px;
 }
 
 .action_bar select option{
     margin: 5px;
 }
 
+.task_name{
+    background: #efefef;
+    padding: 10px 0 10px 30px;
+}
+
+.active_day{
+
+}
+
+.task_info{
+    padding: 7px 0 7px 30px;
+}
 /* Left_bar - end */
+
+/* Center */
+
+.center{
+
+}
+
+/* Center - end */
+
+
+
+
+
+
+
+
+
+

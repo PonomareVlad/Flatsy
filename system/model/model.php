@@ -1,5 +1,4 @@
 <?php
-
 class Model extends DB {
     public function __construct(){
         $this->db = new DB(); // Вызов БД

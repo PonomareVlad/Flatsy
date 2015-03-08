@@ -1,28 +1,21 @@
 <?php
 
-require_once(ROOT.'system/class/MySQL.php');
-
 class User extends DB
 {
-
     public function init()
     {
-
         session_start();
-
         if (isset($_COOKIE['HASH'])) { // Если обнаружен авторизованный пользователь
-
             //$DB['USER_DATA'] = mysql_query('SELECT * FROM users WHERE id="' . $_SESSION['ID'] . '"', $DB['CONNECT']); // Запрашиваем данные пользователя
-
             $res = $this->select('auth', array('iduser', 'hash'), 'hash=' . $_COOKIE['HASH']);
-
+            echo $res;
             $USERA = mysql_fetch_array($res); // Переводим ответ БД в массив
 
             if ($_COOKIE['HASH'] !== $USERA['hash']) { // Если полученный из БД ID не совпадает с хранимым в сессии (такое происходит если в одном браузере в разных вкладках авторизованы разные пользователи)
 
                 session_destroy(); // Удаление всех данных сессии
 
-                header('location:/index.php'); // Перенаправление на главную страницу
+                header('location: /'); // Перенаправление на главную страницу
 
                 exit;
 
