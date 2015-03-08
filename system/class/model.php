@@ -11,7 +11,6 @@ class Model extends DB {
         echo "<pre>";
         print_r($array);
         echo "</pre>";
-
     }
 
     public function selectVisProjectUser(){

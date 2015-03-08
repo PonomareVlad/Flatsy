@@ -1,3 +1,4 @@
+<?defined("ROOT") or header('Location: /');?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -131,6 +132,7 @@
             </table>
         </div>
     </div>
+
 </div>
 </body>
 </html>

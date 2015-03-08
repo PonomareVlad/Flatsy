@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<?defined("ROOT") or header('Location: /');?><!DOCTYPE html>
 <html>
 <head>
     <?head()?>

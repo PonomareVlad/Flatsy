@@ -90,4 +90,21 @@ class User extends DB
 
     }
 
+    public function registration($array){
+
+        foreach($array as $key => $value){
+            if($value == "") die("ААА, все очень плохо!!!");
+        }
+        $table_name = "users";
+        $res = $this->insert($table_name, array('lastname'=>$array['lastname'],
+            'firstname'=>$array['firstname'],
+            'patronymic'=>$array['patronymic'],
+            'password'=>$array['password'],
+            'mail'=>$array['email'],
+            'reg_date'=>time()));
+        if($res==1) echo "Good";
+        else echo "Bad";
+        exit;
+    }
+
 }
