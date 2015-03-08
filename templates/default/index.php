@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <?head()?>
+    <?=head();?>
     <link href="<?=DIR_TMPL?>styles/style.css" rel="stylesheet" type="text/css" />
 </head>
 <body onload="init();">
-    <div class="auth">
+    <div class="auth" id="auther">
         <h2>Авторизация</h2>
         <input type="text" placeholder="Логин"/>
         <input type="password" placeholder="Пароль"/>
         <input type="button" value="Авторизация"/>
     </div>
-    <div class="wrapper">
+    <div class="blur" id="wrapper">
         <header>
             <ul class="menu">
                 <li>

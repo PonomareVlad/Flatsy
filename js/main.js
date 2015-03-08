@@ -22,7 +22,27 @@ auth=false;
 
 function handler(response){
     response=JSON.parse(response);
-    //alert(response['auth']);
+    if(response['auth']){
+    if(auth!=true){
+        auth=true;
+        document.getElementById('auther').style='visibility : collapse;';
+        document.getElementById('wrapper').className = 'noblur';
+    }
+        if(response['tasks']){
+            tasks=new Array();
+            for(i in response['tasks']){
+                tasks[i]=new Array();
+                for(j in response['tasks'][i]){
+                    tasks[i][j]=response['tasks'][i][j];
+                }
+            }
+        }
+    }else {
+        if (auth != false) {
+            auth = false;
+            document.getElementById('wrapper').className = 'blur';
+        }
+    }
 }
 
 function check(mode){
@@ -33,6 +53,7 @@ function check(mode){
 
 function main(){
 
+
     check();
 
 }
@@ -41,3 +62,4 @@ function init(){
     document.getElementById('username').innerHTML='Имя пользователя';
     setInterval('main()',1000);
 }
+

@@ -4,7 +4,6 @@ html, body{
     min-width: 800px;
     padding: 0;
     position: relative;
-    height: 3000px;
 }
 .auth{
     background: #bcbcbc;
@@ -19,12 +18,17 @@ html, body{
 .auth input:last-child{
     width: 100%;
 }
-.wrapper{
+.blur{
+    pointer-events: none;
+    cursor: default;
     -webkit-filter: blur(2px);
     -moz-filter: blur(2px);
     -o-filter: blur(2px);
     -ms-filter: blur(2px);
     filter: blur(2px);
+}
+.noblur{
+
 }
 /* Header */
 header{

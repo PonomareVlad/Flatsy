@@ -1,7 +1,10 @@
 <?php
 
 function head(){
-    echo '<title>EasyTM</title><meta charset="utf-8" /><script src="/js/main.js"></script>';
+    if(defined('USER_ID')){
+        return '<title>EasyTM</title><meta charset="utf-8" /><script src="/js/main.js"></script><script>auth=true;</script>';
+    }
+    return '<title>EasyTM</title><meta charset="utf-8" /><script src="/js/main.js"></script>';
 }
 
 function reg_error($errno, $errstr, $errfile, $errline)

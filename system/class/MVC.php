@@ -71,8 +71,7 @@ class MVC
     }
 
     static function view(){
-
-        global $head;
+        
         require_once PAGE_PATH;
 
     }
