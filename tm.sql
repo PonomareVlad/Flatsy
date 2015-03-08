@@ -3,18 +3,16 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Мар 01 2015 г., 15:16
+-- Время создания: Мар 08 2015 г., 16:19
 -- Версия сервера: 5.6.21
 -- Версия PHP: 5.6.3
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
 
 --
 -- База данных: `tm`
 --
+CREATE DATABASE IF NOT EXISTS `tm` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `tm`;
 
 -- --------------------------------------------------------
 
@@ -26,6 +24,9 @@ CREATE TABLE IF NOT EXISTS `auth` (
   `iduser` int(10) NOT NULL COMMENT 'ID юзера',
   `hash` varchar(32) NOT NULL COMMENT 'Хэш юзера'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
 --
 -- Структура таблицы `comments`
 --
@@ -68,6 +69,19 @@ CREATE TABLE IF NOT EXISTS `groups` (
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `notifications`
+--
+
+CREATE TABLE IF NOT EXISTS `notifications` (
+`idnotification` int(10) NOT NULL,
+  `iduser` int(10) NOT NULL COMMENT 'ID пользователя',
+  `type` varchar(50) NOT NULL COMMENT 'Тип (текстовое поле)',
+  `value` int(10) NOT NULL COMMENT 'Значение (число)'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Информация об обновлении данных';
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `project`
 --
 
@@ -100,7 +114,9 @@ CREATE TABLE IF NOT EXISTS `task` (
   `date_finish` datetime NOT NULL COMMENT 'Дедлайн',
   `fact_finish` datetime NOT NULL COMMENT 'Время фактического завершения задачи',
   `parentask` int(10) NOT NULL COMMENT 'Родительская задача'
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Таблица задач';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица задач';
+
+-- --------------------------------------------------------
 
 --
 -- Структура таблицы `useringroup`
@@ -129,8 +145,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `last_act` datetime NOT NULL,
   `reg_date` datetime NOT NULL,
   `photo` varchar(100) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -205,6 +220,12 @@ ALTER TABLE `groups`
  ADD PRIMARY KEY (`idgroup`);
 
 --
+-- Индексы таблицы `notifications`
+--
+ALTER TABLE `notifications`
+ ADD PRIMARY KEY (`idnotification`);
+
+--
 -- Индексы таблицы `project`
 --
 ALTER TABLE `project`
@@ -252,3 +273,42 @@ ALTER TABLE `visprojectuser`
 ALTER TABLE `vistaskuser`
  ADD PRIMARY KEY (`iduser`,`idtask`);
 
+--
+-- AUTO_INCREMENT для сохранённых таблиц
+--
+
+--
+-- AUTO_INCREMENT для таблицы `comments`
+--
+ALTER TABLE `comments`
+MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT для таблицы `files`
+--
+ALTER TABLE `files`
+MODIFY `idfile` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ID файла';
+--
+-- AUTO_INCREMENT для таблицы `groups`
+--
+ALTER TABLE `groups`
+MODIFY `idgroup` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Номер группы';
+--
+-- AUTO_INCREMENT для таблицы `notifications`
+--
+ALTER TABLE `notifications`
+MODIFY `idnotification` int(10) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT для таблицы `project`
+--
+ALTER TABLE `project`
+MODIFY `idproject` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ID проекта';
+--
+-- AUTO_INCREMENT для таблицы `task`
+--
+ALTER TABLE `task`
+MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT для таблицы `users`
+--
+ALTER TABLE `users`
+MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
