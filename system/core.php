@@ -24,6 +24,9 @@ if(!isset($_COOKIE['HASH'])){
         case "auth":
             $page = "auth";
             break;
+        case "reg":
+            $page = "reg";
+            break;
         default:
             $page = "index";
     }
