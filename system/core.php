@@ -1,13 +1,7 @@
 <?php
 
-define('MODEL', ROOT.'system/model/model.php'); // Обявление модели
-define('DB', ROOT.'system/model/db.php'); // Обявление базы данных
-define('USER', ROOT.'system/model/user.php'); // Обявление базы данных
-define('CUR_TMPL', 'default/');
-define('DIR_TMPL', 'templates/'.CUR_TMPL);
-define('TMPL', ROOT.DIR_TMPL);
-
 require_once(ROOT.'system/config/db.conf.php'); // Подключаем конфиг БД
+require_once(ROOT.'system/config/path.conf.php'); // Подключаем конфиг gentq
 require_once(ROOT . 'system/func.php'); // Подключаем вспомогательные функции
 
 require_once DB; // Подключение базы данных
@@ -28,11 +22,11 @@ if(!isset($_COOKIE['HASH'])){
             $page = "reg";
             break;
         default:
-            $page = "index";
+            $page = "main";
     }
 }
 
-require_once TMPL . $page.'.php';
+require_once TMPL .'index.php';
 
 define('TIME_END',microtime());
 $time = TIME_END - TIME_START;
