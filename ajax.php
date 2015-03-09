@@ -1,31 +1,33 @@
 <?php
 
 define('ROOT',$_SERVER['DOCUMENT_ROOT'].'/'); // Установка корневой директории
-define('CORE_MODE','light');
+define('AJAX','CORE');
 require_once ROOT.'system/core.php'; // Инициация запуска системы
 $QUERY=json_decode($_GET['query']); // Запрос
+$QUERY=objectToArray($QUERY);
 $RESPONSE=array();
 
 if(defined('USER_ID')) { // Статус авторизации
     $RESPONSE['auth']=true;
+    if(isset($QUERY['action'])) {
+        if ($QUERY['action'] == 'logout') {
+            $out = User::logout();
+            if ($out == true) {
+                $RESPONSE['auth'] = false;
+            }
+        }
+    }
+}else {
+    $RESPONSE['auth'] = false;
+    if ($QUERY['action'] == 'reg') {
+        $reg = User::registration($QUERY);
+        $RESPONSE['reg'] = $reg;
+    }
+    if ($QUERY['action'] == 'auth') {
+        $auth = User::auth($QUERY['email'], $QUERY['pass']);
+        $RESPONSE['auth'] = $auth;
+    }
 
-
-
-}else{
-    //$RESPONSE['auth']=false;
-    $RESPONSE['auth']=true;
-    $RESPONSE['tasks']=array();
-    $RESPONSE['tasks'][0]=array();
-    $RESPONSE['tasks'][0][0]='Название задачи';
-    $RESPONSE['tasks'][0][1]='Описание задачи';
-    $RESPONSE['tasks'][0][2]='Пономарев Владислав';
-    $RESPONSE['tasks'][0][3]='10.03.2015';
-
-    $RESPONSE['tasks'][1]=array();
-    $RESPONSE['tasks'][1][0]='Название задачи 2';
-    $RESPONSE['tasks'][1][1]='Описание задачи 2';
-    $RESPONSE['tasks'][1][2]='Пономарев Владислав';
-    $RESPONSE['tasks'][1][3]='11.03.2015';
 }
 
 echo(json_encode($RESPONSE)); // Ответ

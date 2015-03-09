@@ -1,10 +1,12 @@
 <?php
 
+define('MYSQL_CONNECTION',mysql_connect(MYSQL_SERVER,MYSQL_USER,MYSQL_PASSWORD)); // Подключение к БД
+mysql_select_db('tm'); // Выбор БД
+
 class DB {
 
     public function __construct(){
-        define('MYSQL_CONNECTION',mysql_connect(MYSQL_SERVER,MYSQL_USER,MYSQL_PASSWORD)); // Подключение к БД
-        mysql_select_db('tm'); // Выбор БД
+
     }
 
     protected function select($table_name, $fields, $where = "", $order = "", $up = true, $limit = ""){
@@ -40,7 +42,7 @@ class DB {
     }
 
     protected function insert ($table_name, $new_value){
-        $table_name = $this->config->db_prefix.$table_name;
+        $table_name = $table_name;
         $query = "INSERT INTO $table_name (";
         foreach ($new_value as $field => $value) $query .= "`".$field."`,";
         $query = substr($query, 0, -1);

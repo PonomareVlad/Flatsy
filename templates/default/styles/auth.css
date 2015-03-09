@@ -1,0 +1,62 @@
+.authbody {	 /*Стиль страницы для формы авторизации*/
+    background-color: #FFF;
+    font-family: Tahoma,Geneva,sans-serif;
+    text-align: center;
+    padding: 120px 20px;
+    font-size:18px;
+}
+.regbody {	 /*Стиль страницы для формы регистрации */
+    background-color: #FFF;
+    font-family: Tahoma,Geneva,sans-serif;
+    text-align: center;
+    padding: 96px 20px;
+    font-size:18px;
+}
+.Au1 {
+    font-size: 22pt;
+    color: #626262;
+}
+.Au2 {
+    color: #282828;
+    width:70%;
+    height: 30px;
+    margin:5px;
+}
+.Au3 {
+    color: #626262;
+    padding: 20px;
+    height:5px;
+    width:100px;
+    text-align:center;
+}
+#E{
+    padding: 30px 5px 3px;
+}
+
+#In{
+    padding: 8px 5px 3px;
+}
+#Reg{
+    padding: 3px 5px 30px;
+}
+#Reg1{
+    padding: 18px 1px 10px;
+}
+
+.auth {
+    padding: 5px;
+}
+
+.formauth {
+    background:#d0d0d0;
+    color:#FFFFFF;
+    font-size:18px;
+    width:360px;
+    margin:auto;
+    padding:45px 20px;
+    height:400px;
+    background-origin: content-box;
+    background-clip:border-box;
+    background: url("../images/form.png");
+    background-size:100% 100%;
+}

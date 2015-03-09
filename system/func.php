@@ -1,38 +1,21 @@
 <?php
 
 function head(){
-    if(defined('USER_ID')){
-        return '<title>EasyTM</title><meta charset="utf-8" /><script src="/js/main.js"></script><script>auth=true;</script>';
+    $title = $GLOBALS['title_page'] == "" ? "EasyTM" : $GLOBALS['title_page'] .' | EasyTM';
+    if(defined('USER_ID')) {
+        return '<title>' . $title . '</title><meta charset="utf-8" /><script>auth=true;</script><script src="/js/main.js"></script>';
+    }else{
+        return '<title>' . $title . '</title><meta charset="utf-8" /><script src="/js/main.js"></script>';
     }
-    return '<title>EasyTM</title><meta charset="utf-8" /><script src="/js/main.js"></script>';
 }
 
-function reg_error($errno, $errstr, $errfile, $errline)
-{ // Обработчик ошибок для вывода их в системный лог
-    $LOG = '[ERROR LOG START HERE]';
-    switch ($errno) {
-        case E_USER_ERROR:
-            $LOG .= "<b>My ERROR</b> [$errno] $errstr<br />\n";
-            $LOG .= "  Фатальная ошибка в строке $errline файла $errfile";
-            $LOG .= ", PHP " . PHP_VERSION . " (" . PHP_OS . ")<br />\n";
-            $LOG .= "Завершение работы...<br />\n";
-            exit(1);
-            break;
+function Checkdata($string){ // Функция обработки принятых данных
 
-        case E_USER_WARNING:
-            $LOG .= "<b>My WARNING</b> [$errno] $errstr<br />\n";
-            break;
+    $string=stripslashes($string);
+    $string=htmlspecialchars($string);
+    $string=trim($string);
 
-        case E_USER_NOTICE:
-            $LOG .= "<b>My NOTICE</b> [$errno] $errstr<br />\n";
-            break;
-
-        default:
-            $LOG .= "Неизвестная ошибка: [$errno] $errstr<br />\n";
-            break;
-    }
-    $LOG .= '[ERROR LOG END HERE]';
-    return true;
+    return $string;
 }
 
 function genHash($length = 8){
@@ -43,4 +26,25 @@ function genHash($length = 8){
         $string .= substr($chars, rand(1, $numChars) - 1, 1);
     }
     return $string;
+}
+
+function objectToArray($d)
+{
+    if (is_object($d)) {
+        // Gets the properties of the given object
+        // with get_object_vars function
+        $d = get_object_vars($d);
+    }
+
+    if (is_array($d)) {
+        /*
+        * Return array converted to object
+        * Using __FUNCTION__ (Magic constant)
+        * for recursive call
+        */
+        return array_map(__FUNCTION__, $d);
+    } else {
+        // Return array
+        return $d;
+    }
 }

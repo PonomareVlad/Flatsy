@@ -18,29 +18,24 @@ function Ajax(method,url,callback){
     xmlhttp.open(method,url,true);
     xmlhttp.send();
 }
-auth=false;
 
-function handler(response){
-    response=JSON.parse(response);
-    if(response['auth']){
-    if(auth!=true){
+function handler(response) {
+    response = JSON.parse(response);
+    if (response['auth']==true) {
         auth=true;
-        document.getElementById('auther').style='visibility : collapse;';
-        document.getElementById('wrapper').className = 'noblur';
-    }
-        if(response['tasks']){
-            tasks=new Array();
-            for(i in response['tasks']){
-                tasks[i]=new Array();
-                for(j in response['tasks'][i]){
-                    tasks[i][j]=response['tasks'][i][j];
+        if (response['tasks']) {
+            tasks = new Array();
+            for (i in response['tasks']) {
+                tasks[i] = new Array();
+                for (j in response['tasks'][i]) {
+                    tasks[i][j] = response['tasks'][i][j];
                 }
             }
         }
-    }else {
-        if (auth != false) {
-            auth = false;
-            document.getElementById('wrapper').className = 'blur';
+    }else{
+        if(auth==true){
+            auth=false;
+            window.location='/auth';
         }
     }
 }
@@ -51,15 +46,19 @@ function check(mode){
     Ajax('GET','/ajax.php?query='+query+'&rand='+new Date().getTime(),'handler');
 }
 
-function main(){
-
-
-    check();
-
+function logout(){
+    send={"action":"logout"}
+    query=JSON.stringify(send);
+    Ajax('GET','/ajax.php?query='+query+'&rand='+new Date().getTime(),'handler');
 }
 
-function init(){
-    document.getElementById('username').innerHTML='Имя пользователя';
-    setInterval('main()',1000);
+function main(){
+    check();
+}
+
+function init() {
+    if (auth) {
+        setInterval('main()', 5000);
+    }
 }
 
