@@ -37,7 +37,7 @@
         };
     </script>
 </head>
-<body>
+<body onload="init();">
     <form name="reg">
         <label for="lastname">Фамилия: </label><input id="lastname" type="text" name="lastname" placeholder="Фамилия"><br>
         <label for="firstname">Имя: </label><input id="firstname" type="text" name="firstname" placeholder="Имя"><br>

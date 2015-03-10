@@ -24,7 +24,7 @@
     </script>
     <link href="<?=DIR_TMPL?>styles/auth.css" rel="stylesheet" type="text/css" />
 </head>
-<body>
+<body onload="init();">
     <div class="wrapper">
         <div class="authbody">
             <div class="formauth">
