@@ -59,7 +59,7 @@ class User extends DB
 
             if ($user['password'] == md5(strtolower($password))) {
 
-                $hash = genHash();
+                $hash = md5(genHash());
 
                 if (DB::insert('auth', array('iduser' => $user['id'], 'hash' => $hash))) {
 
@@ -110,9 +110,14 @@ class User extends DB
             if ($lastname == '' || $firstname == '' || $password == '' || $patronymic == '' || $email == '') {
                 return 'Bad data';
             }
+            $testlogin=mysql_query('SELECT id FROM users WHERE mail="'.$email.'"'); // Запрос на поиск указанного логина(почты) среди зарегестрированных пользователей
+            $testlogin=mysql_fetch_array($testlogin);
+            if(isset($testlogin['id'])){
+                return 'Login exists';
+            }
 
             $password = md5(strtolower($password));
-            $reg_date = time();//date("y-m-d G:i:s");//getdate(time()+14400);
+            $reg_date = date("y-m-d G:i:s");//date("y-m-d G:i:s");//getdate(time()+14400);
             $last_act = $reg_date;
 
             $query = mysql_query('INSERT INTO tm.users (mail,password,firstname,lastname,patronymic,last_act,reg_date,photo) VALUES("'.$email.
@@ -125,7 +130,16 @@ class User extends DB
                 '","")');
 
             if ($query == 1) {
-                return true;
+                $USERN=mysql_fetch_array(mysql_query('SELECT * FROM users WHERE mail="'.$email.'"'));
+                $CFG_INIT=mysql_query("CREATE TABLE IF NOT EXISTS `users`.`id".$USERN['id']."_config` (
+  `key` varchar(50) NOT NULL,
+  `value` varchar(500) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Пользовательские настройки';");
+                if($CFG_INIT==1) {
+                    return true;
+                }else{
+                    return $CFG_INIT;
+                }
             }else{
                 return $query;
             }
