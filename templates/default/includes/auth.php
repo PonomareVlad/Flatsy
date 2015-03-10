@@ -22,7 +22,7 @@
             }
         };
     </script>
-    <link href="<?=DIR_TMPL?>styles/auth.css" rel="stylesheet" type="text/css" />
+    <link href="/<?=DIR_TMPL?>styles/auth.css" rel="stylesheet" type="text/css" />
 </head>
 <body onload="init();">
     <div class="wrapper">

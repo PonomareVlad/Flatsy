@@ -3,8 +3,8 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 #RewriteRule .* index.php [L]
-RewriteRule ^system/([^/\.]+)/?$ index.php [L]
-RewriteRule ^system/?$ index.php [L]
-RewriteRule ^template/?$ index.php [L]
-RewriteRule ^template/([^/\.]+)/?$ index.php [L]
+RewriteRule ^system/([^/\.]+)/([^/\.]+) index.php [L]
+RewriteRule ^system/([^/\.]+) index.php [L]
+RewriteRule ^templates/default/index.php index.php [L]
+RewriteRule ^templates/default/includes/([^/\.]+) index.php [L]
 ErrorDocument 404 /index.php
