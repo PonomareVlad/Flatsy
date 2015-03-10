@@ -50,10 +50,9 @@ class User extends DB
     {
 
         if (!defined('USER_ID')) {
+            //$query = $this->select('users', array('*'), 'mail="' . strtolower($login) . '"');
 
-            //$query = $this->select('users', '*', 'mail="' . strtolower($login) . '"');
-
-            $query = mysql_query('SELECT * FROM tm.users WHERE mail="' . strtolower($login) . '"');
+            $query = mysql_query('SELECT * FROM tm.users WHERE mail="' . strtolower($login) . '"'); //СМОТРИ
 
             $user = mysql_fetch_array($query);
 
@@ -65,7 +64,7 @@ class User extends DB
 
                     //$_SESSION['HASH'] = $hash;
 
-                    $d=setcookie('HASH',$hash,7000000000);
+                    setcookie('HASH',$hash,7000000000);
 
                     return $user['id'];
 
