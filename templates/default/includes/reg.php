@@ -11,8 +11,15 @@
                     if (response['reg'] == true) {
                         document.getElementById('status').innerHTML = 'Вы успешно зарегистрированы!';
                         window.location = '/auth';
-                    } else {
-                        document.getElementById('status').innerHTML = 'Ошибка при регистрации, проверьте введенные данные';
+                    }else if(response['reg']=='Login exists') {
+                        document.getElementById('status').innerHTML = 'Почтовый адрес уже зарегистрирован';
+                    }else if(response['reg']=='Bad data'){
+                        document.getElementById('status').innerHTML = 'Вы ввели некорректные данные';
+                    }else if(response['reg']=='Empty data'){
+                        document.getElementById('status').innerHTML = 'Необходимо заполнить все поля';
+                    }else{
+                        document.getElementById('status').innerHTML = 'Ошибка БД: ' +
+                        ''+response['reg'];
                     }
                 }
             } else {

@@ -39,47 +39,7 @@
         </div>
     </header>
     <div class="arrow-top"></div>
-    <div class="calendar">
-        <ul>
-            <?php for($i=8;$i<28;$i++):?>
-                <li>
-                    <span class="month">Ноя</span><br>
-                    <span class="day"><?php if($i<10) echo "0"; echo $i++;?></span><br>
-                    <span class="week_day">пн</span>
-                </li>
-                <li>
-                    <span class="month">Ноя</span><br>
-                    <span class="day"><?php if($i<10) echo "0"; echo $i++;?></span><br>
-                    <span class="week_day">вт</span>
-                </li>
-                <li>
-                    <span class="month">Ноя</span><br>
-                    <span class="day"><?php if($i<10) echo "0"; echo $i++;?></span><br>
-                    <span class="week_day">ср</span>
-                </li>
-                <li>
-                    <span class="month">Ноя</span><br>
-                    <span class="day"><?php if($i<10) echo "0"; echo $i++;?></span><br>
-                    <span class="week_day">чт</span>
-                </li>
-                <li>
-                    <span class="month">Ноя</span><br>
-                    <span class="day"><?php if($i<10) echo "0"; echo $i++;?></span><br>
-                    <span class="week_day">пт</span>
-                </li>
-                <li>
-                    <span class="month">Ноя</span><br>
-                    <span class="day"><?php if($i<10) echo "0"; echo $i++;?></span><br>
-                    <span class="week_day">сб</span>
-                </li>
-                <li>
-                    <span class="month">Ноя</span><br>
-                    <span class="day"><?php if($i<10) echo "0"; echo $i++;?></span><br>
-                    <span class="week_day">вс</span>
-                </li>
-            <?php endfor;?>
-        </ul>
-    </div>
+    <div class="calendar" id="calendar"></div>
     <div class="left_bar">
         <div class="action_bar">
             <div class="add_task">
