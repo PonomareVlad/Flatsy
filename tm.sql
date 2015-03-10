@@ -199,7 +199,7 @@ CREATE TABLE IF NOT EXISTS `vistaskuser` (
 -- Индексы таблицы `auth`
 --
 ALTER TABLE `auth`
- ADD PRIMARY KEY (`iduser`);
+ ADD PRIMARY KEY (`hash`);
 
 --
 -- Индексы таблицы `comments`
