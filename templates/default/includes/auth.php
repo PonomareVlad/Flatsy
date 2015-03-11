@@ -6,7 +6,9 @@
         document.onkeyup = function (e) {
             e = e || window.event;
             if (e.keyCode === 13) {
-                authi();
+                if(document.getElementById('passi').value!='') {
+                    authi();
+                }
             }
             return false;
         }
