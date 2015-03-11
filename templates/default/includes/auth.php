@@ -3,6 +3,13 @@
 <head>
     <?=head()?>
     <script>
+        document.onkeyup = function (e) {
+            e = e || window.event;
+            if (e.keyCode === 13) {
+                authi();
+            }
+            return false;
+        }
         function authi(response) {
             if (response) {
                 response = JSON.parse(response);
