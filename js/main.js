@@ -57,7 +57,7 @@ function main(){
 }
 
 function init() {
-    if (auth) {
+    if (auth==true) {
         // AutoUpdate
         setInterval('main()', 5000);
 
