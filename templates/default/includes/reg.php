@@ -36,16 +36,37 @@
             }
         };
     </script>
+    <link href="/<?=DIR_TMPL?>styles/auth.css" rel="stylesheet" type="text/css" />
 </head>
+
 <body onload="init();">
-    <form name="reg">
-        <label for="lastname">Фамилия: </label><input id="lastname" type="text" name="lastname" placeholder="Фамилия"><br>
-        <label for="firstname">Имя: </label><input id="firstname" type="text" name="firstname" placeholder="Имя"><br>
-        <label for="patronymic">Отчество: </label><input id="patronymic" type="text" name="patronymic" placeholder="Отчество"><br>
-        <label for="password">Пароль: </label><input id="password" type="password" name="password" placeholder="Пароль"><br>
-        <label for="email">E-mail: </label><input id="email" type="email" name="email" placeholder="E-mail"><br>
-        <input type="button" name="reg_submit" onclick="regi();return false;" value="Хочу зарегистрироваться">
-    </form>
-<div id="status"></div>
+<div class="wrapper">
+    <div class="authbody">
+        <div class="formreg">
+            <span class="Au1">Регистрация</span>
+            <form name="reg">
+                <div class="auth">
+                    <input id="lastname" class="Au2" type="text" name="lastname" placeholder="Фамилия">
+                </div>
+                <div class="auth">
+                    <input class="Au2" id="firstname" type="text" name="firstname" placeholder="Имя">
+                </div>
+                <div class="auth">
+                    <input class="Au2" id="patronymic" type="text" name="patronymic" placeholder="Отчество">
+                </div>
+                <div class="auth">
+                    <input class="Au2" id="password" type="password" name="password" placeholder="<?=$LANG['PASSWORD']?>">
+                </div>
+                <div class="auth">
+                    <input class="Au2" id="email" type="email" name="email" placeholder="E-mail">
+                </div>
+                <div class="auth">
+                    <input type="button" class="Au2" name="reg_submit" onclick="regi();return false;" value="Хочу зарегистрироваться">
+                </div>
+            </form>
+            <div id="status"></div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

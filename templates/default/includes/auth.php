@@ -40,10 +40,10 @@
                 <span class="Au1">Авторизация</span>
                 <form name="auth">
                     <div class="auth" id="E">
-                        <input type="login" id="emaili" name="email" class="Au2" required placeholder="  E-mail">
+                        <input type="login" id="emaili" name="email" class="Au2" placeholder="E-mail">
                     </div>
                     <div class="auth">
-                        <input name="pass" id="passi" type="password" class="Au2" required placeholder="  <?=$LANG['PASSWORD']?>">
+                        <input name="pass" id="passi" type="password" class="Au2" placeholder="<?=$LANG['PASSWORD']?>">
                     </div>
                     <div class="auth" id="In">
                         <a href="#" onclick='authi();' class="button box-shadow-outset"><?=$LANG['AUTH_ENTER_TITLE']?></a>

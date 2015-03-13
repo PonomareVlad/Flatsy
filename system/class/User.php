@@ -7,8 +7,8 @@ class User extends DB
         session_start();
         if (isset($_COOKIE['HASH'])) { // Если обнаружен авторизованный пользователь
             //$DB['USER_DATA'] = mysql_query('SELECT * FROM users WHERE id="' . $_SESSION['ID'] . '"', $DB['CONNECT']); // Запрашиваем данные пользователя
-            //$res = DB::select('auth', array('iduser', 'hash'), 'hash=' . $_COOKIE['HASH']);
-            $res=mysql_query('SELECT iduser FROM auth WHERE hash="'.$_COOKIE['HASH'].'"');
+            $res = DB::select('auth', array('iduser', 'hash'), 'hash="' . $_COOKIE['HASH'].'"'); // Ну ты молодец, where без кавычек отправляешь
+            //$res=mysql_query('SELECT iduser FROM auth WHERE hash="'.$_COOKIE['HASH'].'"');
             $USERA = mysql_fetch_array($res); // Переводим ответ БД в массив
             if(!isset($USERA['iduser'])){
                 session_destroy();
