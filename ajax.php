@@ -5,7 +5,7 @@ define('AJAX','CORE'); // Блокируем маршрутизацию
 
 require_once ROOT.'system/core.php'; // Инициация запуска системы
 
-$QUERY=json_decode($_GET['query']); // Запрос
+$QUERY=@json_decode($_GET['query']); // Запрос
 $QUERY=objectToArray($QUERY); // Трансформируем из Object в Array
 $RESPONSE=array();
 
@@ -18,6 +18,15 @@ if(defined('USER_ID')) { // Статус авторизации
                 $RESPONSE['auth'] = false;
             }
         }
+        if ($QUERY['action'] == 'add_task') { // Создание задачи
+            $addt = TM::add_task($QUERY);
+            $RESPONSE['add_task'] = $addt;
+        }
+        if($QUERY['check']=='all'){
+            $st = TM::show_task($QUERY);
+            $RESPONSE['tasks'] = $st;
+        }
+
     }
 }else {
     $RESPONSE['auth'] = false;

@@ -60,7 +60,7 @@
             </div>
             <div style="clear: both"></div>
         </div>
-        <div>
+        <div id="tasks">
             <div class="task_day">
                 <div class="task_name">Сегодня</div>
                 <div class="task_info">Постановки задачи №1</div>

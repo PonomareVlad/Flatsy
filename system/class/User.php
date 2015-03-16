@@ -116,7 +116,7 @@ class User extends DB
             }
 
             $password = md5(strtolower($password));
-            $reg_date = date("y-m-d G:i:s");//date("y-m-d G:i:s");//getdate(time()+14400);
+            $reg_date = date("y-m-d G:i:s");//date("y-m-d G:i:s");//getdate("y-m-d G:i:s"); date("y-m-d G:i:s");
             $last_act = $reg_date;
 
             $query = mysql_query('INSERT INTO tm.users (mail,password,firstname,lastname,patronymic,last_act,reg_date,photo) VALUES("'.$email.
