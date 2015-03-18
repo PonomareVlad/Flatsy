@@ -32,7 +32,6 @@ function handler(response) {
     }else{
         if(auth==true){
             auth=false;
-            alert(response['auth']);
             window.location='/auth';
         }
     }
