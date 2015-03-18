@@ -1,12 +1,19 @@
 <?php
 
-function head(){
-    $title = $GLOBALS['title_page'] == "" ? "EasyTM" : $GLOBALS['title_page'] .' | EasyTM';
-    if(defined('USER_ID')) {
-        return '<title>' . $title . '</title><meta charset="utf-8" /><script>auth=true;</script><script src="/js/main.js"></script>';
-    }else{
-        return '<title>' . $title . '</title><meta charset="utf-8" /><script src="/js/main.js"></script>';
+function head()
+{
+    $title = $GLOBALS['title_page'] == "" ? "EasyTM" : $GLOBALS['title_page'] . ' | EasyTM';
+    $scripts='';
+    if (defined('USER_ID')) {
+        $scripts.='<script>auth=true;USER_ID='.USER_ID.';</script>';
     }
+    $js_dir = scandir(ROOT.'/js');
+    for ($i = 2; $i < count($js_dir); $i++){
+        if (explode('.', $js_dir[$i])[count($js_dir[$i])] == 'js'){
+            $scripts.='<script src="/js/'.$js_dir[$i].'"></script>';
+        }
+    }
+    return '<title>' . $title . '</title><meta charset="utf-8" />'.$scripts;
 }
 
 function Checkdata($string){ // Функция обработки принятых данных

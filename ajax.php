@@ -10,23 +10,20 @@ $QUERY=objectToArray($QUERY); // Трансформируем из Object в Arr
 $RESPONSE=array();
 
 if(defined('USER_ID')) { // Статус авторизации
-    $RESPONSE['auth']=true;
-    if(isset($QUERY['action'])) {
-        if ($QUERY['action'] == 'logout') { // Выход из системы
-            $out = User::logout();
-            if ($out == true) {
-                $RESPONSE['auth'] = false;
-            }
+    $RESPONSE['auth'] = true;
+    if (@$QUERY['action'] == 'logout') { // Выход из системы
+        $out = User::logout();
+        if ($out == true) {
+            $RESPONSE['auth'] = false;
         }
-        if ($QUERY['action'] == 'add_task') { // Создание задачи
-            $addt = TM::add_task($QUERY);
-            $RESPONSE['add_task'] = $addt;
-        }
-        if($QUERY['check']=='all'){
-            $st = TM::show_task($QUERY);
-            $RESPONSE['tasks'] = $st;
-        }
-
+    }
+    if (@$QUERY['action'] == 'add_task') { // Создание задачи
+        $addt = TM::add_task($QUERY);
+        $RESPONSE['add_task'] = $addt;
+    }
+    if (@$QUERY['check'] == 'all') {
+        $st = TM::show_task($QUERY);
+        $RESPONSE['tasks'] = $st;
     }
 }else {
     $RESPONSE['auth'] = false;

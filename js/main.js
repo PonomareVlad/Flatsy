@@ -1,86 +1,12 @@
-var SYSTEM=[];
 var TASK=[];
-
-function Ajax(method,url,callback){
-    var xmlhttp;
-    if (window.XMLHttpRequest)
-    {// code for IE7+, Firefox, Chrome, Opera, Safari
-        xmlhttp=new XMLHttpRequest();
-    }
-    else
-    {// code for IE6, IE5
-        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange=function()
-    {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200)
-        {
-            eval(callback+'(\''+xmlhttp.responseText+'\');');
-        }
-    }
-    xmlhttp.open(method,url,true);
-    xmlhttp.send();
-}
-
-function io(array,callback){
-    query=JSON.stringify(array);
-    Ajax('GET','/ajax.php?query='+query+'&rand='+new Date().getTime(),callback||'handler');
-}
-
-function update(mode) {
-    if (mode == 'tasks') {
-        source = '';
-        today=[];
-        old=[];
-        furure=[];
-
-
-
-        source += '';
-        document.getElementById('').innerHTML = source;
-    }
-}
-
-function show(type,id){
-
-}
-
-function handler(response) {
-    response = JSON.parse(response);
-    if (response['auth']==true) {
-        auth=true;
-        if (response['tasks']) {
-            TASK=response['tasks'];
-            update('tasks');
-        }
-    }else{
-        if(auth==true){
-            auth=false;
-            window.location='/auth';
-        }
-    }
-}
-
-function check(mode){
-    send={"check":mode||"all"}
-    query=JSON.stringify(send);
-    Ajax('GET','/ajax.php?query='+query+'&rand='+new Date().getTime(),'handler');
-}
-
-function logout(){
-    send={"action":"logout"}
-    query=JSON.stringify(send);
-    Ajax('GET','/ajax.php?query='+query+'&rand='+new Date().getTime(),'handler');
-}
-
-function main(){
-    check();
-}
 
 function init() {
     if (auth==true) {
+        //io({"action":"init"},'postinit');
+        check('all');
+        tasks_mode=document.getElementById('view_mode').value;
         // AutoUpdate
-        setInterval('main()', 5000);
+        setInterval('check()', 5000);
 
         // Calendar generation
         D1 = new Date();
@@ -105,3 +31,4 @@ function init() {
     }
 }
 
+//function postinit(response){}
