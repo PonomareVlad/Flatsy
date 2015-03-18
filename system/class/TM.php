@@ -38,8 +38,8 @@ class TM extends DB
         $CURRENT = [];
         $now = strtotime(date('Y-m-d'));//+14400; //Time zone offset (Ekaterinburg,Russia)
         while ($task = mysql_fetch_array($res, MYSQL_ASSOC)) {
-            $task['initiator_name'] = implode(' ', mysql_fetch_assoc(mysql_query('SELECT firstname,lastname FROM tm.users WHERE id="' . $task['initiator'] . '"')));
-            $task['executor_name'] = implode(' ', mysql_fetch_assoc(mysql_query('SELECT firstname,lastname FROM tm.users WHERE id="' . $task['executor'] . '"')));
+            $task['initiator_name'] = @implode(' ', mysql_fetch_assoc(mysql_query('SELECT firstname,lastname FROM tm.users WHERE id="' . $task['initiator'] . '"')));
+            $task['executor_name'] = @implode(' ', mysql_fetch_assoc(mysql_query('SELECT firstname,lastname FROM tm.users WHERE id="' . $task['executor'] . '"')));
             $cur_end = strtotime(explode(' ', $task['date_finish'])[0]);
             $cur_start = strtotime(explode(' ', $task['date_start'])[0]);
             if ($now < $cur_start) {
