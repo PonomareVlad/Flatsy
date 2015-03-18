@@ -3,7 +3,31 @@ require_once ROOT.'system/class/db.php';
 class TM extends DB
 {
     public function add_task($query){
+        if(isset($query['name'],$query['description'],$query['executor'],$query['date_finish'])){
 
+            $now=date("y-m-d G:i:s");
+            $name=Checkdata($query['name']);
+            $description=Checkdata($query['description']);
+            $executor=Checkdata($query['executor']);
+            $date_finish=$query['date_finish'];
+            $idproject='0';
+            $parentask='0';
+
+            if($name==''||$description==''||$executor==''||$date_finish==''){
+                return 'EMPTY DATA';
+            }
+
+            $add=mysql_query('INSERT INTO task (name,description,initiator,executor,date_start,date_finish,fact_finish,finished,idproject,parentask) VALUES("'.$name.'","'.$description.'","'.USER_ID.'","'.$executor.'","'.$now.'","'.$date_finish.'","'.$date_finish.'","0","'.$idproject.'","'.$parentask.'")');
+
+            if($add==1){
+                $chck=mysql_query('SELECT id FROM task WHERE initiator="'.USER_ID.'" AND date_start="'.$now.'"');
+                $chck=mysql_fetch_array($chck);
+                return $chck['id'];
+            }
+
+        }else{
+            return 'EMPTY DATA';
+        }
     }
     public function show_task($query)
     {

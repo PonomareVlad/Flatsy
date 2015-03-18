@@ -1,7 +1,7 @@
 html, body{
     font-family: Tahoma, Geneva, sans-serif;
     margin: 0;
-    min-width: 800px;
+    min-width: 850px;
     padding: 0;
     position: relative;
 }
@@ -130,10 +130,11 @@ font-size: 25px;
 
 /* Left_bar */
 .left_bar{
+    background: #fff;
     border-right: 3px solid #D0D0D0;
     float: left;
     height: 100%;
-    width: 545px;
+    width: 500px;
 }
 
 .action_bar{
@@ -209,8 +210,18 @@ font-size: 25px;
 /* Center */
 
 .center{
+    float: left;
 
 }
+.center .title h4{
+    background: #FF9C00;
+    color: #fff;
+    margin: 0;
+    width: inherit;
+}
+
+
+
 
 /* Center - end */
 

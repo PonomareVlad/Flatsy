@@ -1,4 +1,6 @@
 var TASK=[];
+var Show_it=false;
+var postload_show=false;
 
 function init() {
     if (auth==true) {

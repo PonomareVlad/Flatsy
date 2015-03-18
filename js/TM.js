@@ -21,6 +21,14 @@ function handler(response) {
             TASK=response['tasks'];
             tasks_upd();
         }
+        if (response['add_task']){
+            if(response['add_task']=='EMPTY DATA'){
+                alert('Заполнены не все данные или не корректное заполнение');
+            }else{
+                Show_it=response['add_task'];
+                check('all');
+            }
+        }
     }else{
         if(auth==true){
             auth=false;
@@ -36,6 +44,10 @@ function tasks_upd() {
     source = '';
     source += '<div class="task_day" id="past"><div class="task_name">Просрочено</div>';
     for (i in TASK['PAST']) {
+        if(TASK['PAST'][i]['id']==Show_it){
+            Show_it=false;
+            postload_show=[i,'PAST'];
+        }
         if(tasks_mode=='my'){
             if(TASK['PAST'][i]['executor']!=USER_ID){
                 continue;
@@ -49,6 +61,10 @@ function tasks_upd() {
     }
     source += '</div><div class="task_day active_day" id="today"><div class="task_name">Сегодня</div>';
     for (i in TASK['TODAY']) {
+        if(TASK['TODAY'][i]['id']==Show_it){
+            Show_it=false;
+            postload_show=[i,'TODAY'];
+        }
         if(tasks_mode=='my'){
             if(TASK['TODAY'][i]['executor']!=USER_ID){
                 continue;
@@ -73,6 +89,10 @@ function tasks_upd() {
             cur = '0';
         }
         for (i in TASK['CURRENT'][d]) {
+            if(TASK['CURRENT'][d][i]['id']==Show_it){
+                Show_it=false;
+                postload_show=[i,'CURRENT',d];
+            }
             if(tasks_mode=='my'){
                 if(TASK['CURRENT'][d][i]['executor']!=USER_ID){
                     continue;
@@ -100,6 +120,10 @@ function tasks_upd() {
             cur = '0';
         }
         for (i in TASK['FUTURE'][d]) {
+            if(TASK['FUTURE'][d][i]['id']==Show_it){
+                Show_it=false;
+                postload_show=[i,'FUTURE',d];
+            }
             if(tasks_mode=='my'){
                 if(TASK['FUTURE'][d][i]['executor']!=USER_ID){
                     continue;
@@ -125,6 +149,9 @@ function tasks_upd() {
         }
     }
     document.getElementById('tasks').innerHTML = source;
+    if(postload_show){
+        task_show(postload_show[0],postload_show[1],postload_show[2]?postload_show[2]:false);
+    }
 }
 
 function task_show(id,type,dat){
@@ -149,4 +176,34 @@ function task_show(id,type,dat){
     source+='<tr><td>Исполнитель</td><td>'+taski['executor_name']+'</td></tr></table></div>';
     document.getElementById('view').innerHTML = source;
     return false;
+}
+
+function show_add_task() {
+    source = '<div class="title"><h4>Создание новой задачи</h4></div><p>' +
+    '<label for="task_title">Постановка задачи</label><input type="text" name="task_title" id="name"></p>' +
+    '<p><label for="task_description">Описание</label>' +
+    '<textarea type="text" name="task_description" id="description"></textarea></p>' +
+    '<p><label for="date_final">Завершить</label><input type="text" name="date_final" id="date_finish"></p>' +
+    '<p><label for="project_id">Проект</label>' +
+    '<input type="text" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его"></p>' +
+    '<p><label for="main_user">Отвественный</label><input type="text" name="main_user" id="executor"></p>' +
+    '<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
+    '<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p><input type="button" value="Создать" id="new_send" onclick="send_task();">';
+    document.getElementById('view').innerHTML = source;
+    return false;
+}
+
+function send_task(){
+
+    name=document.getElementById('name').value;
+    description=document.getElementById('description').value;
+    executor=document.getElementById('executor').value;
+    date_finish=document.getElementById('date_finish').value;
+
+    document.getElementById('description').innerHTML='Создаем...';
+    io({"action":"add_task",
+        "name":name,
+        "description":description,
+        "executor":executor,
+        "date_finish":date_finish});
 }

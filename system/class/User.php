@@ -52,11 +52,11 @@ class User extends DB
         if (!defined('USER_ID')) {
             //$query = $this->select('users', array('*'), 'mail="' . strtolower($login) . '"');
 
-            $query = mysql_query('SELECT * FROM tm.users WHERE mail="' . strtolower($login) . '"'); //СМОТРИ
+            $query = mysql_query('SELECT * FROM tm.users WHERE mail="' . strtolower(Checkdata($login,true)) . '"'); //СМОТРИ
 
             $user = mysql_fetch_array($query);
 
-            if ($user['password'] == md5(strtolower($password))) {
+            if ($user['password'] == md5(strtolower(Checkdata($password,true)))) {
 
                 $hash = md5(genHash());
 
@@ -100,11 +100,11 @@ class User extends DB
 
         if (isset($array['lastname']) && isset($array['firstname']) && isset($array['patronymic']) && isset($array['password']) && isset($array['email'])) {
 
-            $lastname = Checkdata($array['lastname']);
-            $firstname = Checkdata($array['firstname']);
-            $patronymic = Checkdata($array['patronymic']);
-            $password = Checkdata($array['password']);
-            $email = Checkdata($array['email']);
+            $lastname = Checkdata($array['lastname'],true);
+            $firstname = Checkdata($array['firstname'],true);
+            $patronymic = Checkdata($array['patronymic'],true);
+            $password = Checkdata($array['password'],true);
+            $email = Checkdata($array['email'],true);
 
             if ($lastname == '' || $firstname == '' || $password == '' || $patronymic == '' || $email == '') {
                 return 'Bad data';

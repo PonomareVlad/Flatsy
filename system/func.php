@@ -16,12 +16,11 @@ function head()
     return '<title>' . $title . '</title><meta charset="utf-8" />'.$scripts;
 }
 
-function Checkdata($string){ // Функция обработки принятых данных
+function Checkdata($string,$cls_probels=false){ // Функция обработки принятых данных
 
     $string=stripslashes($string);
     $string=htmlspecialchars($string);
-    $string=trim($string);
-
+    $string=$cls_probels==true?trim($string):$string;
     return $string;
 }
 

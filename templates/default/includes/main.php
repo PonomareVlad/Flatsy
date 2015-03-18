@@ -42,6 +42,7 @@
     <div class="calendar" id="calendar"></div>
     <div class="left_bar">
         <div class="action_bar">
+            <a href="#" onclick="show_add_task();">
             <div class="add_task">
                 <div class="plus">
                     <div id="p1"></div>
@@ -51,6 +52,7 @@
                 </div>
                 Добавить задание
             </div>
+            </a>
             <div class="select">
                 <select id="view_mode" onchange="tasks_mode=this.value;check('all');">
                     <option value="my">Мои задачи</option>
