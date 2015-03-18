@@ -69,5 +69,15 @@ class TM extends DB
             return false;
         }
     }
+    public function set_task($query){
+        if($query['param']=='finished'){
+            $set=mysql_query('UPDATE tm.task SET finished = '.$query['value'].' WHERE task.id = '.$query['id']);
+            if($set==1){
+                return $query['id'];
+            }else{
+                return false;
+            }
+        }
+    }
 
 }

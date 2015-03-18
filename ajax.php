@@ -21,6 +21,10 @@ if(defined('USER_ID')) { // Статус авторизации
         $addt = TM::add_task($QUERY);
         $RESPONSE['add_task'] = $addt;
     }
+    if(@$QUERY['action']=='set_task'){ // Изменение свойств задачи
+        $setask=TM::set_task($QUERY);
+        $RESPONSE['set_task']=$setask;
+    }
     if (@$QUERY['check'] == 'all') {
         $st = TM::show_task($QUERY);
         $RESPONSE['tasks'] = $st;
