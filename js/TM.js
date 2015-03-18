@@ -139,6 +139,7 @@ function task_show(id,type,dat){
         taski=TASK[type][id];
     }
     source='<h3>'+taski['name']+'</h3><div class="text">'+taski['description']+'</div><div class="info"><table>';
+    source+='<tr><td>Статус</td><td>'+(taski['finished']==1?'Выполнена':'Не выполнена')+'</td></tr>';
     source+='<tr><td>Истекает</td><td>'+taski['date_finish']+'</td></tr>';
     source+='<tr><td>Создана</td><td>'+taski['date_start']+'</td></tr>';
     if(taski['idproject']!=0){
