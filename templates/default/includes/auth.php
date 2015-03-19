@@ -16,6 +16,7 @@
             if (response) {
                 response = JSON.parse(response);
                 if (response['auth'] == false) {
+                    document.getElementById('passi').value='';
                     alert('Incorrect');
                 } else {
                     window.location = '/main';
@@ -26,6 +27,7 @@
                     "email": document.getElementById('emaili').value,
                     "pass": document.getElementById('passi').value
                 };
+                document.getElementById('passi').value='';
                 query = JSON.stringify(send);
                 Ajax('GET', '/ajax.php?query=' + query + '&rand=' + new Date().getTime(), 'authi');
             }
@@ -40,7 +42,7 @@
                 <span class="Au1">Авторизация</span>
                 <form name="auth">
                     <div class="auth" id="E">
-                        <input type="login" id="emaili" name="email" class="Au2" placeholder="E-mail">
+                        <input type="login" id="emaili" name="email" class="Au2" autofocus placeholder="E-mail">
                     </div>
                     <div class="auth">
                         <input name="pass" id="passi" type="password" class="Au2" placeholder="<?=$LANG['PASSWORD']?>">

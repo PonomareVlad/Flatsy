@@ -5,7 +5,9 @@ html, body{
     padding: 0;
     position: relative;
 }
-
+.clear{
+    clear: both;
+}
 .wrapper{
     /*
     -webkit-filter: blur(2px);
@@ -108,22 +110,35 @@ header{
 
 
 /* Calendar */
-.calendar{
+#calendar{
     border-bottom: 3px solid #D0D0D0;
+    width: 1366px;
+    height: 100px;
+    overflow: hidden;
 }
-.calendar ul li{
+.calendar{
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+#calendar ul {
+    width: 10000px;
+    height: 80px;
+
+}
+#calendar ul li{
     color: #bcbcbc;
     display: inline-block;
+    float: left;
     text-align: center;
     padding: 0 14px;
 }
-.calendar li .month{
+#calendar li .month{
 
 }
-.calendar li .day{
+#calendar li .day{
 font-size: 25px;
 }
-.calendar li .week_day{
+#calendar li .week_day{
 
 }
 /* Calendar - end */
@@ -133,10 +148,11 @@ font-size: 25px;
     background: #fff;
     border-right: 3px solid #D0D0D0;
     float: left;
-    height: 100%;
     width: 500px;
 }
-
+#tasks{
+    height: 400px;
+}
 .action_bar{
     height: 40px;
     line-height: 40px;
@@ -210,26 +226,98 @@ font-size: 25px;
 /* Center */
 
 .center{
-    float: left;
-
+    margin-left: 500px;
+    overflow: scroll;
 }
 .center .title h4{
     background: #FF9C00;
     color: #fff;
     margin: 0;
-    width: inherit;
+    padding: 20px;
 }
-
-
-
 
 /* Center - end */
 
+/* Task*/
+.task label{
+    width: 200px;
+    float: left;
+
+}
+.task form{
+    padding: 5px 15px;
+}
+
+.task input,.task textarea{
+    width: 70%;
+}
+
+.task textarea{
+    height: 100px;
+}
 
 
+/* Task - end */
 
+/* Project */
+.project{
+    padding: 0 20px;
+    font-size: 14px;
+}
+.project_time{
+    color: #FF9C00;
+}
+.date_start{
+    float: left;
+}
+.date_end{
+    float: right;
+}
+.project_time_all{
+    background: #EEEEEE;
+    margin: 3px 150px 0;
+    float: none;
+    height: 18px;
+}
+.project_rime_cur{
+    background: #FF9C00;
+    width: 20%;
+    height: 18px;
 
+}
 
+.iniciator{
+    margin-top: 10px;
+}
+.iniciator div, .uchastniki div{
+    color: #FF9C00;
+    width: 100px;
+    float: left;
+}
+/* Project - end */
+
+.comments{
+    overflow-y: scroll;
+    height: 200px;
+    width: calc(100% - 60px);
+}
+.comment_info{
+    float: left;
+    width: calc(100% - 50px);
+    margin-left: 10px;
+}
+.comment .photo,.comment_info .name,.comment_info{
+    float: left;
+}
+.date{
+    float: left;
+    margin-left: 5px;
+}
+.project textarea{
+    width: calc(100% - 60px);
+    height: 60px;
+    margin: 5px 0 0 ;
+}
 
 
 

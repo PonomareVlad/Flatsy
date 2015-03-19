@@ -1,6 +1,27 @@
 var TASK=[];
 var Show_it=false;
 var postload_show=false;
+var comments=false;
+var new_comm=false;
+
+function main(){
+    check();
+    if(comments!=false){
+        if(document.getElementById('comments')) {
+            io({"action": "get_comments", "id": comments}, 'gen_comments');
+        }else{
+            comments=false;
+        }
+    }
+}
+
+function sizing(){
+    document.getElementById('view').style.height=window.innerHeight-document.getElementById('view').offsetTop+'px';
+    document.getElementById('tasks').style.height=window.innerHeight-document.getElementById('tasks').offsetTop+'px';
+    if(comments!=false){
+        document.getElementById('comments').style.height=window.innerHeight-document.getElementById('comments').offsetTop-document.getElementById('new_comm').scrollHeight-12+"px"
+    }
+}
 
 function init() {
     if (auth==true) {
@@ -8,7 +29,9 @@ function init() {
         check('all');
         tasks_mode=document.getElementById('view_mode').value;
         // AutoUpdate
-        setInterval('check()', 5000);
+        setInterval('main()', 5000);
+
+        sizing();
 
         // Calendar generation
         D1 = new Date();

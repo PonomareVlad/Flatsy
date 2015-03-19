@@ -25,6 +25,17 @@ if(defined('USER_ID')) { // Статус авторизации
         $setask=TM::set_task($QUERY);
         $RESPONSE['set_task']=$setask;
     }
+    if(@$QUERY['action']=='get_comments'){
+        $comm=TM::get_comm($QUERY);
+        $RESPONSE['comments']=$comm;
+    }
+    if(@$QUERY['action']=='add_comment'){
+        $RESPONSE['add_comment']=TM::add_comm($QUERY);
+        $RESPONSE['comments']=TM::get_comm($QUERY);
+    }
+    if(@$QUERY['action']=='get_users'){
+        $RESPONSE['users']=User::get_users($QUERY);
+    }
     if (@$QUERY['check'] == 'all') {
         $st = TM::show_task($QUERY);
         $RESPONSE['tasks'] = $st;

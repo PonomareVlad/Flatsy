@@ -1,18 +1,3 @@
-function io(array,callback){
-    query=JSON.stringify(array);
-    Ajax('GET','/ajax.php?query='+query+'&rand='+new Date().getTime(),callback||'handler');
-}
-
-function check(mode){
-    send={"check":mode||"simple"};
-    io(send);
-}
-
-function logout(){
-    send={"action":"logout"}
-    io(send);
-}
-
 function handler(response) {
     response=JSON.parse(response);
     if (response['auth']==true) {
@@ -20,6 +5,9 @@ function handler(response) {
         if (response['tasks']) {
             TASK=response['tasks'];
             tasks_upd();
+        }
+        if(response['tasks']==false){
+            document.getElementById('tasks').innerHTML = '<div class="task_info">(нет элементов)</div>';
         }
         if (response['add_task']){
             if(response['add_task']=='EMPTY DATA'){
@@ -48,6 +36,7 @@ function tasks_upd() {
     now = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
     source = '';
     source += '<div class="task_day" id="past"><div class="task_name">Просрочено</div>';
+    empty=true;
     for (i in TASK['PAST']) {
         if(TASK['PAST'][i]['id']==Show_it){
             Show_it=false;
@@ -62,8 +51,11 @@ function tasks_upd() {
                 continue;
             }
         }
+        empty=false;
         source += '<a href="#" onclick="task_show('+i+',\'PAST\');"><div class="task_info">' + TASK['PAST'][i]['name'] + '</div></a>';
     }
+    if(empty==true){source+='<div class="task_info">(нет элементов)</div>'};
+    empty=true;
     source += '</div><div class="task_day active_day" id="today"><div class="task_name">Сегодня</div>';
     for (i in TASK['TODAY']) {
         if(TASK['TODAY'][i]['id']==Show_it){
@@ -81,6 +73,8 @@ function tasks_upd() {
         }
         source += '<a href="#" onclick="task_show('+i+',\'TODAY\');"><div class="task_info">' + TASK['TODAY'][i]['name'] + '</div></a>';
     }
+    if(empty==true){source+='<div class="task_info">(нет элементов)</div>'};
+    empty=true;
     source += '</div>';
     dates = new Array();
     dates_num = new Array()
@@ -170,19 +164,22 @@ function task_show(id,type,dat){
     }else{
         taski=TASK[type][id];
     }
-    source='<h3>'+taski['name']+'</h3><div class="text">'+taski['description']+'</div><div class="info"><table>';
-    source+='<tr><td>Статус</td><td>'+(taski['finished']==1?'Выполнена':'Не выполнена')+'</td></tr>';
-    source+='<tr><td>Истекает</td><td>'+taski['date_finish']+'</td></tr>';
-    source+='<tr><td>Создана</td><td>'+taski['date_start']+'</td></tr>';
-    if(taski['idproject']!=0){
-        source+='<tr><td>Проект</td><td>'+taski['idproject']+'</td></tr>';
+    source='<div class="project"><div class="project_title"><h4>'+taski['name']+'</h4>' +
+    '</div><div class="project_description">'+taski['description']+'</div><div class="project_time">' +
+    '<div class="date_start">'+taski['date_start']+'</div><div class="date_end">'+taski['date_finish']+'</div>' +
+    '<div class="project_time_all"><div class="project_rime_cur"></div></div></div>' +
+    '<div class="iniciator"><div>Инициатор:</div>'+taski['initiator_name']+'</div>';
+    source+='<div class="uchastniki"><div>Исполнитель:</div>'+taski['executor_name']+'</div>';
+    source+='<div class="files">Прикрепленных файлов нет</div>';
+    if(taski['finished']!=1) {
+        source += '<input type="button" style="width: 10em;" onclick="task_end(' + taski['id'] + ')" value="Завершить"/>';
     }
-    source+='<tr><td>Инициатор</td><td>'+taski['initiator_name']+'</td></tr>';
-    source+='<tr><td>Исполнитель</td><td>'+taski['executor_name']+'</td></tr></table></div>';
-    if(taski['finished']!=1&&(taski['executor']==USER_ID||taski['initiator']==USER_ID)){
-        source+='<input type="button" value="Завершить задачу" onclick="task_end('+taski['id']+');"/>';
-    }
+    source+='<div class="comments_title">Обсуждение</div>';
+    source+='<div class="comments" id="comments"></div>' +
+    '<textarea id="new_comm" placeholder="Ваш комментарий"></textarea>';
     document.getElementById('view').innerHTML = source;
+    init_comments(taski['id']);
+    sizing();
     return false;
 }
 
@@ -191,15 +188,23 @@ function show_add_task() {
     '<label for="name">Постановка задачи</label><input type="text" name="task_title" id="name"></p>' +
     '<p><label for="description">Описание</label>' +
     '<textarea type="text" name="task_description" id="description"></textarea></p>' +
-    '<p><label for="date_finish">Завершить</label><input size="45" type="text" placeholder="* Только в формате YYYY-MM-DD HH:MM:SS" name="date_final" id="date_finish"></p>' +
+    '<p><label for="date_finish">Дата завершения:</label>' +
+    '<input onfocus="this.select();lcs(this);position_calen();" onclick="event.cancelBubble=true;this.select();lcs(this);position_calen()" style="width: 5em;" type="text" name="date_final" id="date_finish">' +
+    ' Часы: <input type="number" min="0" max="23" style="width: 3em;" id="hours">' +
+    ' Минуты: <input type="number" min="0" max="59" style="width: 3em;" id="minuts">' +
+    '<span id="minical"></span></p>' +
     //'<p><label for="project_id">Проект</label>' +
     //'<input type="text" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его"></p>' +
-    '<p><label for="executor">Отвественный</label><input size="33" type="text" placeholder="* ID, только в числовом формате" name="main_user" id="executor"></p>' +
+    '<p><label for="executor">Отвественный</label>' +
+    '<input size="33" type="text" class="livesearch" placeholder="* ID, только в числовом формате" name="main_user" value="" autocomplete="off" id="executor">' +
+    '<div id="search_advice_wrapper"></div></p>' +
     //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
     //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
-    '<input type="button" value="Создать" id="new_send" onclick="send_task();">' +
-    ' * Отображаются, на данный момент,только те поля, которые,<br>функционально, имеют возможность обрабатываться системой!';
+    '<p><input type="button" style="width: 10em;" value="Создать" id="new_send" onclick="send_task();">' +
+    ' * Отображаются, на данный момент,только те поля, которые, функционально, имеют возможность обрабатываться системой!</p>';
     document.getElementById('view').innerHTML = source;
+    loadSearch();
+    calendar_init();
     return false;
 }
 
@@ -207,15 +212,22 @@ function send_task(){
 
     name=document.getElementById('name').value;
     description=document.getElementById('description').value;
-    executor=document.getElementById('executor').value;
+    executor=selected_id;
+    hours=document.getElementById('hours').value;
+    minuts=document.getElementById('minuts').value;
     date_finish=document.getElementById('date_finish').value;
+    date_finish=date_finish.split('.');
+    date_finish=date_finish[2]+'-'+date_finish[1]+'-'+date_finish[0]+' '+hours+':'+minuts;
 
-    document.getElementById('description').innerHTML='Создаем...';
-    io({"action":"add_task",
-        "name":name,
-        "description":description,
-        "executor":executor,
-        "date_finish":date_finish});
+    if(executor!=false) {
+        io({
+            "action": "add_task",
+            "name": name,
+            "description": description,
+            "executor": executor,
+            "date_finish": date_finish
+        });
+    }
 }
 
 function task_end(id){

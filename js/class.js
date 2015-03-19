@@ -20,9 +20,18 @@ function Ajax(method,url,callback){
     xmlhttp.send();
 }
 
-function getCookie(name) {
-    var matches = document.cookie.match(new RegExp(
-        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-    ));
-    return matches ? decodeURIComponent(matches[1]) : undefined;
+function io(array,callback){
+    query=JSON.stringify(array);
+    Ajax('GET','/ajax.php?query='+query+'&rand='+new Date().getTime(),callback||'handler');
 }
+
+function check(mode){
+    send={"check":mode||"simple"};
+    io(send);
+}
+
+function logout(){
+    send={"action":"logout"}
+    io(send);
+}
+

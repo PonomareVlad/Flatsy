@@ -5,7 +5,7 @@
     <?=head()?>
     <link href="<?=DIR_TMPL?>styles/style.css" rel="stylesheet" type="text/css" />
 </head>
-<body onload="init();">
+<body onload="init();" onresize="sizing();">
 <div class="wrapper">
     <header>
         <ul class="menu">
@@ -64,10 +64,9 @@
         </div>
         <div id="tasks"></div>
     </div>
-    <div class="center" id="view">
+    <div class="center task" id="view">
         <div>Выберите задачу для просмотра</div>
     </div>
-
 </div>
 </body>
 </html>

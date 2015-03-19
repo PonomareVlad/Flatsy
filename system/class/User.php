@@ -147,4 +147,13 @@ class User extends DB
 
     }
 
+    public function get_users($query){
+        $users=[];
+        $array=mysql_query("SELECT * FROM users WHERE lastname LIKE '%".mysql_real_escape_string($query['query'])."%' OR firstname LIKE '%".mysql_real_escape_string($query['query'])."%' OR patronymic LIKE '%".mysql_real_escape_string($query['query'])."%' LIMIT 0, 10");
+        while($user=mysql_fetch_assoc($array)){
+            $users[]=["id"=>$user['id'],"lastname"=>$user['lastname'],"firstname"=>$user['firstname'],"patronymic"=>$user['patronymic']];
+        }
+        return $users;
+    }
+
 }
