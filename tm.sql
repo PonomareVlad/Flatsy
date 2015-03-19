@@ -40,6 +40,19 @@ CREATE TABLE IF NOT EXISTS `comments` (
   `datacom` datetime(6) NOT NULL COMMENT 'Дата и время публикации'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Комментарии';
 
+--
+-- Структура таблицы `comproject`
+--
+
+CREATE TABLE IF NOT EXISTS `comproject` (
+`id` int(10) NOT NULL COMMENT 'ID',
+  `idproject` int(10) NOT NULL COMMENT 'ID проекта',
+  `numbercom` int(10) NOT NULL COMMENT 'Номер комментария',
+  `usercom` int(10) NOT NULL COMMENT 'ID юзера',
+  `comment` varchar(1000) NOT NULL COMMENT 'Комментарий',
+  `datacom` datetime NOT NULL COMMENT 'Дата комментария'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Комментарии к проектам';
+
 -- --------------------------------------------------------
 
 --
@@ -54,6 +67,20 @@ CREATE TABLE IF NOT EXISTS `files` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица хранения информации о файлах';
 
 -- --------------------------------------------------------
+
+--
+-- Структура таблицы `invitegroup`
+--
+
+CREATE TABLE IF NOT EXISTS `invitegroup` (
+`id` int(10) NOT NULL,
+  `iduser` int(10) NOT NULL COMMENT 'ID пользователя',
+  `idgroup` int(10) NOT NULL COMMENT 'ID группы',
+  `idinviteuser` int(10) NOT NULL COMMENT 'ID приглашающего юзера',
+  `status` int(10) NOT NULL COMMENT 'статус пользователя',
+  `date` datetime NOT NULL COMMENT 'дата приглашения'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица приглашений в группы';
+
 
 --
 -- Структура таблицы `groups`
@@ -125,8 +152,7 @@ CREATE TABLE IF NOT EXISTS `task` (
 CREATE TABLE IF NOT EXISTS `useringroup` (
   `iduser` int(10) NOT NULL COMMENT 'ID юзера',
   `idgroup` int(10) NOT NULL COMMENT 'ID группы',
-  `userlvl` int(10) NOT NULL COMMENT 'Уровень юзера',
-  `statususer` int(10) NOT NULL COMMENT 'Статус юзера'
+  `userlvl` int(10) NOT NULL COMMENT 'Уровень юзера'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -207,6 +233,13 @@ ALTER TABLE `auth`
 ALTER TABLE `comments`
  ADD PRIMARY KEY (`id`);
 
+ --
+-- Индексы таблицы `comproject`
+--
+ALTER TABLE `comproject`
+ ADD PRIMARY KEY (`id`);
+
+ 
 --
 -- Индексы таблицы `files`
 --
@@ -219,6 +252,12 @@ ALTER TABLE `files`
 ALTER TABLE `groups`
  ADD PRIMARY KEY (`idgroup`);
 
+ --
+-- Индексы таблицы `invitegroup`
+--
+ALTER TABLE `invitegroup`
+ ADD PRIMARY KEY (`id`);
+ 
 --
 -- Индексы таблицы `notifications`
 --
@@ -283,8 +322,14 @@ ALTER TABLE `vistaskuser`
 ALTER TABLE `comments`
 MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT для таблицы `comproject`
+--
+ALTER TABLE `comproject`
+MODIFY `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ID';
+--
 -- AUTO_INCREMENT для таблицы `files`
 --
+
 ALTER TABLE `files`
 MODIFY `idfile` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ID файла';
 --
@@ -292,6 +337,11 @@ MODIFY `idfile` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ID файла';
 --
 ALTER TABLE `groups`
 MODIFY `idgroup` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Номер группы';
+--
+-- AUTO_INCREMENT для таблицы `invitegroup`
+--
+ALTER TABLE `invitegroup`
+MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT для таблицы `notifications`
 --
