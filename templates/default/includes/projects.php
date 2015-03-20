@@ -39,7 +39,9 @@
         </div>
     </header>
     <div class="arrow-top"></div>
-    <div class="calendar" id="calendar"></div>
+    <div class="calendar">
+        <div id="calendar"></div>
+    </div>
     <div class="left_bar">
         <div class="action_bar">
             <a href="#" onclick="show_add_project();">

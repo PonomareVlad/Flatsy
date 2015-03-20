@@ -40,10 +40,7 @@
     </header>
     <div class="arrow-top"></div>
     <div class="calendar">
-
-        <div id="calendar">
-
-        </div>
+        <div id="calendar"></div>
     </div>
     <div class="left_bar">
         <div class="action_bar">
@@ -59,6 +56,15 @@
             </div>
             </a>
             <div class="select">
+                <ul>
+                    <li id="my">Мои задачи</li>
+                    <li>
+                        <ul>
+                            <li id="unfinished">Невыполненные задачи</li>
+                            <li id="all">Все задачи</li>
+                        </ul>
+                    </li>
+                </ul>
                 <select id="view_mode" onchange="tasks_mode=this.value;check('all');">
                     <option value="my">Мои задачи</option>
                     <option value="unfinished">Невыполненные задачи</option>

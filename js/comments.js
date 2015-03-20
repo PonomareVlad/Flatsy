@@ -13,7 +13,8 @@ function gen_comments(response){
             '<div class="photo"><img src="templates/default/images/avatar.png"></div>' +
             '<div class="comment_info">' +
             '<div class="name">'+comm[i]['usercom_name']+'</div><div class="date">в '+comm[i]['datacom']+'</div>' +
-            '<div class="clear"></div><div class="text">'+comm[i]['comment']+'</div></div></div>';
+            '<div class="clear"></div><div clas' +
+            's="text">'+comm[i]['comment']+'</div></div></div>';
         }
     }
     if(source==''){source='<div class="comment">(Комментриев нет)</div>'}

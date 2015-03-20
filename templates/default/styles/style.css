@@ -152,7 +152,7 @@ font-size: 25px;
     float: left;
     width: 500px;
 }
-#projects{
+#projects, #tasks{
     height: 400px;
     overflow-y: scroll;
 }
@@ -201,8 +201,6 @@ font-size: 25px;
     float: left;
 }
 .action_bar select{
-    border: none;
-    outline: none;
     background: #e4e4e4;
     padding: 5px;
     margin-top: 8px;
@@ -311,6 +309,10 @@ font-size: 25px;
 .comment .photo,.comment_info .name,.comment_info .date{
     float: left;
 }
+.comment{
+    min-height: 50px;
+}
+
 .project textarea{
     width: calc(100% - 60px);
     height: 60px;
