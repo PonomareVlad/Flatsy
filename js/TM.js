@@ -71,6 +71,7 @@ function tasks_upd() {
                 continue;
             }
         }
+        empty=false;
         source += '<a href="#" onclick="task_show('+i+',\'TODAY\');"><div class="task_info">' + TASK['TODAY'][i]['name'] + '</div></a>';
     }
     if(empty==true){source+='<div class="task_info">(нет элементов)</div>'};
@@ -164,10 +165,28 @@ function task_show(id,type,dat){
     }else{
         taski=TASK[type][id];
     }
+    if(taski['finished']!=1) {
+        now = new Date().getTime();
+        trgtf = new Date(taski['date_finish'].replace(' ', 'T')).getTime();
+        trgts = new Date(taski['date_start'].replace(' ', 'T')).getTime();
+        now = now - trgts;
+        prc = (trgtf - trgts) / 100;
+        trgt = now / prc;
+        trgtp=trgt+'';
+        trgtp=trgtp.split('.');
+        trgtp=trgtp[0];
+        //alert(now+' '+prc+' '+trgt);
+        if(trgt>=100){
+            trgt=100;
+            trgtp='Просрочено';
+        }
+    }else{
+        trgt=100;
+    }
     source='<div class="project"><div class="project_title"><h4>'+taski['name']+'</h4>' +
     '</div><div class="project_description">'+taski['description']+'</div><div class="project_time">' +
     '<div class="date_start">'+taski['date_start']+'</div><div class="date_end">'+taski['date_finish']+'</div>' +
-    '<div class="project_time_all"><div class="project_rime_cur"></div></div></div>' +
+    '<div class="project_time_all"><div class="project_rime_cur" style="color: #282828;width: '+trgt+'%;">'+(taski['finished']==1?'Завершено':trgtp)+'</div></div></div>' +
     '<div class="iniciator"><div>Инициатор:</div>'+taski['initiator_name']+'</div>';
     source+='<div class="uchastniki"><div>Исполнитель:</div>'+taski['executor_name']+'</div>';
     source+='<div class="files">Прикрепленных файлов нет</div>';

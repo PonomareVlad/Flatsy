@@ -28,6 +28,7 @@ function init() {
         //io({"action":"init"},'postinit');
         check('all');
         tasks_mode=document.getElementById('view_mode').value;
+        projects_mode=document.getElementById('view_mode').value;
         // AutoUpdate
         setInterval('main()', 5000);
 
