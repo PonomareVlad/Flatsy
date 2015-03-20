@@ -201,6 +201,8 @@ font-size: 25px;
     float: left;
 }
 .action_bar select{
+    border: none;
+    outline: none;
     background: #e4e4e4;
     padding: 5px;
     margin-top: 8px;
