@@ -62,7 +62,7 @@
             </div>
             <div style="clear: both"></div>
         </div>
-        <div id="tasks"></div>
+        <div id="projects"></div>
     </div>
     <div class="center task" id="view">
         <div>Выберите проект для просмотра</div>

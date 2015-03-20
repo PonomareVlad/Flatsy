@@ -16,6 +16,7 @@ function gen_comments(response){
             '<div class="clear"></div><div class="text">'+comm[i]['comment']+'</div></div></div>';
         }
     }
+    if(source==''){source='<div class="comment">(Комментриев нет)</div>'}
     document.getElementById('comments').innerHTML=source;
     document.getElementById('comments').scrollTop=9999;
     if(new_comm==true&&response['add_comment']!=true){

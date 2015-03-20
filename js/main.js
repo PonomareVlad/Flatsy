@@ -15,11 +15,15 @@ function main(){
     }
 }
 
-function sizing(){
-    document.getElementById('view').style.height=window.innerHeight-document.getElementById('view').offsetTop+'px';
-    document.getElementById('tasks').style.height=window.innerHeight-document.getElementById('tasks').offsetTop+'px';
-    if(comments!=false){
-        document.getElementById('comments').style.height=window.innerHeight-document.getElementById('comments').offsetTop-document.getElementById('new_comm').scrollHeight-12+"px"
+function sizing() {
+    document.getElementById('view').style.height = window.innerHeight - document.getElementById('view').offsetTop + 'px';
+    if (current_page == '/projects') {
+        document.getElementById('projects').style.height = window.innerHeight - document.getElementById('projects').offsetTop + 'px';
+    }else{
+        document.getElementById('tasks').style.height = window.innerHeight - document.getElementById('tasks').offsetTop + 'px';
+    }
+    if (comments != false) {
+        document.getElementById('comments').style.height = window.innerHeight - document.getElementById('comments').offsetTop - document.getElementById('new_comm').scrollHeight - 12 + "px"
     }
 }
 

@@ -25,9 +25,14 @@ function io(array,callback){
     Ajax('GET','/ajax.php?query='+query+'&rand='+new Date().getTime(),callback||'handler');
 }
 
-function check(mode){
-    send={"check":mode||"simple"};
-    io(send);
+function check(mode) {
+    current_page = location.pathname;
+    if (current_page == '/projects') {
+        io({"action":"show_projects"});
+    } else {
+        send = {"check": mode || "simple"};
+        io(send);
+    }
 }
 
 function logout(){

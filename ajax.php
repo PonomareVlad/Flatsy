@@ -36,6 +36,12 @@ if(defined('USER_ID')) { // Статус авторизации
     if(@$QUERY['action']=='get_users'){
         $RESPONSE['users']=User::get_users($QUERY);
     }
+    if(@$QUERY['action']=='show_projects'){
+        $RESPONSE['projects']=TM::show_projects($QUERY);
+    }
+    if(@$QUERY['action']=='add_project'){
+        $RESPONSE['add_project']=TM::add_project($QUERY);
+    }
     if (@$QUERY['check'] == 'all') {
         $st = TM::show_task($QUERY);
         $RESPONSE['tasks'] = $st;
