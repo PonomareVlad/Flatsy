@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `comments` (
   `numbercom` int(10) NOT NULL COMMENT 'Порядковый номер комментария',
   `usercom` int(10) NOT NULL COMMENT 'Владелец комментария',
   `comment` varchar(1000) NOT NULL COMMENT 'Комментарий',
-  `datacom` datetime(6) NOT NULL COMMENT 'Дата и время публикации'
+  `datacom` datetime NOT NULL COMMENT 'Дата и время публикации'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Комментарии';
 
 --
