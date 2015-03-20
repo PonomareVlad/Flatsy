@@ -56,7 +56,7 @@
             </div>
             </a>
             <div class="select">
-                <ul>
+                <!--<ul>
                     <li id="my">Мои задачи</li>
                     <li>
                         <ul>
@@ -64,7 +64,7 @@
                             <li id="all">Все задачи</li>
                         </ul>
                     </li>
-                </ul>
+                </ul>-->
                 <select id="view_mode" onchange="tasks_mode=this.value;check('all');">
                     <option value="my">Мои задачи</option>
                     <option value="unfinished">Невыполненные задачи</option>
