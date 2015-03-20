@@ -186,7 +186,7 @@ function task_show(id,type,dat){
     source='<div class="project"><div class="project_title"><h4>'+taski['name']+'</h4>' +
     '</div><div class="project_description">'+taski['description']+'</div><div class="project_time">' +
     '<div class="date_start">'+taski['date_start']+'</div><div class="date_end">'+taski['date_finish']+'</div>' +
-    '<div class="project_time_all"><div class="project_rime_cur" style="color: #282828;width: '+trgt+'%;">'+(taski['finished']==1?'Завершено':trgtp)+'</div></div></div>' +
+    '<div class="project_time_all"><div class="project_rime_cur" style="text-align: right;padding-right: 5px;color: #282828;width: '+trgt+'%;">'+(taski['finished']==1?'Завершено':(trgtp!='Просрочено'?trgtp+'%':trgtp))+'</div></div></div>' +
     '<div class="iniciator"><div>Инициатор:</div>'+taski['initiator_name']+'</div>';
     source+='<div class="uchastniki"><div>Исполнитель:</div>'+taski['executor_name']+'</div>';
     source+='<div class="files">Прикрепленных файлов нет</div>';
@@ -215,7 +215,7 @@ function show_add_task() {
     //'<p><label for="project_id">Проект</label>' +
     //'<input type="text" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его"></p>' +
     '<p><label for="executor">Отвественный</label>' +
-    '<input size="33" type="text" class="livesearch" placeholder="* ID, только в числовом формате" name="main_user" value="" autocomplete="off" id="executor">' +
+    '<input size="33" type="text" class="livesearch" placeholder="Начните набирать имя пользователя" name="main_user" value="" autocomplete="off" id="executor">' +
     '<div id="search_advice_wrapper"></div></p>' +
     //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
     //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
@@ -236,7 +236,7 @@ function send_task(){
     minuts=document.getElementById('minuts').value;
     date_finish=document.getElementById('date_finish').value;
     date_finish=date_finish.split('.');
-    date_finish=date_finish[2]+'-'+date_finish[1]+'-'+date_finish[0]+' '+hours+':'+minuts;
+    date_finish=date_finish[2]+'-'+date_finish[1]+'-'+date_finish[0]+' '+(hours<10?'0':'')+hours+':'+(minuts<10?'0':'')+minuts;
 
     if(executor!=false) {
         io({
