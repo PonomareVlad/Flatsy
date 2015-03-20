@@ -39,8 +39,9 @@
         </div>
     </header>
     <div class="arrow-top"></div>
-    <div id="calendar">
-        <div class="calendar">
+    <div class="calendar">
+
+        <div id="calendar">
 
         </div>
     </div>

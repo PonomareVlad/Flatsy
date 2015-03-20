@@ -48,7 +48,7 @@ header{
 .user_menu{
     color: #929292;
     float: right;
-    padding-right: 20px;
+    padding-right: 40px;
     position: relative;
 }
 
@@ -63,6 +63,7 @@ header{
     border: 10px solid transparent;
     border-top-color:#929292;
     top:30px;
+    left:10px;
     height: 0;
     width: 0;
     transition-duration: 80ms;
@@ -110,35 +111,36 @@ header{
 
 
 /* Calendar */
-#calendar{
+.calendar{
     border-bottom: 3px solid #D0D0D0;
-    width: 1366px;
-    height: 100px;
+    height: 90px;
     overflow: hidden;
 }
-.calendar{
-    overflow-y: scroll;
-    overflow-x: hidden;
+
+#calendar{
+    overflow-y: hidden;
+    overflow-x: scroll;
 }
 #calendar ul {
-    width: 10000px;
+margin-left: 0;
     height: 80px;
-
+    display: table;
+    margin-top: 10px;
 }
-#calendar ul li{
+.calendar ul li{
     color: #bcbcbc;
-    display: inline-block;
-    float: left;
+    display: table-cell;
+    list-style: none;
     text-align: center;
     padding: 0 14px;
 }
-#calendar li .month{
+.calendar li .month{
 
 }
-#calendar li .day{
+.calendar li .day{
 font-size: 25px;
 }
-#calendar li .week_day{
+.calendar li .week_day{
 
 }
 /* Calendar - end */
