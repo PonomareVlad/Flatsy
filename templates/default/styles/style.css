@@ -52,14 +52,17 @@ header{
     position: relative;
 }
 
+.user_menu .avatar img {
+    margin: 10px 10px -10px 0;
 
+}
 .user_menu div{
     float: left;
     background:  #D0D0D0;
     position: relative;
     z-index: 100;
 }
-.user_menu #arrow{
+.arrow{
     border: 10px solid transparent;
     border-top-color:#929292;
     top:30px;
@@ -69,7 +72,7 @@ header{
     transition-duration: 80ms;
 }
 
-.user_menu:hover #arrow{
+.user_menu:hover .arrow, .selectul:hover .arrow{
     border: 10px solid transparent;
     border-bottom-color:#929292;
     top:20px;
@@ -138,7 +141,7 @@ header{
 
 }
 .calendar li .day{
-font-size: 25px;
+    font-size: 25px;
 }
 .calendar li .week_day{
 
@@ -161,6 +164,7 @@ font-size: 25px;
     line-height: 40px;
     margin: 0 auto;
     width: 410px;
+    font-size: 14px;
 }
 
 .add_task{
@@ -201,6 +205,7 @@ font-size: 25px;
     float: left;
 }
 .action_bar select{
+    display: none;
     border: none;
     outline: none;
     background: #e4e4e4;
@@ -212,6 +217,42 @@ font-size: 25px;
     margin: 5px;
 }
 
+.selectul ul{
+    list-style: none;
+    float: left;
+    margin: 7px 0 0 0;
+    padding: 0;
+    width: 200px;
+    color: #929292;
+    position: relative;
+}
+
+.selectul li{
+    padding-left: 10px;
+    background: #E4E4E4;
+    line-height: 24px;
+}
+
+.selectul .arrow{
+    position: absolute;
+    top: 8px;
+    left: 170px;
+    float: right;
+}
+
+.selectul:hover .arrow{
+    top: -2px !important;
+}
+.selectul:hover #none{
+    display: block;
+}
+#none{
+    display: none;
+    position: absolute;
+}
+#none ul {
+    width: 190px;
+}
 .task_name{
     background: #efefef;
     padding: 10px 0 10px 30px;
