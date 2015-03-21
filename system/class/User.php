@@ -7,12 +7,12 @@ class User extends DB
         session_start();
         if (isset($_COOKIE['HASH'])) { // Если обнаружен авторизованный пользователь
             //$DB['USER_DATA'] = mysql_query('SELECT * FROM users WHERE id="' . $_SESSION['ID'] . '"', $DB['CONNECT']); // Запрашиваем данные пользователя
-            $res = DB::select('auth', array('iduser', 'hash'), 'hash="' . $_COOKIE['HASH'].'"'); // Ну ты молодец, where без кавычек отправляешь
+            $res = DB::select('auth', array('iduser', 'hash'), 'hash="' . $_COOKIE['HASH'] . '"'); // Ну ты молодец, where без кавычек отправляешь
             //$res=mysql_query('SELECT iduser FROM auth WHERE hash="'.$_COOKIE['HASH'].'"');
             $USERA = mysql_fetch_array($res); // Переводим ответ БД в массив
-            if(!isset($USERA['iduser'])){
+            if (!isset($USERA['iduser'])) {
                 session_destroy();
-                setcookie('HASH','',time()-10000);
+                setcookie('HASH', '', time() - 10000);
                 header('location: /');
                 exit;
             }
@@ -26,7 +26,7 @@ class User extends DB
 
             }*/
 
-            $res = DB::select('users', array('*'), 'id="' . $USERA['iduser'].'"');
+            $res = DB::select('users', array('*'), 'id="' . $USERA['iduser'] . '"');
 
             $USER = mysql_fetch_array($res); // Переводим ответ БД в массив
 
@@ -52,11 +52,11 @@ class User extends DB
         if (!defined('USER_ID')) {
             //$query = $this->select('users', array('*'), 'mail="' . strtolower($login) . '"');
 
-            $query = mysql_query('SELECT * FROM tm.users WHERE mail="' . strtolower(Checkdata($login,true)) . '"'); //СМОТРИ
+            $query = mysql_query('SELECT * FROM tm.users WHERE mail="' . strtolower(Checkdata($login, true)) . '"'); //СМОТРИ
 
             $user = mysql_fetch_array($query);
 
-            if ($user['password'] == md5(strtolower(Checkdata($password,true)))) {
+            if ($user['password'] == md5(strtolower(Checkdata($password, true)))) {
 
                 $hash = md5(genHash());
 
@@ -64,7 +64,7 @@ class User extends DB
 
                     //$_SESSION['HASH'] = $hash;
 
-                    setcookie('HASH',$hash,7000000000);
+                    setcookie('HASH', $hash, 7000000000);
 
                     return $user['id'];
 
@@ -78,13 +78,14 @@ class User extends DB
 
     }
 
-    public function logout(){
+    public function logout()
+    {
 
         if (defined('USER_ID')) {
 
-            if(DB::delete('auth', 'hash="' . $_COOKIE['HASH'].'"')){
+            if (DB::delete('auth', 'hash="' . $_COOKIE['HASH'] . '"')) {
 
-                setcookie('HASH','',time()-10000);
+                setcookie('HASH', '', time() - 10000);
 
                 return true;
 
@@ -96,22 +97,23 @@ class User extends DB
 
     }
 
-    public function registration($array){
+    public function registration($array)
+    {
 
         if (isset($array['lastname']) && isset($array['firstname']) && isset($array['patronymic']) && isset($array['password']) && isset($array['email'])) {
 
-            $lastname = Checkdata($array['lastname'],true);
-            $firstname = Checkdata($array['firstname'],true);
-            $patronymic = Checkdata($array['patronymic'],true);
-            $password = Checkdata($array['password'],true);
-            $email = Checkdata($array['email'],true);
+            $lastname = Checkdata($array['lastname'], true);
+            $firstname = Checkdata($array['firstname'], true);
+            $patronymic = Checkdata($array['patronymic'], true);
+            $password = Checkdata($array['password'], true);
+            $email = Checkdata($array['email'], true);
 
             if ($lastname == '' || $firstname == '' || $password == '' || $patronymic == '' || $email == '') {
                 return 'Bad data';
             }
-            $testlogin=mysql_query('SELECT id FROM users WHERE mail="'.$email.'"'); // Запрос на поиск указанного логина(почты) среди зарегестрированных пользователей
-            $testlogin=mysql_fetch_array($testlogin);
-            if(isset($testlogin['id'])){
+            $testlogin = mysql_query('SELECT id FROM users WHERE mail="' . $email . '"'); // Запрос на поиск указанного логина(почты) среди зарегестрированных пользователей
+            $testlogin = mysql_fetch_array($testlogin);
+            if (isset($testlogin['id'])) {
                 return 'Login exists';
             }
 
@@ -119,27 +121,27 @@ class User extends DB
             $reg_date = date("y-m-d G:i:s");//date("y-m-d G:i:s");//getdate("y-m-d G:i:s"); date("y-m-d G:i:s");
             $last_act = $reg_date;
 
-            $query = mysql_query('INSERT INTO tm.users (mail,password,firstname,lastname,patronymic,last_act,reg_date,photo) VALUES("'.$email.
-                '","'.$password.
-                '","'.$firstname.
-                '","'.$lastname.
-                '","'.$patronymic.
-                '","'.$last_act.
-                '","'.$reg_date.
+            $query = mysql_query('INSERT INTO tm.users (mail,password,firstname,lastname,patronymic,last_act,reg_date,photo) VALUES("' . $email .
+                '","' . $password .
+                '","' . $firstname .
+                '","' . $lastname .
+                '","' . $patronymic .
+                '","' . $last_act .
+                '","' . $reg_date .
                 '","")');
 
             if ($query == 1) {
-                $USERN=mysql_fetch_array(mysql_query('SELECT * FROM users WHERE mail="'.$email.'"'));
-                $CFG_INIT=mysql_query("CREATE TABLE IF NOT EXISTS users.id".$USERN['id']."_config (
+                $USERN = mysql_fetch_array(mysql_query('SELECT * FROM users WHERE mail="' . $email . '"'));
+                $CFG_INIT = mysql_query("CREATE TABLE IF NOT EXISTS users.id" . $USERN['id'] . "_config (
   key varchar(50) NOT NULL,
   value varchar(500) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Пользовательские настройки';");
-                if($CFG_INIT==1) {
+                if ($CFG_INIT == 1) {
                     return true;
-                }else{
+                } else {
                     return $CFG_INIT;
                 }
-            }else{
+            } else {
                 return $query;
             }
         }
@@ -147,27 +149,29 @@ class User extends DB
 
     }
 
-    public function get_users($query){
-        $users=[];
-        $array=mysql_query("SELECT * FROM users WHERE lastname LIKE '%".mysql_real_escape_string($query['query'])."%' OR firstname LIKE '%".mysql_real_escape_string($query['query'])."%' OR patronymic LIKE '%".mysql_real_escape_string($query['query'])."%' LIMIT 0, 10");
-        while($user=mysql_fetch_assoc($array)){
-            $users[]=["id"=>$user['id'],"lastname"=>$user['lastname'],"firstname"=>$user['firstname'],"patronymic"=>$user['patronymic']];
+    public function get_users($query)
+    {
+        $users = [];
+        $array = mysql_query("SELECT * FROM users WHERE lastname LIKE '%" . mysql_real_escape_string($query['query']) . "%' OR firstname LIKE '%" . mysql_real_escape_string($query['query']) . "%' OR patronymic LIKE '%" . mysql_real_escape_string($query['query']) . "%' LIMIT 0, 10");
+        while ($user = mysql_fetch_assoc($array)) {
+            $users[] = ["id" => $user['id'], "lastname" => $user['lastname'], "firstname" => $user['firstname'], "patronymic" => $user['patronymic']];
         }
         return $users;
     }
 
-    public function get_user($query,$private=false){
+    public function get_user($query, $private = false)
+    {
         if ($private == true) {
-            $mail=strtolower(Checkdata($query['email']));
-            $user = mysql_query('SELECT photo FROM users WHERE mail="'.$mail.'"');
+            $mail = strtolower(Checkdata($query['email']));
+            $user = mysql_query('SELECT photo FROM users WHERE mail="' . $mail . '"');
         } else {
             $user = mysql_query('SELECT id,lastname,firstname,patronymic,last_act,photo FROM users WHERE id=' . $query['id']);
         }
-        if($user) {
-            $user = mysql_fetch_assoc($user);
+        $user = mysql_fetch_assoc($user);
+        if (isset($user['photo'])) {
             $user['photo'] = $user['photo'] == '' ? '/templates/default/images/avatar.png' : $user['photo'];
             return $user;
-        }else{
+        } else {
             return false;
         }
     }
