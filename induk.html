@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>EasyTM</title><meta charset="utf-8" /><script>auth=true;</script><script src="/js/main.js"></script>    <link href="templates/default/styles/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body onload="init();">
+<div class="wrapper">
+    <header>
+        <ul class="menu">
+            <li>
+                <a href="/">Главная</a>
+            </li>
+            <li>
+                <a href="index.php">Задачи</a>
+            </li>
+            <li>
+                <a href="index.php">Проекты</a>
+            </li>
+            <li>
+                <a href="index.php">Группы</a>
+            </li>
+        </ul>
+        <div class="user_menu">
+            <div><span id="username">Ларионов Александр</span></div>
+            <div id="arrow"></div>
+            <ul>
+                <li>
+                    <a>Мои данные</a>
+                </li>
+                <li>
+                    <a>Настройки</a>
+                </li>
+                <li>
+                    <a onclick="logout();">Выход</a>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <div class="arrow-top"></div>
+    <div class="calendar" id="calendar"></div>
+    <div class="left_bar">
+        <div class="action_bar">
+            <div class="add_task">
+                <div class="plus">
+                    <div id="p1"></div>
+                    <div id="p2"></div>
+                    <div id="p3"></div>
+                    <div id="p4"></div>
+                </div>
+                Добавить задание
+            </div>
+            <div class="select">
+                <select>
+                    <option value="all">Мои задачи</option>
+                    <option value="all">Невыполненные задачи</option>
+                    <option value="all">Все задачи</option>
+                </select>
+            </div>
+            <div style="clear: both"></div>
+        </div>
+        <div>
+            <div class="task_day">
+                <div class="task_name">Сегодня</div>
+                <div class="task_info">
+                    <div class="alert"><img src="templates/default/images/alert.png"></div>
+                    <div class="comment"><img src="templates/default/images/alert.png"></div>
+                    <div class="screpka"></div>
+                    <div class="galka"></div>
+                    <div class="task_text">Постановки задачи №1</div>
+                </div>
+                <div class="task_info">Постановки задачи №2</div>
+                <div class="task_info">Постановки задачи №3</div>
+            </div>
+            <div class="task_day active_day">
+                <div class="task_name">Вчера</div>
+                <div class="task_info">Постановки задачи №1</div>
+                <div class="task_info">Постановки задачи №2</div>
+            </div>
+        </div>
+    </div>
+    <div class="center">
+        <div class="task">
+            <div class="title">
+                <h4>Создание новой задачи</h4>
+            </div>
+            <p>
+                <label for="task_title">Постановка задачи</label>
+                <input type="text" name="task_title" id="task_title">
+            </p>
+            <p>
+                <label for="task_description">Описание</label>
+                <textarea type="text" name="task_description" id="task_description"></textarea>
+            </p>
+            <p>
+                <label for="date_final">Завершить</label>
+                <input type="text" name="date_final" id="date_final">
+            </p>
+            <p>
+                <label for="project_id">Проект</label>
+                <input type="text" name="project_id" id="project_id" placeholder="Если Ваша задача должна быть включена в проект, укажите его">
+            </p>
+            <p>
+                <label for="main_user">Отвественный</label>
+                <input type="text" name="main_user" id="main_user">
+            </p>
+            <p>
+                <label for="not_main_user">Соисполнители</label>
+                <input type="text" name="not_main_user" id="not_main_user">
+            </p>
+            <p>
+                Иван иванов, Иван иванов,Иван иванов
+            </p>
+            <p>
+                Прикрепить
+            </p>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
