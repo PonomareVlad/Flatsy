@@ -40,3 +40,10 @@ function logout(){
     io(send);
 }
 
+function set_vmode(mode){
+    view_mode=mode;
+    document.getElementById('currentv').innerHTML=document.getElementById(view_mode).innerHTML;
+    tasks_mode=view_mode;
+    projects_mode=view_mode;
+    tasks_upd();
+}

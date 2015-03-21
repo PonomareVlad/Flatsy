@@ -3,6 +3,7 @@ var Show_it=false;
 var postload_show=false;
 var comments=false;
 var new_comm=false;
+var view_mode='all';
 
 function main(){
     check();
@@ -31,8 +32,9 @@ function init() {
     if (auth==true) {
         //io({"action":"init"},'postinit');
         check('all');
-        tasks_mode=document.getElementById('view_mode').value;
-        projects_mode=document.getElementById('view_mode').value;
+        document.getElementById('currentv').innerHTML=document.getElementById(view_mode).innerHTML;
+        tasks_mode=view_mode;
+        projects_mode=view_mode;
         // AutoUpdate
         setInterval('main()', 5000);
 

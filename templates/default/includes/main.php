@@ -14,11 +14,12 @@
             <div class="selectul">
                 <ul>
                     <div class="arrow"></div>
-                    <li id="my">Мои задачи </li>
+                    <li id="currentv"></li>
                     <li id="none">
                         <ul>
-                            <li id="unfinished">Невыполненные задачи</li>
-                            <li id="all">Все задачи</li>
+                            <li id="my" onclick="set_vmode('my');">Мои задачи</li>
+                            <li id="unfinished" onclick="set_vmode('unfinished');">Невыполненные задачи</li>
+                            <li id="all" onclick="set_vmode('all');">Все задачи</li>
                         </ul>
                     </li>
                 </ul>
