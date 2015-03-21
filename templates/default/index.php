@@ -1,5 +1,9 @@
 <?php
 defined("ROOT") or header('Location: /');
-require_once TMPL.'includes/header.php';
-require_once TMPL.'includes/'.$page.'.php';
-require_once TMPL.'includes/footer.php';
+if(defined('USER_ID')) {
+    require_once TMPL . 'includes/header.php';
+    require_once TMPL . 'includes/' . $page . '.php';
+    require_once TMPL . 'includes/footer.php';
+}else{
+    require_once TMPL . 'includes/' . $page . '.php';
+}
