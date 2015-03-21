@@ -36,6 +36,8 @@ class User extends DB
 
             define('USER_ID', $USER['id']);
 
+            define('USER_PIC', $USER['photo']);
+
             //$DB['USER_CONF'] = mysql_query('SELECT * FROM `users`.`config_id'.$_SESSION['ID'].'`', $DB['CONNECT']); // Запрос таблицы настроек пользователя
 
             //$res  = $this->select('users.config_id'.$USER['id'],'*');

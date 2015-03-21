@@ -23,7 +23,7 @@
             </li>
         </ul>
         <div class="user_menu">
-            <div class="avatar"><img src="<?=DIR_TMPL;?>images/avatar.png"></div>
+            <div class="avatar"><img src="<?=USER_PIC?>"></div>
             <div><span id="username"><?=USER_NAME?></span></div>
             <div class="arrow"></div>
             <ul>
