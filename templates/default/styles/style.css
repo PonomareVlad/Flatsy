@@ -53,7 +53,8 @@ header{
 }
 
 .user_menu .avatar img {
-    margin: 10px 10px -10px 0;
+    border-radius: 99px;
+    /*margin: 10px 10px -10px 0;*/
 
 }
 .user_menu div{
@@ -351,6 +352,9 @@ header{
 }
 .comment .photo,.comment_info .name,.comment_info .date{
     float: left;
+}
+.photo img{
+    border-radius: 99px;
 }
 .comment{
     min-height: 50px;
