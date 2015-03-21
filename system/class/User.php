@@ -133,16 +133,16 @@ class User extends DB
                 '","")');
 
             if ($query == 1) {
-                $USERN = mysql_fetch_array(mysql_query('SELECT * FROM users WHERE mail="' . $email . '"'));
+                /*$USERN = mysql_fetch_array(mysql_query('SELECT * FROM users WHERE mail="' . $email . '"'));
                 $CFG_INIT = mysql_query("CREATE TABLE IF NOT EXISTS users.id" . $USERN['id'] . "_config (
   key varchar(50) NOT NULL,
   value varchar(500) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Пользовательские настройки';");
-                if ($CFG_INIT == 1) {
+                if ($CFG_INIT == 1) {*/
                     return true;
-                } else {
+                /*} else {
                     return $CFG_INIT;
-                }
+                }*/
             } else {
                 return $query;
             }

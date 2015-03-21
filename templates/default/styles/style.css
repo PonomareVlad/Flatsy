@@ -350,8 +350,12 @@ header{
     width: calc(100% - 50px);
     margin-left: 10px;
 }
-.comment .photo,.comment_info .name,.comment_info .date{
+.comment .photo,.comment_info .name,.comment_info{
     float: left;
+}
+.date{
+    float: left;
+    margin-left: 5px;
 }
 .photo img{
     border-radius: 99px;
