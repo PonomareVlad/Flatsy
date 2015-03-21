@@ -2,7 +2,7 @@
 require_once ROOT.'system/class/db.php';
 class TM extends DB
 {
-    public function add_task($query){
+    public static function add_task($query){
         global $MYSQL_CONNECTION;
         if(isset($query['name'],$query['description'],$query['executor'],$query['date_finish'])){
 
@@ -30,7 +30,7 @@ class TM extends DB
             return 'EMPTY DATA';
         }
     }
-    public function show_task($query,$separated=true){
+    public static function show_task($query,$separated=true){
         global $MYSQL_CONNECTION;
         $res = mysqli_query($MYSQL_CONNECTION,'SELECT * FROM task WHERE initiator="' . USER_ID . '" OR executor="' . USER_ID . '"');
         $TODAY = [];
@@ -40,8 +40,8 @@ class TM extends DB
         $now = strtotime(date('y-m-d G:i:s'))+14400; //Time zone offset (Ekaterinburg,Russia)
         $now_day=strtotime(date("y-m-d",$now));
         while ($task = mysqli_fetch_assoc($res)) {
-            $task['initiator_name'] = @implode(' ', mysqli_fetch_assoc(mysqli_query($MYSQL_CONNECTION,'SELECT firstname,lastname FROM tm.users WHERE id="' . $task['initiator'] . '"')));
-            $task['executor_name'] = @implode(' ', mysqli_fetch_assoc(mysqli_query($MYSQL_CONNECTION,'SELECT firstname,lastname FROM tm.users WHERE id="' . $task['executor'] . '"')));
+            $task['initiator_name'] = @implode(' ', mysqli_fetch_assoc(mysqli_query($MYSQL_CONNECTION,'SELECT firstname,lastname FROM users WHERE id="' . $task['initiator'] . '"')));
+            $task['executor_name'] = @implode(' ', mysqli_fetch_assoc(mysqli_query($MYSQL_CONNECTION,'SELECT firstname,lastname FROM users WHERE id="' . $task['executor'] . '"')));
             if($separated==true) {
                 $cur_end = strtotime($task['date_finish']);
                 $cur_start = strtotime($task['date_start']);
@@ -79,10 +79,10 @@ class TM extends DB
             return false;
         }
     }
-    public function set_task($query){
+    public static function set_task($query){
         global $MYSQL_CONNECTION;
         if($query['param']=='finished'){
-            $set=mysqli_query($MYSQL_CONNECTION,'UPDATE tm.task SET finished = '.$query['value'].' WHERE task.id = '.$query['id']);
+            $set=mysqli_query($MYSQL_CONNECTION,'UPDATE task SET finished = '.$query['value'].' WHERE task.id = '.$query['id']);
             if($set==1){
                 return $query['id'];
             }else{
@@ -90,7 +90,7 @@ class TM extends DB
             }
         }
     }
-    public function get_comm($query){
+    public static function get_comm($query){
         global $MYSQL_CONNECTION;
         if(isset($query['id'])){
             $comms=[];
@@ -98,7 +98,7 @@ class TM extends DB
             while($comment=mysqli_fetch_assoc($array)){
                 $num=count($comms);
                 $comms[$num]=$comment;
-                $comms[$num]['usercom_name']=@implode(' ', mysqli_fetch_assoc(mysqli_query($MYSQL_CONNECTION,'SELECT firstname,lastname FROM tm.users WHERE id="' . $comment['usercom'] . '"')));
+                $comms[$num]['usercom_name']=@implode(' ', mysqli_fetch_assoc(mysqli_query($MYSQL_CONNECTION,'SELECT firstname,lastname FROM users WHERE id="' . $comment['usercom'] . '"')));
                 $comms[$num]['usercom_photo']=User::get_user(['id'=>$comment['usercom']])['photo'];
             }
             return $comms;//array_reverse($comms);
@@ -106,7 +106,7 @@ class TM extends DB
             return false;
         }
     }
-    public function add_comm($query){
+    public static function add_comm($query){
         global $MYSQL_CONNECTION;
         if(isset($query['id'],$query['text'])){
             $now=date("y-m-d G:i:s");
@@ -125,21 +125,21 @@ class TM extends DB
             return false;
         }
     }
-    public function show_projects($query){
+    public static function show_projects($query){
         global $MYSQL_CONNECTION;
         $project=[];
         $res = mysqli_query($MYSQL_CONNECTION,'SELECT * FROM project WHERE initiator="' . USER_ID . '"');
         while($proj=mysqli_fetch_assoc($res)){
             //$num=count($project);
             $project[$proj['idproject']]=$proj;
-            $project[$proj['idproject']]['initiator_name'] = @implode(' ', mysqli_fetch_assoc(mysqli_query($MYSQL_CONNECTION,'SELECT firstname,lastname FROM tm.users WHERE id="' . $proj['initiator'] . '"')));
+            $project[$proj['idproject']]['initiator_name'] = @implode(' ', mysqli_fetch_assoc(mysqli_query($MYSQL_CONNECTION,'SELECT firstname,lastname FROM users WHERE id="' . $proj['initiator'] . '"')));
             $project[$proj['idproject']]['tasks']=[];
             $tasks=mysqli_query($MYSQL_CONNECTION,'SELECT * FROM task WHERE idproject='.$proj['idproject']);
             while($taska=mysqli_fetch_assoc($tasks)){
                 $num=count($project[$proj['idproject']]['tasks']);
                 $project[$proj['idproject']]['tasks'][$num]=$taska;
-                $project[$proj['idproject']]['tasks'][$num]['initiator_name']=@implode(' ', mysqli_fetch_assoc(mysqli_query($MYSQL_CONNECTION,'SELECT firstname,lastname FROM tm.users WHERE id="' . $taska['initiator'] . '"')));
-                $project[$proj['idproject']]['tasks'][$num]['executor_name']=@implode(' ', mysqli_fetch_assoc(mysqli_query($MYSQL_CONNECTION,'SELECT firstname,lastname FROM tm.users WHERE id="' . $taska['executor'] . '"')));
+                $project[$proj['idproject']]['tasks'][$num]['initiator_name']=@implode(' ', mysqli_fetch_assoc(mysqli_query($MYSQL_CONNECTION,'SELECT firstname,lastname FROM users WHERE id="' . $taska['initiator'] . '"')));
+                $project[$proj['idproject']]['tasks'][$num]['executor_name']=@implode(' ', mysqli_fetch_assoc(mysqli_query($MYSQL_CONNECTION,'SELECT firstname,lastname FROM users WHERE id="' . $taska['executor'] . '"')));
             }
         }
         $task=TM::show_task($query,false);
@@ -148,21 +148,21 @@ class TM extends DB
                 $res=mysqli_query($MYSQL_CONNECTION,'SELECT * FROM project WHERE idproject="'.$task[$i]['idproject'].'"');
                 $proj=mysqli_fetch_assoc($res);
                 $project[$proj['idproject']]=$proj;
-                $project[$proj['idproject']]['initiator_name'] = @implode(' ', mysqli_fetch_assoc(mysqli_query($MYSQL_CONNECTION,'SELECT firstname,lastname FROM tm.users WHERE id="' . $proj['initiator'] . '"')));
+                $project[$proj['idproject']]['initiator_name'] = @implode(' ', mysqli_fetch_assoc(mysqli_query($MYSQL_CONNECTION,'SELECT firstname,lastname FROM users WHERE id="' . $proj['initiator'] . '"')));
                 $project[$proj['idproject']]['tasks']=[];
                 $tasks=mysqli_query($MYSQL_CONNECTION,'SELECT * FROM task WHERE idproject='.$proj['idproject']);
                 while($taska=mysqli_fetch_assoc($tasks)){
                     $num=count($project[$proj['idproject']]['tasks']);
                     $project[$proj['idproject']]['tasks'][$num]=$taska;
-                    $project[$proj['idproject']]['tasks'][$num]['initiator_name']=@implode(' ', mysqli_fetch_assoc(mysqli_query($MYSQL_CONNECTION,'SELECT firstname,lastname FROM tm.users WHERE id="' . $taska['initiator'] . '"')));
-                    $project[$proj['idproject']]['tasks'][$num]['executor_name']=@implode(' ', mysqli_fetch_assoc(mysqli_query($MYSQL_CONNECTION,'SELECT firstname,lastname FROM tm.users WHERE id="' . $taska['executor'] . '"')));
+                    $project[$proj['idproject']]['tasks'][$num]['initiator_name']=@implode(' ', mysqli_fetch_assoc(mysqli_query($MYSQL_CONNECTION,'SELECT firstname,lastname FROM users WHERE id="' . $taska['initiator'] . '"')));
+                    $project[$proj['idproject']]['tasks'][$num]['executor_name']=@implode(' ', mysqli_fetch_assoc(mysqli_query($MYSQL_CONNECTION,'SELECT firstname,lastname FROM users WHERE id="' . $taska['executor'] . '"')));
                 }
             }
         }
 
         return $project;
     }
-    public function add_project($query){
+    public static function add_project($query){
         global $MYSQL_CONNECTION;
         if(isset($query['name'],$query['description'],$query['date_finish'])){
 
