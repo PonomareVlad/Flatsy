@@ -10,11 +10,9 @@ function gen_comments(response){
         comm=response['comments'];
         for(i in comm){
             source+='<div class="comment">' +
-            '<div class="photo"><img src="templates/default/images/avatar.png"></div>' +
-            '<div class="comment_info">' +
+            '<div class="photo"><img src="'+comm[i]['usercom_photo']+'"></div><div class="comment_info">' +
             '<div class="name">'+comm[i]['usercom_name']+'</div><div class="date">в '+comm[i]['datacom']+'</div>' +
-            '<div class="clear"></div><div clas' +
-            's="text">'+comm[i]['comment']+'</div></div></div>';
+            '<div class="clear"></div><div class="text">'+comm[i]['comment']+'</div></div></div>';
         }
     }
     if(source==''){source='<div class="comment">(Комментриев нет)</div>'}

@@ -95,6 +95,7 @@ class TM extends DB
                 $num=count($comms);
                 $comms[$num]=$comment;
                 $comms[$num]['usercom_name']=@implode(' ', mysql_fetch_assoc(mysql_query('SELECT firstname,lastname FROM tm.users WHERE id="' . $comment['usercom'] . '"')));
+                $comms[$num]['usercom_photo']=User::get_user(['id'=>$comment['usercom']])['photo'];
             }
             return $comms;//array_reverse($comms);
         }else{
