@@ -48,11 +48,11 @@ if(defined('USER_ID')) { // Статус авторизации
     }
 }else {
     $RESPONSE['auth'] = false;
-    if ($QUERY['action'] == 'reg') { // Регистрация
+    if (@$QUERY['action'] == 'reg') { // Регистрация
         $reg = User::registration($QUERY);
         $RESPONSE['reg'] = $reg;
     }
-    if ($QUERY['action'] == 'auth') { // Авторизация
+    if (@$QUERY['action'] == 'auth') { // Авторизация
         $auth = User::auth($QUERY['email'], $QUERY['pass']);
         $RESPONSE['auth'] = $auth;
     }

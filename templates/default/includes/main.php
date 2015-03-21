@@ -1,5 +1,4 @@
-<?require_once 'header.php';?>
-    <div class="left_bar">
+<div class="left_bar">
         <div class="action_bar">
             <a href="#" onclick="show_add_task();">
             <div class="add_task">
@@ -36,6 +35,3 @@
     <div class="center task" id="view">
         <div>Выберите задачу для просмотра</div>
     </div>
-</div>
-</body>
-</html>
