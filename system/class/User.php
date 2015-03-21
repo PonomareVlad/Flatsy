@@ -156,4 +156,20 @@ class User extends DB
         return $users;
     }
 
+    public function get_user($query,$private=false){
+        if ($private == true) {
+            $mail=strtolower(Checkdata($query['email']));
+            $user = mysql_query('SELECT photo FROM users WHERE mail="'.$mail.'"');
+        } else {
+            $user = mysql_query('SELECT id,lastname,firstname,patronymic,last_act,photo FROM users WHERE id=' . $query['id']);
+        }
+        if($user) {
+            $user = mysql_fetch_assoc($user);
+            $user['photo'] = $user['photo'] == '' ? '/templates/default/images/avatar.png' : $user['photo'];
+            return $user;
+        }else{
+            return false;
+        }
+    }
+
 }

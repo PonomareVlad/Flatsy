@@ -11,13 +11,17 @@ $RESPONSE=array();
 
 if(defined('USER_ID')) { // Статус авторизации
     $RESPONSE['auth'] = true;
-    if (@$QUERY['action'] == 'logout') { // Выход из системы
+    if(@$QUERY['action']=='logout') { // Выход из системы
         $out = User::logout();
         if ($out == true) {
             $RESPONSE['auth'] = false;
         }
     }
-    if (@$QUERY['action'] == 'add_task') { // Создание задачи
+    if(@$QUERY['check']=='all') {
+        $st = TM::show_task($QUERY);
+        $RESPONSE['tasks'] = $st;
+    }
+    if(@$QUERY['action']=='add_task') { // Создание задачи
         $addt = TM::add_task($QUERY);
         $RESPONSE['add_task'] = $addt;
     }
@@ -42,10 +46,10 @@ if(defined('USER_ID')) { // Статус авторизации
     if(@$QUERY['action']=='add_project'){
         $RESPONSE['add_project']=TM::add_project($QUERY);
     }
-    if (@$QUERY['check'] == 'all') {
-        $st = TM::show_task($QUERY);
-        $RESPONSE['tasks'] = $st;
+    if(@$QUERY['action']=='get_user') {
+        $RESPONSE['get_user'] = User::get_user($QUERY);
     }
+
 }else {
     $RESPONSE['auth'] = false;
     if (@$QUERY['action'] == 'reg') { // Регистрация
@@ -56,7 +60,9 @@ if(defined('USER_ID')) { // Статус авторизации
         $auth = User::auth($QUERY['email'], $QUERY['pass']);
         $RESPONSE['auth'] = $auth;
     }
-
+    if(@$QUERY['action']=='get_user') {
+        $RESPONSE['get_user'] = User::get_user($QUERY,true);
+    }
 }
 
 echo(json_encode($RESPONSE)); // Ответ
