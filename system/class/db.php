@@ -1,11 +1,11 @@
 <?php
 
-define('MYSQL_CONNECTION',mysql_connect(MYSQL_SERVER,MYSQL_USER,MYSQL_PASSWORD)); // Подключение к БД
-mysql_select_db(MYSQL_DB); // Выбор БД
+$MYSQL_CONNECTION=mysqli_connect(MYSQL_SERVER,MYSQL_USER,MYSQL_PASSWORD,MYSQL_DB); // Подключение к БД
+//mysqli_select_db($MYSQL_CONNECTION,MYSQLI_DB); // Выбор БД
 
-mysql_query("set character_set_connection=cp1251;",MYSQL_CONNECTION);
-mysql_query("set character_set_client=utf8;",MYSQL_CONNECTION);
-mysql_query("set character_set_results=utf8;",MYSQL_CONNECTION);
+mysqli_query($MYSQL_CONNECTION,"set character_set_connection=cp1251;");
+mysqli_query($MYSQL_CONNECTION,"set character_set_client=utf8;");
+mysqli_query($MYSQL_CONNECTION,"set character_set_results=utf8;");
 
 class DB {
 
@@ -14,6 +14,7 @@ class DB {
     }
 
     protected function select($table_name, $fields, $where = "", $order = "", $up = true, $limit = ""){
+        global $MYSQL_CONNECTION;
         for ($i = 0; $i < count ($fields); $i++){
             if ((strpos($fields[$i], "(") === false) && ($fields[$i] != "*")) $fields[$i] = "`".$fields[$i]."`";
         }
@@ -29,23 +30,25 @@ class DB {
         if ($limit) $limit = "LIMIT $limit";
         if ($where) $query = "SELECT $fields FROM $table_name WHERE $where $order $limit";
         else $query = "SELECT $fields FROM $table_name $order $limit";
-        $res = mysql_query($query) or die(mysql_error());
+        $res = mysqli_query($MYSQL_CONNECTION,$query) or die(mysqli_error($MYSQL_CONNECTION));
         return $res;
     }
 
     protected function update ($table_name, $upd_fields, $where){
+        global $MYSQL_CONNECTION;
         $query = "UPDATE $table_name SET ";
         foreach ($upd_fields as $field => $value) $query .= "`$field` = '".addslashes($value)."',";
         $query = substr($query, 0, -1);
         if ($where){
             $query .= " WHERE $where";
-            $res = mysql_query($query) or die(mysql_error());
+            $res = mysqli_query($MYSQL_CONNECTION,$query) or die(mysqli_error($MYSQL_CONNECTION));
             return $res;
         }
         else return false;
     }
 
     protected function insert ($table_name, $new_value){
+        global $MYSQL_CONNECTION;
         $table_name = $table_name;
         $query = "INSERT INTO $table_name (";
         foreach ($new_value as $field => $value) $query .= "`".$field."`,";
@@ -54,16 +57,17 @@ class DB {
         foreach ($new_value as $value) $query .= "'".addslashes($value)."',";
         $query = substr($query, 0, -1);
         $query .= ")";
-        $res = mysql_query($query) or die(mysql_error());
+        $res = mysqli_query($MYSQL_CONNECTION,$query) or die(mysqli_error($MYSQL_CONNECTION));
         return $res;
     }
 
 
 
     protected function delete ($table_name, $where = ""){
+        global $MYSQL_CONNECTION;
         if ($where){
             $query = "DELETE FROM $table_name WHERE $where";
-            $res = mysql_query($query) or die(mysql_error());
+            $res = mysqli_query($MYSQL_CONNECTION,$query) or die(mysqli_error($MYSQL_CONNECTION));
             return $res;
         }
         else return false;
