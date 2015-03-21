@@ -1,5 +1,6 @@
 <?php
 require_once ROOT.'system/class/db.php';
+/*
 class Model extends DB {
     public function __construct(){
         $this->db = new DB(); // Вызов БД
@@ -17,7 +18,7 @@ class Model extends DB {
     public function selectVisProjectUser(){
         $table_name = "visprojectuser";
         $res  = $this->select($table_name,array("iduser","idproject"));
-        while($row = mysql_fetch_assoc($res)){
+        while($row = mysqli_fetch_assoc($res)){
             $this->pre_arr($row);
         }
     }
@@ -38,4 +39,4 @@ class Model extends DB {
         $where = "iduser=12";
         $res  = $this->delete($table_name,$where);
     }
-}
+}*/
