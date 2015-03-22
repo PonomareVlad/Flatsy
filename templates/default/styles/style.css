@@ -1,5 +1,10 @@
 .wrapperautreg{
     background: transparent radial-gradient(ellipse, #FFF, #FFF, #F9F9F9, #CCC, #999) repeat;
+    overflow: hidden;
+}
+.wrapperautreg a{
+    text-decoration: none;
+
 }
 .authbody {	 /*Стиль страницы для формы авторизации*/
     font-family: Tahoma,Geneva,sans-serif;
@@ -12,6 +17,14 @@
     text-align: center;
     padding: calc(100% - 1270px) 20px;
     font-size:18px;
+}
+.authregbtn{
+    background: #999999;
+    color: #fff;
+    margin: 5px auto;
+    padding: 10px;
+    width: 235px;
+    cursor: pointer;
 }
 .Au1 {
     font-size: 22pt;
@@ -37,7 +50,7 @@
 }
 
 #In{
-    padding: 8px 5px 3px;
+    /*padding: 8px 5px 3px;*/
 }
 #Reg{
     padding: 3px 5px 30px;
@@ -47,7 +60,7 @@
 }
 
 .auth {
-    padding: 5px;
+    padding: 0 5px;
 }
 
 .formauth,.formreg {
@@ -57,14 +70,14 @@
     width:360px;
     margin:auto;
     padding:45px 20px;
-    height: 300px;
+    height: 340px;
     background-origin: content-box;
     background-clip:border-box;
     background: url("../images/form.png");
     background-size:100% 100%;
 }
 .formreg{
-    height: 400px;
+    height: 450px;
 }
 
 .avatar img{
@@ -140,6 +153,7 @@ header{
     background:  #D0D0D0;
     position: relative;
     z-index: 100;
+    cursor: default;
 }
 .arrow{
     border: 10px solid transparent;
@@ -182,6 +196,7 @@ header{
     line-height: 14px;
     padding: 10px;
     transition-duration: 300ms;
+    cursor: pointer;
 }
 .user_menu li:hover{
     color: #ffffff;
@@ -215,6 +230,7 @@ header{
     list-style: none;
     text-align: center;
     padding: 0 14px;
+    cursor: default;
 }
 .calendar li .month{
 
@@ -309,6 +325,7 @@ header{
     width: 200px;
     color: #929292;
     position: relative;
+    cursor: default;
 }
 
 .selectul li{
@@ -421,6 +438,9 @@ header{
 }
 .create{
     float: right;
+    height: 25px;
+    width: 120px !important;
+    margin-bottom: 10px;
 }
 .create input:focus{
     outline: none;
@@ -437,6 +457,7 @@ header{
 }
 .project_time{
     color: #FF9C00;
+    margin-bottom: 10px;
 }
 .date_start{
     float: left;
@@ -449,12 +470,20 @@ header{
     margin: 3px 150px 0;
     float: none;
     height: 18px;
+    position: relative;
+    text-align: center;
+    color: #000;
 }
 .project_rime_cur{
     background: #FF9C00;
-    width: 20%;
+    width: 10%;
     height: 18px;
-
+}
+.countpercent{
+    position: absolute;
+    z-index: 100;
+    text-align: center;
+    width: 100%;
 }
 .files{
     margin-top: 10px;
@@ -464,7 +493,7 @@ header{
     width: 100px;
     float: left;
 }
-.task_table a, .files a{
+.center a{
     color: #999999;
     text-decoration: none;
     font-weight: bold;
@@ -475,6 +504,9 @@ header{
     overflow-y: scroll;
     height: 220px;
 }
+.comments_title{
+    margin: 5px 0;
+}
 .comment .photo{
     width: 30px;
 
@@ -482,17 +514,18 @@ header{
 .comment{
     min-height: 70px;
 }
-.photo3{
+.comment img{
     float: left;
+    margin-right:10px ;
 }
-.info_text{
+.comment .name{
     float: left;
+    margin-right: 10px;
 }
-.comment .name, .comment .text{
-    float: left;
+.comment .text{
+    margin: 5px 0;
 }
 .date{
-    float: left;
     margin-left: 5px;
 }
 .photo img{
@@ -502,6 +535,15 @@ header{
     width: 100%;
     height: 60px;
     margin: 5px 0 0 ;
+}
+.project input{
+    float: right;
+}
+.project_title h4{
+
+}
+#edit_pen{
+    margin: 0 10px;
 }
 
 
