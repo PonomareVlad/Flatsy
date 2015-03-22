@@ -1,3 +1,4 @@
+/*
 var suggest_count = 0;
 var input_initial_value = '';
 var suggest_selected = 0;
@@ -138,3 +139,4 @@ function key_activate(n){
         selected_id=false;
     }
 }
+*/

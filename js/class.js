@@ -47,3 +47,11 @@ function set_vmode(mode){
     projects_mode=view_mode;
     tasks_upd();
 }
+
+function page($name){
+    if($name!='auth'){
+        document.getElementById('header').innerHTML=PART['header'];
+    }
+    document.title=PAGE[$name]['title']+' | EasyTM';
+    document.getElementById('page').innerHTML=PAGE[$name]['source'];
+}

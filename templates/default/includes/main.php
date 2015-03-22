@@ -1,38 +1,14 @@
-<div class="left_bar">
-        <div class="action_bar">
-            <a href="#" onclick="show_add_task();">
-            <div class="add_task">
-                <div class="plus">
-                    <div id="p1"></div>
-                    <div id="p2"></div>
-                    <div id="p3"></div>
-                    <div id="p4"></div>
-                </div>
-                Добавить задачу
-            </div>
-            </a>
-            <div class="selectul">
-                <ul>
-                    <div class="arrow"></div>
-                    <li id="currentv"></li>
-                    <li id="none">
-                        <ul>
-                            <li id="my" onclick="set_vmode('my');">Мои задачи</li>
-                            <li id="unfinished" onclick="set_vmode('unfinished');">Невыполненные задачи</li>
-                            <li id="all" onclick="set_vmode('all');">Все задачи</li>
-                        </ul>
-                    </li>
-                </ul>
-                <select id="view_mode" onchange="tasks_mode=this.value;check('all');">
-                    <option value="my">Мои задачи</option>
-                    <option value="unfinished">Невыполненные задачи</option>
-                    <option value="all" selected="selected">Все задачи</option>
-                </select>
-            </div>
-            <div style="clear: both"></div>
-        </div>
-        <div id="tasks"></div>
-    </div>
-    <div class="center task" id="view">
-        <div>Выберите задачу для просмотра</div>
-    </div>
+<?php defined('ROOT') or header('Location: /');?>
+<!DOCTYPE html>
+<html>
+<head>
+    <?=head()?>
+    <link href="<?=DIR_TMPL?>styles/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body onload="init();" onresize="sizing();">
+<div class="wrapper">
+    <div id="header"></div>
+    <div id="page"></div>
+</div>
+</body>
+</html>

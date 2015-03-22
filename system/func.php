@@ -5,8 +5,12 @@ function head(){ // Фунция генерации основных элеме�
     $title='EasyTM';
     $scripts='';
     if (defined('USER_ID')) { // Если пользователь авторизован
-        $scripts.='<script>auth=true;USER_ID='.USER_ID.';</script>';
-        // BUILD DB FOR JS
+        $scripts.='<script>';
+        $scripts.='SERVER=[];';
+        $scripts.='SERVER["ID"]='.USER_ID.';';
+        $scripts.='SERVER["NAME"]="'.USER_NAME.'";';
+        $scripts.='SERVER["PIC"]="'.USER_PIC.'";';
+        $scripts.='</script>';
     }
 
     // Подключение скриптов

@@ -32,7 +32,7 @@ function add_comment(){
     new_comm=true;
     io({"action":"add_comment","id":comments,"text":text},'gen_comments');
 }
-
+/*
 document.onkeyup = function (e) {
     e = e || window.event;
     if (e.keyCode === 13) {
@@ -43,4 +43,4 @@ document.onkeyup = function (e) {
         }
     }
     return false;
-}
+}*/

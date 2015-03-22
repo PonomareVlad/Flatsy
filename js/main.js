@@ -1,11 +1,23 @@
+/*
 var TASK=[];
 var Show_it=false;
 var postload_show=false;
 var comments=false;
 var new_comm=false;
 var view_mode='all';
+*/
+
+var DB=[];
+var TM=[];
+
+if(SERVER) {
+    TM['USER_ID'] = SERVER['ID'];
+    TM['USER_NAME'] = SERVER['NAME'];
+    TM['USER_PIC'] = SERVER['PIC'];
+}
 
 function main(){
+    /*
     check();
     if(comments!=false){
         if(document.getElementById('comments')) {
@@ -14,9 +26,11 @@ function main(){
             comments=false;
         }
     }
+    */
 }
 
 function sizing() {
+    /*
     document.getElementById('view').style.height = window.innerHeight - document.getElementById('view').offsetTop + 'px';
     if (current_page == '/projects') {
         document.getElementById('projects').style.height = window.innerHeight - document.getElementById('projects').offsetTop + 'px';
@@ -26,20 +40,28 @@ function sizing() {
     if (comments != false) {
         document.getElementById('comments').style.height = window.innerHeight - document.getElementById('comments').offsetTop - document.getElementById('new_comm').scrollHeight - 12 + "px"
     }
+    */
 }
 
 function init() {
-    if (auth==true) {
+    sizing();
+    if (TM['USER_ID']) {
+
+        page('tasks');
+
+        document.getElementById('user_name').innerHTML=TM['USER_NAME'];
+        document.getElementById('user_pic').innerHTML=TM['USER_PIC'];
+
         //io({"action":"init"},'postinit');
-        check('all');
-        document.getElementById('currentv').innerHTML=document.getElementById(view_mode).innerHTML;
-        tasks_mode=view_mode;
-        projects_mode=view_mode;
+        //check('all');
+        //document.getElementById('currentv').innerHTML=document.getElementById(view_mode).innerHTML;
+        //tasks_mode=view_mode;
+        //projects_mode=view_mode;
+
         // AutoUpdate
-        setInterval('main()', 1000);
+        //setInterval('main()', 1000);
 
-        sizing();
-
+        /*
         // Calendar generation
         D1 = new Date();
         D1last = new Date(D1.getFullYear(),D1.getMonth()+1,0).getDate(); // последний день месяца
@@ -60,6 +82,9 @@ function init() {
             '<span class="week_day">'+array[i][1]+'</span></li>';
         }
         document.getElementById('calendar').innerHTML=cal_view+'</ul>';
+        */
+    }else{
+        page('auth');
     }
 }
 

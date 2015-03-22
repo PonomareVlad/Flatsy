@@ -1,4 +1,4 @@
-
+/*
 // Calendar script
 var now = new Date;
 var sccd = now.getDate();
@@ -263,3 +263,4 @@ function addnull(d,m,y)
 
     return ''+d0+d+'.'+m0+m+'.'+y;
 }
+*/
