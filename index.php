@@ -1,4 +1,5 @@
-<?php //define('TIME_START',microtime());
+<?php
+
 define('ROOT',$_SERVER['DOCUMENT_ROOT'].'/'); // Установка корневой директории
 
-require_once ROOT . 'system/core.php'; // Подключение контроллера
+require_once ROOT . 'system/core.php'; // Запуск системы

@@ -1,51 +1,30 @@
 <?php
+// Обеспечение целостности зависимостей
 require_once ROOT.'system/class/db.php';
-class User extends DB
-{
-    public static function init()
-    {
-        session_start();
-        if (isset($_COOKIE['HASH'])) { // Если обнаружен авторизованный пользователь
-            //$DB['USER_DATA'] = mysqli_query($MYSQL_CONNECTION,'SELECT * FROM users WHERE id="' . $_SESSION['ID'] . '"', $DB['CONNECT']); // Запрашиваем данные пользователя
-            $res = DB::select('auth', array('iduser', 'hash'), 'hash="' . $_COOKIE['HASH'] . '"'); // Ну ты молодец, where без кавычек отправляешь
-            //$res=mysqli_query($MYSQL_CONNECTION,'SELECT iduser FROM auth WHERE hash="'.$_COOKIE['HASH'].'"');
+
+class User extends DB{
+
+    public static function init(){ // Функция проверки авторизации пользователя
+        if (isset($_COOKIE['HASH'])) { // Если обнаружен ключ авторизации
+            $res = DB::select('auth', array('iduser'), 'hash="' . $_COOKIE['HASH'] . '"'); // Запрашиваем ID по найденнову HASH
             $USERA = mysqli_fetch_array($res); // Переводим ответ БД в массив
-            if (!isset($USERA['iduser'])) {
-                session_destroy();
-                setcookie('HASH', '', time() - 10000);
-                header('location: /');
-                exit;
+            if (!isset($USERA['iduser'])) { // Если ключ авторизации не найден
+                setcookie('HASH', '', time() - 10000); // Удаляем недействительный ключ авторизации
+                //header('location: /'); exit;
+                // BUILD EXCEPTION
             }
-            /*if ($_COOKIE['HASH'] !== $USERA['hash']) { // Если полученный из БД ID не совпадает с хранимым в сессии (такое происходит если в одном браузере в разных вкладках авторизованы разные пользователи)
 
-                session_destroy(); // Удаление всех данных сессии
-
-                //header('location: /'); // Перенаправление на главную страницу
-
-                exit;
-
-            }*/
-
-            $res = DB::select('users', array('*'), 'id="' . $USERA['iduser'] . '"');
-
+            $res = DB::select('users', array('*'), 'id='.$USERA['iduser']); // Запрашиваем данные пользователя
             $USER = mysqli_fetch_assoc($res); // Переводим ответ БД в массив
 
             $USER['FULL_NAME'] = $USER['lastname'] . ' ' . $USER['firstname']; // Генерация полного имени для заголовка
-
             define('USER_NAME', $USER['FULL_NAME']);
-
             define('USER_ID', $USER['id']);
-
             define('USER_PIC', $USER['photo'] == '' ? '/templates/default/images/avatar.png' : $USER['photo']);
 
-            //$DB['USER_CONF'] = mysqli_query($MYSQL_CONNECTION,'SELECT * FROM `users`.`config_id'.$_SESSION['ID'].'`', $DB['CONNECT']); // Запрос таблицы настроек пользователя
-
-            //$res  = $this->select('users.config_id'.$USER['id'],'*');
-
-            //$USER['CONF'] = mysqli_fetch_array($res); // Запись всех настроек как массив
+            // BUILD USER SETTINGS LOAD
 
         }
-
     }
 
     public static function auth($login, $password)
