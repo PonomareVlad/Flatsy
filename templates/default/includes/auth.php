@@ -64,11 +64,16 @@
                     <div class="auth">
                         <input name="pass" id="passi" type="password" class="Au2" onfocus="load_enter_pic();" placeholder="<?=$LANG['PASSWORD']?>">
                     </div>
-                    <div class="auth" id="In">
-                        <a href="#" onclick='authi();' class="button box-shadow-outset"><?=$LANG['AUTH_ENTER_TITLE']?></a>
+                    <div id="In">
+                        <a href="#" onclick='authi();' class="button box-shadow-outset">
+                            <div class="authregbtn"><?=$LANG['AUTH_ENTER_TITLE']?></div>
+                        </a>
                     </div>
+                    <a href="reg">
+                        <div class="authregbtn" ><?=$LANG['REG_TITLE']?></div>
+                    </a>
                 </form>
-                <a href="reg" ><?=$LANG['REG_TITLE']?></a><br>
+
                 <a href="recovery.php" ><?=$LANG['RECOVERY_PASS']?></a>
             </div>
         </div>

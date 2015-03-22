@@ -1,5 +1,10 @@
 .wrapperautreg{
     background: transparent radial-gradient(ellipse, #FFF, #FFF, #F9F9F9, #CCC, #999) repeat;
+    overflow: hidden;
+}
+.wrapperautreg a{
+    text-decoration: none;
+
 }
 .authbody {	 /*Стиль страницы для формы авторизации*/
     font-family: Tahoma,Geneva,sans-serif;
@@ -12,6 +17,14 @@
     text-align: center;
     padding: calc(100% - 1270px) 20px;
     font-size:18px;
+}
+.authregbtn{
+    background: #999999;
+    color: #fff;
+    margin: 5px auto;
+    padding: 10px;
+    width: 235px;
+    cursor: pointer;
 }
 .Au1 {
     font-size: 22pt;
@@ -37,7 +50,7 @@
 }
 
 #In{
-    padding: 8px 5px 3px;
+    /*padding: 8px 5px 3px;*/
 }
 #Reg{
     padding: 3px 5px 30px;
@@ -47,7 +60,7 @@
 }
 
 .auth {
-    padding: 5px;
+    padding: 0 5px;
 }
 
 .formauth,.formreg {
@@ -57,14 +70,14 @@
     width:360px;
     margin:auto;
     padding:45px 20px;
-    height: 300px;
+    height: 340px;
     background-origin: content-box;
     background-clip:border-box;
     background: url("../images/form.png");
     background-size:100% 100%;
 }
 .formreg{
-    height: 400px;
+    height: 450px;
 }
 
 .avatar img{
