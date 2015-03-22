@@ -63,7 +63,6 @@ header{
     background:  #D0D0D0;
     position: relative;
     z-index: 100;
-    cursor: default;
 }
 .arrow{
     border: 10px solid transparent;
@@ -106,7 +105,6 @@ header{
     line-height: 14px;
     padding: 10px;
     transition-duration: 300ms;
-    cursor: pointer;
 }
 .user_menu li:hover{
     color: #ffffff;
@@ -140,7 +138,6 @@ header{
     list-style: none;
     text-align: center;
     padding: 0 14px;
-    cursor: default;
 }
 .calendar li .month{
 
@@ -235,7 +232,6 @@ header{
     width: 200px;
     color: #929292;
     position: relative;
-    cursor: default;
 }
 
 .selectul li{
@@ -284,8 +280,10 @@ header{
     padding: 10px 0 10px 30px;
 }
 
-.active_day{
-
+.active_day .task_name{
+    background: #FF9C00;
+    color: #fff;
+    font-weight: bold;
 }
 
 .task_info{
@@ -317,26 +315,26 @@ header{
 
 /* Center - end */
 
-/* Task*/
-.task{
+/* Task_add*/
+.task_add{
     color: #929292;
 }
-.task label{
+.task_add label{
     width: 200px;
     float: left;
 
 }
-.task form{
+.task_add form{
     padding: 5px 15px;
 }
 
-.task input,.task textarea{
+.task_add input,.task_add textarea{
     width: 70%;
 }
-.task input:focus,.task textarea:focus{
+.task_add input:focus,.task_add textarea:focus{
     outline: 4px solid #FF9C00;
 }
-.task textarea{
+.task_add textarea{
     height: 120px;
 }
 
@@ -352,10 +350,10 @@ header{
 .create+div{
     font-weight: bold;
 }
-/* Task - end */
+/* Task_add - end */
 
 /* Project */
-.project{
+.project, .task{
     padding: 0 10px;
     font-size: 14px;
 }
@@ -380,14 +378,18 @@ header{
     height: 18px;
 
 }
-
-.iniciator{
+.files{
     margin-top: 10px;
 }
-.iniciator div, .uchastniki div{
+.task_table div{
     color: #FF9C00;
     width: 100px;
     float: left;
+}
+.task_table a, .files a{
+    color: #999999;
+    text-decoration: none;
+    font-weight: bold;
 }
 /* Project - end */
 
@@ -395,11 +397,15 @@ header{
     overflow-y: scroll;
     height: 220px;
 }
+.comments .photo{
+    width: 30px;
+    float: left;
+}
 .comment_info{
     float: left;
-    margin-left: 10px;
+    margin-left: 70px;
 }
-.comment .photo,.comment_info .name,.comment_info{
+.comment_info .name, .comment_info .text{
     float: left;
 }
 .date{
@@ -410,15 +416,13 @@ header{
     border-radius: 99px;
 }
 .comment{
-    min-height: 50px;
+    min-height: 70px;
 }
 
-.project textarea{
+.project textarea,.task textarea{
     width: 100%;
     height: 60px;
     margin: 5px 0 0 ;
 }
-
-
 
 
