@@ -15,6 +15,7 @@ if(SERVER) {
     TM['USER_NAME'] = SERVER['NAME'];
     TM['USER_PIC'] = SERVER['PIC'];
 }
+TM['current_page']='auth';
 
 function main(){
     /*
@@ -50,7 +51,7 @@ function init() {
         page('tasks');
 
         document.getElementById('user_name').innerHTML=TM['USER_NAME'];
-        document.getElementById('user_pic').innerHTML=TM['USER_PIC'];
+        document.getElementById('user_pic').src=TM['USER_PIC'];
 
         //io({"action":"init"},'postinit');
         //check('all');

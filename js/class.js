@@ -49,9 +49,17 @@ function set_vmode(mode){
 }
 
 function page($name){
-    if($name!='auth'){
-        document.getElementById('header').innerHTML=PART['header'];
+    if(TM['current_page']!=$name) {
+        if ($name == 'auth') {
+            document.getElementById('header').innerHTML = '';
+        }else{
+            if(TM['current_page']=='auth') {
+                document.getElementById('header').innerHTML = PART['header'];
+                document.getElementById('user_name').innerHTML=TM['USER_NAME'];
+                document.getElementById('user_pic').src=TM['USER_PIC'];
+            }
+        }
+        document.title = PAGE[$name]['title'] + ' | EasyTM';
+        document.getElementById('page').innerHTML = PAGE[$name]['source'];
     }
-    document.title=PAGE[$name]['title']+' | EasyTM';
-    document.getElementById('page').innerHTML=PAGE[$name]['source'];
 }
