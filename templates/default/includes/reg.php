@@ -36,10 +36,10 @@
             }
         };
     </script>
-    <link href="/<?=DIR_TMPL?>styles/auth.css" rel="stylesheet" type="text/css" />
+    <link href="/<?=DIR_TMPL?>styles/style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body onload="init();">
+<body onload="init();" class="wrapperautreg">
 <div class="wrapper">
     <div class="regbody">
         <div class="formreg">
