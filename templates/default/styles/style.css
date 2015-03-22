@@ -276,6 +276,7 @@ header{
 .task_name{
     background: #efefef;
     padding: 10px 0 10px 30px;
+    cursor: default;
 }
 
 .active_day{
