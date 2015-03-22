@@ -20,7 +20,7 @@ PAGE['tasks']['source']='<div class="left_bar"><div class="action_bar"><a href="
 
 PAGE['auth']=[];
 PAGE['auth']['title']='Авторизация';
-PAGE['auth']['source']='<div class="authbody"><div class="formauth"><span class="Au1">Авторизация</span>' +
+PAGE['auth']['source']='<div class="authbody wrapperautreg"><div class="formauth"><span class="Au1">Авторизация</span>' +
 '<form name="auth"><div class="auth" id="E"><div id="pic" style="height: 41px"></div>' +
 '<input type="login" id="emaili" name="email" class="Au2" onfocus="pic_loaded=false;document.getElementById(\'pic\').innerHTML=\'\';" autofocus placeholder="E-mail">' +
 '</div><div class="auth">' +

@@ -1,3 +1,80 @@
+.wrapperautreg{
+    background: transparent radial-gradient(ellipse, #FFF, #FFF, #F9F9F9, #CCC, #999) repeat;
+}
+.authbody {	 /*Стиль страницы для формы авторизации*/
+    font-family: Tahoma,Geneva,sans-serif;
+    text-align: center;
+    padding: 120px 20px;
+    font-size:18px;
+}
+.regbody {	 /*Стиль страницы для формы регистрации */
+    font-family: Tahoma,Geneva,sans-serif;
+    text-align: center;
+    padding: calc(100% - 1270px) 20px;
+    font-size:18px;
+}
+.Au1 {
+    font-size: 22pt;
+    color: #626262;
+    cursor: default;
+}
+.Au2 {
+    color: #282828;
+    width:70%;
+    height: 30px;
+    margin:5px;
+    padding-left: 5px;
+}
+.Au3 {
+    color: #626262;
+    padding: 20px;
+    height:5px;
+    width:100px;
+    text-align:center;
+}
+#E{
+    padding: 30px 5px 3px;
+}
+
+#In{
+    padding: 8px 5px 3px;
+}
+#Reg{
+    padding: 3px 5px 30px;
+}
+#Reg1{
+    padding: 18px 1px 10px;
+}
+
+.auth {
+    padding: 5px;
+}
+
+.formauth,.formreg {
+    background:#d0d0d0;
+    color:#FFFFFF;
+    font-size:18px;
+    width:360px;
+    margin:auto;
+    padding:45px 20px;
+    height: 300px;
+    background-origin: content-box;
+    background-clip:border-box;
+    background: url("../images/form.png");
+    background-size:100% 100%;
+}
+.formreg{
+    height: 400px;
+}
+
+.avatar img{
+    border-radius: 99px;
+}
+#status {
+    color:#777;
+}
+
+
 html, body{
     font-family: Tahoma, Geneva, sans-serif;
     margin: 0;
@@ -63,7 +140,6 @@ header{
     background:  #D0D0D0;
     position: relative;
     z-index: 100;
-    cursor: default;
 }
 .arrow{
     border: 10px solid transparent;
@@ -106,7 +182,6 @@ header{
     line-height: 14px;
     padding: 10px;
     transition-duration: 300ms;
-    cursor: pointer;
 }
 .user_menu li:hover{
     color: #ffffff;
@@ -140,7 +215,6 @@ header{
     list-style: none;
     text-align: center;
     padding: 0 14px;
-    cursor: default;
 }
 .calendar li .month{
 
@@ -235,7 +309,6 @@ header{
     width: 200px;
     color: #929292;
     position: relative;
-    cursor: default;
 }
 
 .selectul li{
@@ -285,8 +358,10 @@ header{
     cursor: default;
 }
 
-.active_day{
-
+.active_day .task_name{
+    background: #FF9C00;
+    color: #fff;
+    font-weight: bold;
 }
 
 .task_info{
@@ -318,26 +393,26 @@ header{
 
 /* Center - end */
 
-/* Task*/
-.task{
+/* Task_add*/
+.task_add{
     color: #929292;
 }
-.task label{
+.task_add label{
     width: 200px;
     float: left;
 
 }
-.task form{
+.task_add form{
     padding: 5px 15px;
 }
 
-.task input,.task textarea{
+.task_add input,.task_add textarea{
     width: 70%;
 }
-.task input:focus,.task textarea:focus{
+.task_add input:focus,.task_add textarea:focus{
     outline: 4px solid #FF9C00;
 }
-.task textarea{
+.task_add textarea{
     height: 120px;
 }
 
@@ -353,10 +428,10 @@ header{
 .create+div{
     font-weight: bold;
 }
-/* Task - end */
+/* Task_add - end */
 
 /* Project */
-.project{
+.project, .task{
     padding: 0 10px;
     font-size: 14px;
 }
@@ -381,14 +456,18 @@ header{
     height: 18px;
 
 }
-
-.iniciator{
+.files{
     margin-top: 10px;
 }
-.iniciator div, .uchastniki div{
+.task_table div{
     color: #FF9C00;
     width: 100px;
     float: left;
+}
+.task_table a, .files a{
+    color: #999999;
+    text-decoration: none;
+    font-weight: bold;
 }
 /* Project - end */
 
@@ -396,11 +475,20 @@ header{
     overflow-y: scroll;
     height: 220px;
 }
-.comment_info{
-    float: left;
-    margin-left: 10px;
+.comment .photo{
+    width: 30px;
+
 }
-.comment .photo,.comment_info .name,.comment_info{
+.comment{
+    min-height: 70px;
+}
+.photo3{
+    float: left;
+}
+.info_text{
+    float: left;
+}
+.comment .name, .comment .text{
     float: left;
 }
 .date{
@@ -410,16 +498,10 @@ header{
 .photo img{
     border-radius: 99px;
 }
-.comment{
-    min-height: 50px;
-}
-
-.project textarea{
+.project textarea,.task textarea{
     width: 100%;
     height: 60px;
     margin: 5px 0 0 ;
 }
-
-
 
 
