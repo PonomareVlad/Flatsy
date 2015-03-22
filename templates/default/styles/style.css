@@ -424,6 +424,9 @@ header{
 }
 .create{
     float: right;
+    height: 25px;
+    width: 120px !important;
+    margin-bottom: 10px;
 }
 .create input:focus{
     outline: none;
@@ -476,7 +479,7 @@ header{
     width: 100px;
     float: left;
 }
-.task_table a, .files a{
+.center a{
     color: #999999;
     text-decoration: none;
     font-weight: bold;
