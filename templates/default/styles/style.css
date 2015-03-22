@@ -482,17 +482,17 @@ header{
 .comment{
     min-height: 70px;
 }
-.photo3{
+.comment img{
+    float: left;
+    margin-right:10px ;
+}
+.comment .name{
     float: left;
 }
-.info_text{
-    float: left;
-}
-.comment .name, .comment .text{
-    float: left;
+.comment .text{
+    margin: 5px 0;
 }
 .date{
-    float: left;
     margin-left: 5px;
 }
 .photo img{
