@@ -41,7 +41,7 @@
 
 <body onload="init();">
 <div class="wrapper">
-    <div class="authbody">
+    <div class="regbody">
         <div class="formreg">
             <span class="Au1">Регистрация</span>
             <form name="reg">

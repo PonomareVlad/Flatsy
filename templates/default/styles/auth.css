@@ -10,12 +10,13 @@ body{
 .regbody {	 /*Стиль страницы для формы регистрации */
     font-family: Tahoma,Geneva,sans-serif;
     text-align: center;
-    padding: 96px 20px;
+    padding: calc(100% - 1270px) 20px;
     font-size:18px;
 }
 .Au1 {
     font-size: 22pt;
     color: #626262;
+    cursor: default;
 }
 .Au2 {
     color: #282828;
@@ -68,4 +69,7 @@ body{
 
 .avatar img{
     border-radius: 99px;
+}
+#status {
+    color:#777;
 }

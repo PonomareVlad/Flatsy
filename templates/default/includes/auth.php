@@ -14,6 +14,7 @@
             return false;
         }
         function load_enter_pic(response){
+            document.getElementById('passi').placeholder='Пароль';
             if(response){
                 response = JSON.parse(response);
                 //alert(response['get_user']);
@@ -32,7 +33,8 @@
                 response = JSON.parse(response);
                 if (response['auth'] == false) {
                     document.getElementById('passi').value='';
-                    alert('Incorrect');
+                    //alert('Incorrect');
+                    document.getElementById('passi').placeholder='Неверный пароль!';
                 } else {
                     window.location = '/main';
                 }
