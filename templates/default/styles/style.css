@@ -4,6 +4,7 @@ html, body{
     min-width: 850px;
     padding: 0;
     position: relative;
+    font-size: 15px;
 }
 .clear{
     clear: both;
@@ -159,6 +160,11 @@ header{
     float: left;
     width: 500px;
 }
+.left_bar a{
+    text-decoration: none;
+    color: #000;
+    font-size: 16px;
+}
 #projects, #tasks{
     height: 400px;
     overflow-y: scroll;
@@ -312,6 +318,9 @@ header{
 /* Center - end */
 
 /* Task*/
+.task{
+    color: #929292;
+}
 .task label{
     width: 200px;
     float: left;
@@ -324,12 +333,25 @@ header{
 .task input,.task textarea{
     width: 70%;
 }
-
+.task input:focus,.task textarea:focus{
+    outline: 4px solid #FF9C00;
+}
 .task textarea{
-    height: 100px;
+    height: 120px;
 }
 
-
+#date_finish, #hours, #minuts{
+    outline: none;
+}
+.create{
+    float: right;
+}
+.create input:focus{
+    outline: none;
+}
+.create+div{
+    font-weight: bold;
+}
 /* Task - end */
 
 /* Project */
