@@ -1,12 +1,13 @@
+body{
+    background: transparent radial-gradient(ellipse, #FFF, #FFF, #F9F9F9, #CCC, #999) repeat;
+}
 .authbody {	 /*Стиль страницы для формы авторизации*/
-    background-color: #FFF;
     font-family: Tahoma,Geneva,sans-serif;
     text-align: center;
     padding: 120px 20px;
     font-size:18px;
 }
 .regbody {	 /*Стиль страницы для формы регистрации */
-    background-color: #FFF;
     font-family: Tahoma,Geneva,sans-serif;
     text-align: center;
     padding: 96px 20px;

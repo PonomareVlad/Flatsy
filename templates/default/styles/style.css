@@ -62,6 +62,7 @@ header{
     background:  #D0D0D0;
     position: relative;
     z-index: 100;
+    cursor: default;
 }
 .arrow{
     border: 10px solid transparent;
@@ -104,6 +105,7 @@ header{
     line-height: 14px;
     padding: 10px;
     transition-duration: 300ms;
+    cursor: pointer;
 }
 .user_menu li:hover{
     color: #ffffff;
@@ -226,6 +228,7 @@ header{
     width: 200px;
     color: #929292;
     position: relative;
+    cursor: default;
 }
 
 .selectul li{

@@ -36,7 +36,7 @@ function init() {
         tasks_mode=view_mode;
         projects_mode=view_mode;
         // AutoUpdate
-        setInterval('main()', 5000);
+        setInterval('main()', 1000);
 
         sizing();
 
