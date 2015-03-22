@@ -48,18 +48,22 @@ function set_vmode(mode){
     tasks_upd();
 }
 
-function page($name){
-    if(TM['current_page']!=$name) {
-        if ($name == 'auth') {
+function page(name,headgen){
+    if(TM['current_page']!=name||headgen) {
+        if (name == 'auth') {
             document.getElementById('header').innerHTML = '';
-        }else{
-            if(TM['current_page']=='auth') {
+        } else {
+            if (TM['current_page'] == 'auth' || headgen) {
                 document.getElementById('header').innerHTML = PART['header'];
-                document.getElementById('user_name').innerHTML=TM['USER_NAME'];
-                document.getElementById('user_pic').src=TM['USER_PIC'];
+                document.getElementById('user_name').innerHTML = TM['USER_NAME'];
+                document.getElementById('user_pic').src = TM['USER_PIC'];
             }
         }
-        document.title = PAGE[$name]['title'] + ' | EasyTM';
-        document.getElementById('page').innerHTML = PAGE[$name]['source'];
+        document.title = PAGE[name]['title'] + ' | EasyTM';
+        document.getElementById('page').innerHTML = PAGE[name]['source'];
+        TM['current_page'] = name;
+        if (document.getElementById('currentv')) {
+            document.getElementById('currentv').innerHTML = document.getElementById(TM[TM['current_page'] + '_mode']).innerHTML;
+        }
     }
 }

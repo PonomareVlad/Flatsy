@@ -10,12 +10,16 @@ var view_mode='all';
 var DB=[];
 var TM=[];
 
+TM['current_page']=false;
+TM['tasks_mode']='all';
+TM['projects_mode']='all';
+
 if(SERVER) {
     TM['USER_ID'] = SERVER['ID'];
     TM['USER_NAME'] = SERVER['NAME'];
     TM['USER_PIC'] = SERVER['PIC'];
+    TM['current_page'] = SERVER['PAGE']?SERVER['PAGE']:false;
 }
-TM['current_page']='auth';
 
 function main(){
     /*
@@ -48,19 +52,16 @@ function init() {
     sizing();
     if (TM['USER_ID']) {
 
-        page('tasks');
+        page(TM['current_page']!=false?TM['current_page']:'tasks',true);
 
-        document.getElementById('user_name').innerHTML=TM['USER_NAME'];
-        document.getElementById('user_pic').src=TM['USER_PIC'];
+        // AutoUpdate
+        setInterval('main()', 1000);
+
+        //document.getElementById('user_name').innerHTML=TM['USER_NAME'];
+        //document.getElementById('user_pic').src=TM['USER_PIC'];
 
         //io({"action":"init"},'postinit');
         //check('all');
-        //document.getElementById('currentv').innerHTML=document.getElementById(view_mode).innerHTML;
-        //tasks_mode=view_mode;
-        //projects_mode=view_mode;
-
-        // AutoUpdate
-        //setInterval('main()', 1000);
 
         /*
         // Calendar generation
@@ -85,7 +86,7 @@ function init() {
         document.getElementById('calendar').innerHTML=cal_view+'</ul>';
         */
     }else{
-        page('auth');
+        page('auth',false);
     }
 }
 

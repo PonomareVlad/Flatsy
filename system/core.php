@@ -24,46 +24,12 @@ User::init(); // Запуск подсистемы пользователей и
 
 if(!defined('AJAX')) { // Генерация интерфейса включена
 
-    require_once LANG; // Подключаем язык
+    //require_once LANG; // Подключаем язык
 
-    //$cur_page=false;
-    $link = explode('/', $_SERVER['REQUEST_URI']); // "http://site.com/reg"
+    $link = explode('/', $_SERVER['REQUEST_URI']);
     if (!empty($link[1])) {
-        //$cur_page = strtolower($link[1]); // "reg"
         define('PAGE',strtolower($link[1]));
     }
-
-    /*
-    if (!defined('USER_ID')) { // Если нет авторизации
-        foreach ($PAGES as $page_arr) {
-            if ($cur_page == $page_arr[0]) {
-                if ($page_arr[2] == false) {
-                    $page = $page_arr[0];
-                    $GLOBALS['title_page'] = $page_arr[1];
-                    break;
-                }
-            }
-        }
-        if (!isset($page)) {
-            $page = 'auth';
-            $GLOBALS['title_page'] = 'Авторизация';
-        } // Если неверный Url
-    } else { // Если есть авторизация
-        foreach ($PAGES as $page_arr) {
-            if ($cur_page == $page_arr[0]) {
-                if ($page_arr[2] == true) {
-                    $page = $page_arr[0];
-                    $GLOBALS['title_page'] = $page_arr[1];
-                    break;
-                }
-            }
-        }
-        if (!isset($page)) {
-            $page = 'main';
-            $GLOBALS['title_page'] = '';
-        } // Если неверный Url
-    }
-    */
 
     require_once TMPL.'index.php'; // Подключаем макет странцы
 

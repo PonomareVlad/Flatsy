@@ -10,6 +10,9 @@ function head(){ // Фунция генерации основных элеме�
         $scripts.='SERVER["ID"]='.USER_ID.';';
         $scripts.='SERVER["NAME"]="'.USER_NAME.'";';
         $scripts.='SERVER["PIC"]="'.USER_PIC.'";';
+        if(defined('PAGE')){
+            $scripts.='SERVER["PAGE"]="'.PAGE.'";';
+        }
         $scripts.='</script>';
     }
 
