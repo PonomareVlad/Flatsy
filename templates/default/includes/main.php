@@ -23,11 +23,6 @@
                         </ul>
                     </li>
                 </ul>
-                <select id="view_mode" onchange="tasks_mode=this.value;check('all');">
-                    <option value="my">Мои задачи</option>
-                    <option value="unfinished">Невыполненные задачи</option>
-                    <option value="all" selected="selected">Все задачи</option>
-                </select>
             </div>
             <div style="clear: both"></div>
         </div>
