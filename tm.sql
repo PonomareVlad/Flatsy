@@ -33,25 +33,14 @@ CREATE TABLE IF NOT EXISTS `auth` (
 
 CREATE TABLE IF NOT EXISTS `comments` (
 `id` int(10) NOT NULL,
-  `idtask` int(10) NOT NULL COMMENT 'ID задачи',
+  `idobject` int(10) NOT NULL COMMENT 'ID объекта',
+  `type` int(10) NOT NULL COMMENT 'Тип объекта',
   `numbercom` int(10) NOT NULL COMMENT 'Порядковый номер комментария',
   `usercom` int(10) NOT NULL COMMENT 'Владелец комментария',
   `comment` varchar(1000) NOT NULL COMMENT 'Комментарий',
   `datacom` datetime NOT NULL COMMENT 'Дата и время публикации'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Комментарии';
 
---
--- Структура таблицы `comproject`
---
-
-CREATE TABLE IF NOT EXISTS `comproject` (
-`id` int(10) NOT NULL COMMENT 'ID',
-  `idproject` int(10) NOT NULL COMMENT 'ID проекта',
-  `numbercom` int(10) NOT NULL COMMENT 'Номер комментария',
-  `usercom` int(10) NOT NULL COMMENT 'ID юзера',
-  `comment` varchar(1000) NOT NULL COMMENT 'Комментарий',
-  `datacom` datetime NOT NULL COMMENT 'Дата комментария'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Комментарии к проектам';
 
 -- --------------------------------------------------------
 
@@ -233,12 +222,6 @@ ALTER TABLE `auth`
 ALTER TABLE `comments`
  ADD PRIMARY KEY (`id`);
 
- --
--- Индексы таблицы `comproject`
---
-ALTER TABLE `comproject`
- ADD PRIMARY KEY (`id`);
-
  
 --
 -- Индексы таблицы `files`
@@ -321,11 +304,7 @@ ALTER TABLE `vistaskuser`
 --
 ALTER TABLE `comments`
 MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT для таблицы `comproject`
---
-ALTER TABLE `comproject`
-MODIFY `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ID';
+
 --
 -- AUTO_INCREMENT для таблицы `files`
 --
