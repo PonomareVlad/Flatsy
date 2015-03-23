@@ -47,7 +47,11 @@ if(defined('USER_ID')) { // Статус авторизации
                 $RESPONSE['check'] = false;
             }
         }
-
+        if ($QUERY['action']=='load_db'){
+            $DB=[];
+            $DB['TASK']=TM::get_tasks();
+            $RESPONSE['DB']=$DB;
+        }
         if ($QUERY['action'] == 'logout') { // Выход из системы
             $out = User::logout();
             if ($out == true) {

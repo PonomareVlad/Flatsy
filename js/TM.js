@@ -19,6 +19,7 @@ function handler(response) {
             DB=response['DB'];
             TM['update_db']=false;
             // BUILD REFRESH VIEW
+            gen_list();
         }
     }else{
         if(TM['USER_ID']){
@@ -391,33 +392,34 @@ function project_show(id) {
     sizing();
     return false;
 }
-abcde='';
+
 function gen_list(){
     source='';
     if(TM['current_page']=='tasks'){
         if(!DB['TASK']){
             TM['update_db']=true;
-        }else{
+        }else{ // BUILD FILTER
             TASK=[];
             DAY=[];
             for(i in DB['TASK']){
+                empty=false;
                 task=DB['TASK'][i];
                 date_finish=task['date_finish'].split(' ');
                 date_finish=date_finish[0].split('-');
                 key=date_finish[2]+'.'+date_finish[1]+'.'+date_finish[0];
                 DAY[key]=new Date(date_finish[0], date_finish[1], date_finish[2]).getTime();
                 if(!TASK[key]){
-                    TASK['key']=[];
+                    TASK[key]=[];
                 }
-                TASK[key][TASK['key'].length]=task; // BUILD SORT BY TIME
+                TASK[key][TASK[key].length]='<p>'+task['name']+'</p>'; // BUILD SORT BY TIME // BUILD VIEW LINK
             }
             DAY.sort();
-            for(i in DAY){
-                key=Object.keys(DAY)[i];
-                for(j in TASK[key]){
-                    source+='<p>'+TASK[key][j]['name']+'</p>'; // BUILD VIEW LINK
+            for(d in DAY){
+                for(t in TASK[d]){
+                    source+=TASK[d][t];
                 }
             }
         }
     }
+    document.getElementById('tasks').innerHTML=source; // BUILD WRITE
 }
