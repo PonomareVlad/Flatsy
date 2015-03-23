@@ -10,7 +10,17 @@ function handler(response) {
                 }
                 if(response['NEW']['COMMENT']){
                     for(i in response['NEW']['COMMENT']){
+                        comment=response['NEW']['COMMENT'][i];
                         // BUILD UPD DB
+                        if(comment['idobject']==TM['CID']&&comment['type']==TM['comments_loaded']) {
+                            source = '<div class="comment">' +
+                            '<img src="' + comment['usercom_photo'] + '"><div class="info_text">' +
+                            '<div class="name">' + comment['usercom_name'] + '</div><div class="date">' + comment['datacom'] + '</div>' +
+                            '<p class="text">' + comment['comment'] + '</p></div></div>';
+                            document.getElementById('comments').innerHTML += source;
+                        }else{
+                            //alert('New comment for '+comment['type']+' '+comment['idobject']);
+                        }
                     }
                 }
             }
@@ -20,6 +30,9 @@ function handler(response) {
             TM['update_db']=false;
             // BUILD REFRESH VIEW
             gen_list();
+        }
+        if(response['new_comment']){
+            // BUILD UPD COMMENT LIST
         }
     }else{
         if(TM['USER_ID']){
@@ -482,9 +495,11 @@ function view(id,type){
         source+='<div class="files"><div>Прикрепленные файлы</div>' +
         'IS DEVELOPING...'+//'<a href="#user2">Doc1.doc</a>, <a href="#user2">Doc1.doc</a>, <a href="#user2">Doc1.doc</a>' +
         '</div>';
-        source+='<h4 class="comments_title">Обсуждение</h4><div class="comments"></div>' +
-        '<textarea placeholder="Ваш комментарий..."></textarea><p>' +
-        '<input type="image" src="templates/default/images/create.png" class="create"><a href="#">Прикрепить</a></p></div>';
+        source+='<h4 class="comments_title">Обсуждение</h4><div style="height: 0px" class="comments" id="comments"></div>' +
+        '<textarea id="new_comm" placeholder="Ваш комментарий..."></textarea><p>' +
+        '<input type="image" onclick="add_comment()" src="templates/default/images/create.png" class="create"><a href="#">Прикрепить</a></p></div>';
+        document.getElementById('view').innerHTML=source;
+        init_comments(task['id'],type);
+        sizing();
     }
-    document.getElementById('view').innerHTML=source;
 }

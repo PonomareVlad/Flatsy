@@ -39,7 +39,7 @@ if(defined('USER_ID')) { // Статус авторизации
                         }
                         $NEW['COMMENT'][] = $comment;
                     }
-                    //DB::delete('notifications','idnotification='.$notify['idnotification']);
+                    DB::delete('notifications','idnotification='.$notify['idnotification']);
                 }
                 $RESPONSE['NEW'] = $NEW;
                 $RESPONSE['check'] = true;
@@ -67,12 +67,12 @@ if(defined('USER_ID')) { // Статус авторизации
             $RESPONSE['set_task'] = $setask;
         }
         if ($QUERY['action'] == 'get_comments') {
-            $comm = TM::get_comm($QUERY);
+            $comm = TM::get_comments($QUERY['id'],$QUERY['type']);
             $RESPONSE['comments'] = $comm;
         }
         if ($QUERY['action'] == 'add_comment') {
-            $RESPONSE['add_comment'] = TM::add_comm($QUERY);
-            $RESPONSE['comments'] = TM::get_comm($QUERY);
+            $RESPONSE['new_comment'] = TM::add_comment($QUERY['id'],$QUERY['type'],$QUERY['text']);
+            //$RESPONSE['comments'] = TM::get_comm($QUERY);
         }
         if ($QUERY['action'] == 'get_users') {
             $RESPONSE['users'] = User::get_users($QUERY);

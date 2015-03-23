@@ -1,6 +1,7 @@
-function init_comments(id){
-    comments=id;
-    io({"action":"get_comments","id":id},'gen_comments');
+function init_comments(id,type){
+    TM['comments_loaded']=type;
+    TM['CID']=id;
+    io({"action":"get_comments","id":id,"type":type},gen_comments);
 }
 
 function gen_comments(response){
@@ -10,27 +11,20 @@ function gen_comments(response){
         comm=response['comments'];
         for(i in comm){
             source+='<div class="comment">' +
-            '<div class="photo"><img src="'+comm[i]['usercom_photo']+'"></div><div class="comment_info">' +
-            '<div class="name">'+comm[i]['usercom_name']+'</div><div class="date">в '+comm[i]['datacom']+'</div>' +
-            '<div class="clear"></div><div class="text">'+comm[i]['comment']+'</div></div></div>';
+            '<img src="'+comm[i]['usercom_photo']+'"><div class="info_text">' +
+            '<div class="name">'+comm[i]['usercom_name']+'</div><div class="date">'+comm[i]['datacom']+'</div>' +
+            '<p class="text">'+comm[i]['comment']+'</p></div></div>';
         }
     }
-    if(source==''){source='<div class="comment">(Комментриев нет)</div>'}
+    if(source==''){source='<div class="comment"><p class="text">(Комментриев нет)</p></div>'}
     document.getElementById('comments').innerHTML=source;
     document.getElementById('comments').scrollTop=9999;
-    if(new_comm==true&&response['add_comment']!=true){
-        alert('Ошибка создания комментария');
-        new_comm=false;
-    }else if(new_comm==true&&response['add_comment']==true){
-        new_comm=false;
-    };
 }
 
 function add_comment(){
     text=document.getElementById('new_comm').value;
     document.getElementById('new_comm').value='';
-    new_comm=true;
-    io({"action":"add_comment","id":comments,"text":text},'gen_comments');
+    io({"action":"add_comment","id":TM['CID'],"type":TM['comments_loaded'],"text":text});
 }
 /*
 document.onkeyup = function (e) {

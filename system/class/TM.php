@@ -207,5 +207,41 @@ class TM extends DB
         }
         return $tasks;
     }
-
+    public static function add_comment($id,$type,$text){
+        if(isset($id,$type,$text)){
+            $now=date("y-m-d G:i:s");
+            $text=str_replace(array("\r\n", "\r", "\n"), '<br>', strip_tags(Checkdata($text)));
+            if(trim($text)=='<br>'||trim($text=='')){
+                return false;
+            }
+            $max=mysqli_fetch_assoc(DB::select('comments',['MAX(numbercom) AS numbercom'],'idobject='.$id.' AND type="'.$type.'"'));
+            //$add=mysqli_query($MYSQL_CONNECTION,'INSERT INTO comments (idtask, numbercom, usercom, comment, datacom) VALUES ('.$query['id'].','.($max['numbercom']+1).','.USER_ID.',"'.$text.'","'.$now.'")');
+            $add=DB::inserti('comments','(idobject, type, numbercom, usercom, comment, datacom) VALUES ('.$id.',"'.$type.'",'.($max['numbercom']+1).','.USER_ID.',"'.$text.'","'.$now.'")');
+            if($add==1){
+                $comment=mysqli_fetch_assoc(DB::select('comments',['*'],'idobject='.$id.' AND type="'.$type.'" AND numbercom='.$max['numbercom']+1));
+                $comment['usercom_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['firstname', 'lastname'], 'id=' . $comment['usercom'])));
+                $comment['usercom_photo'] = User::get_user($comment['usercom'])['photo'];
+                return $comment;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+    public static function get_comments($id,$type){
+        if(isset($id)){
+            $comms=[];
+            $array=DB::select('comments',['*'],'idobject='.$id.' AND type="'.$type.'"');
+            while($comment=mysqli_fetch_assoc($array)){
+                $num=count($comms);
+                $comms[$num]=$comment;
+                $comms[$num]['usercom_name']=@implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$comment['usercom'])));
+                $comms[$num]['usercom_photo']=User::get_user($comment['usercom'])['photo'];
+            }
+            return $comms;//array_reverse($comms);
+        }else{
+            return false;
+        }
+    }
 }

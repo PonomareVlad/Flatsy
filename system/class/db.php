@@ -61,6 +61,21 @@ class DB {
         return $res;
     }
 
+    public static function inserti ($table_name='', $new_values=''){
+        global $MYSQL_CONNECTION;
+        $table_name = $table_name;
+        //$query = "INSERT INTO $table_name (";
+        $query = "INSERT INTO $table_name ".$new_values;
+        //foreach ($new_value as $field => $value) $query .= "`".$field."`,";
+        //$query = substr($query, 0, -1);
+        //$query .= ") VALUES (";
+        //foreach ($new_value as $value) $query .= "'".addslashes($value)."',";
+        //$query = substr($query, 0, -1);
+        //$query .= ")";
+        $res = mysqli_query($MYSQL_CONNECTION,$query) or die(mysqli_error($MYSQL_CONNECTION));
+        return $res;
+    }
+
 
 
     public static function delete ($table_name, $where = ""){
