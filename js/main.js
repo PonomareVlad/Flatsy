@@ -60,6 +60,8 @@ function init() {
 
         if(TM['update_db']==true){
             io({'action':'load_db'});
+        }else{
+            gen_list();
         }
 
         // AutoUpdate

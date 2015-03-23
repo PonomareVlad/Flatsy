@@ -395,6 +395,11 @@ function project_show(id) {
 
 function gen_list(){
     source='';
+    date=new Date();
+    //day=(date.getDate()<10?'0':'')+date.getDate();month=((date.getMonth()+1)<10?'0':'')+(date.getMonth()+1);
+    //today=day+'.'+month+'.'+date.getFullYear();
+    now = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+    // BUILD NEXT DAY
     if(TM['current_page']=='tasks'){
         if(!DB['TASK']){
             TM['update_db']=true;
@@ -407,19 +412,79 @@ function gen_list(){
                 date_finish=task['date_finish'].split(' ');
                 date_finish=date_finish[0].split('-');
                 key=date_finish[2]+'.'+date_finish[1]+'.'+date_finish[0];
-                DAY[key]=new Date(date_finish[0], date_finish[1], date_finish[2]).getTime();
+                DAY[key]=new Date(date_finish[0], date_finish[1]-1, date_finish[2]).getTime();
+                //alert(date_finish[0]+'.'+(date_finish[1]-1)+'.'+date_finish[2]);
                 if(!TASK[key]){
                     TASK[key]=[];
                 }
-                TASK[key][TASK[key].length]='<p>'+task['name']+'</p>'; // BUILD SORT BY TIME // BUILD VIEW LINK
+                num=TASK[key].length;
+                TASK[key][num]='<div class="task_info" onclick="view('+task['id']+',\'task\')"><div>';
+                TASK[key][num]+='</div><div class="task_text">'+task['name']+'</div></div>';
+                // BUILD SORT BY TIME
             }
             DAY.sort();
-            for(d in DAY){
-                for(t in TASK[d]){
-                    source+=TASK[d][t];
+            overdue='<div class="task_day"><div class="task_name">Просрочено</div>';
+            overdue_view=false;
+            for(d in DAY) {
+                over=false;
+                //alert(DAY[d]+' '+now);
+                if(DAY[d]<now){
+                    over=true;
+                    overdue_view=true;
+                }else {
+                    if (DAY[d] == now) {
+                        source += '<div class="task_day active_day"><div class="task_name">Сегодня</div>';
+                    } else {
+                        source += '<div class="task_day"><div class="task_name">' + d + '</div>';
+                    }
                 }
+                for (t in TASK[d]) {
+                    if(over) {
+                        overdue += TASK[d][t];
+                    }else{
+                        source += TASK[d][t];
+                    }
+                }
+                if(!over) {
+                    source += '</div>';
+                }
+            }
+            if(overdue_view){
+                source=overdue+'</div>'+source;
             }
         }
     }
     document.getElementById('tasks').innerHTML=source; // BUILD WRITE
+}
+
+function view(id,type){
+    source='';
+    if(type=='task'){
+        task=false;
+        for(t in DB['TASK']){
+            if(DB['TASK'][t]['id']==id){
+                task=DB['TASK'][t];
+                break;
+            }
+        }
+        source+='<h4 class="task_title">'+task['name']+'</h4>';
+        source+='<p class="task_description">'+task['description']+'</p>';
+        source+='<div class="info_task">';
+        if(task['idproject']!=0){
+            source+='<div class="task_table"><div>Проект</div>' +
+            '<a href="#" onclick=\'view('+task['idproject']+',"project")\'>'+task['projectname']+'</a></div>';
+        }
+        source+='<div class="task_table"><div>Инициатор</div>' +
+        '<a href="#" onclick=\'view('+task['initiator']+',"user")\'>'+task['initiator_name']+'</a></div>';
+        source+='<div class="task_table"><div>Исполнители</div>' +
+        'IS DEVELOPING...'+//'<a href="#" onclick=\'view('+task['initiator']+',"user")\'>'+task['initiator_name']+'</a>' +
+        '</div>';
+        source+='<div class="files"><div>Прикрепленные файлы</div>' +
+        'IS DEVELOPING...'+//'<a href="#user2">Doc1.doc</a>, <a href="#user2">Doc1.doc</a>, <a href="#user2">Doc1.doc</a>' +
+        '</div>';
+        source+='<h4 class="comments_title">Обсуждение</h4><div class="comments"></div>' +
+        '<textarea placeholder="Ваш комментарий..."></textarea><p>' +
+        '<input type="image" src="templates/default/images/create.png" class="create"><a href="#">Прикрепить</a></p></div>';
+    }
+    document.getElementById('view').innerHTML=source;
 }

@@ -16,7 +16,7 @@ PAGE['tasks']['source']='<div class="left_bar"><div class="action_bar"><a href="
 '<li id="none"><ul><li id="my" onclick="set_vmode(\'my\');">Мои задачи</li>' +
 '<li id="unfinished" onclick="set_vmode(\'unfinished\');">Невыполненные задачи</li>' +
 '<li id="all" onclick="set_vmode(\'all\');">Все задачи</li></ul></li></ul></div><div style="clear: both"></div></div>' +
-'<div id="tasks"></div></div><div class="center task" id="view"><div>Выберите задачу для просмотра</div></div>';
+'<div id="tasks"></div></div><div class="center"><div class="task" id="view"></div></div>';
 
 PAGE['auth']=[];
 PAGE['auth']['title']='Авторизация';

@@ -13,6 +13,9 @@ function head(){ // Фунция генерации основных элеме�
         if(defined('PAGE')){
             $scripts.='SERVER["PAGE"]="'.PAGE.'";';
         }
+        $DB=[];
+        $DB['TASK']=TM::get_tasks();
+        $scripts.='var DB='.json_encode($DB).';';
         $scripts.='</script>';
     }
 
