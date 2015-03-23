@@ -17,6 +17,10 @@ function handler(response) {
                             '<img src="' + comment['usercom_photo'] + '"><div class="info_text">' +
                             '<div class="name">' + comment['usercom_name'] + '</div><div class="date">' + comment['datacom'] + '</div>' +
                             '<p class="text">' + comment['comment'] + '</p></div></div>';
+                            if(TM['empty_comments']){
+                                document.getElementById('comments').innerHTML='';
+                                TM['empty_comments']=false;
+                            }
                             document.getElementById('comments').innerHTML += source;
                         }else{
                             //alert('New comment for '+comment['type']+' '+comment['idobject']);
@@ -33,6 +37,19 @@ function handler(response) {
         }
         if(response['new_comment']){
             // BUILD UPD COMMENT LIST
+            comment=response['new_comment'];
+            if(comment['idobject']==TM['CID']&&comment['type']==TM['comments_loaded']) {
+                source = '<div class="comment">' +
+                '<img src="' + comment['usercom_photo'] + '"><div class="info_text">' +
+                '<div class="name">' + comment['usercom_name'] + '</div><div class="date">' + comment['datacom'] + '</div>' +
+                '<p class="text">' + comment['comment'] + '</p></div></div>';
+                if(TM['empty_comments']){
+                    document.getElementById('comments').innerHTML='';
+                    TM['empty_comments']=false;
+                }
+                document.getElementById('comments').innerHTML += source;
+                document.getElementById('comments').scrollTop=9999;
+            }
         }
     }else{
         if(TM['USER_ID']){

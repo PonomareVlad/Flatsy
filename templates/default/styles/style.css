@@ -512,7 +512,7 @@ header{
 
 }
 .comment{
-    min-height: 70px;
+    min-height: 50px;
 }
 .comment img{
     float: left;

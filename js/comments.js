@@ -16,7 +16,7 @@ function gen_comments(response){
             '<p class="text">'+comm[i]['comment']+'</p></div></div>';
         }
     }
-    if(source==''){source='<div class="comment"><p class="text">(Комментриев нет)</p></div>'}
+    if(source==''){source='<div class="comment"><p class="text">(Комментриев нет)</p></div>';TM['empty_comments']=true;}
     document.getElementById('comments').innerHTML=source;
     document.getElementById('comments').scrollTop=9999;
 }
