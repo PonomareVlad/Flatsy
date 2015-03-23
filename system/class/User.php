@@ -143,14 +143,13 @@ class User extends DB{
         return $users;
     }
 
-    public static function get_user($query, $private = false)
+    public static function get_user($id, $private = false)
     {
-        global $MYSQL_CONNECTION;
-        if ($private == true) {
-            $mail = strtolower(Checkdata($query['email']));
-            $user = mysqli_query($MYSQL_CONNECTION,'SELECT photo FROM users WHERE mail="' . $mail . '"');
+        if ($private == true && !is_numeric($id)) {
+            $mail = strtolower(Checkdata($id));
+            $user = DB::select('users',['photo'],'mail="'.$mail.'"');
         } else {
-            $user = mysqli_query($MYSQL_CONNECTION,'SELECT id,lastname,firstname,patronymic,last_act,photo FROM users WHERE id=' . $query['id']);
+            $user = DB::select('users',['id','lastname','firstname','patronymic','last_act','photo'],'id='.$id);
         }
         $user = mysqli_fetch_assoc($user);
         if (isset($user['photo'])) {

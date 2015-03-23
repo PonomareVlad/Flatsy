@@ -79,6 +79,13 @@ class TM extends DB
             return false;
         }
     }
+    public static function get_task($id){
+        $arr=DB::select('task',['*'],'id='.$id);
+        $task=mysqli_fetch_assoc($arr);
+        $task['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$task['initiator'])));
+        $task['executor_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$task['executor'])));
+        return $task;
+    }
     public static function set_task($query){
         global $MYSQL_CONNECTION;
         if($query['param']=='finished'){

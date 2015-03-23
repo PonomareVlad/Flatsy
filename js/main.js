@@ -7,21 +7,25 @@ var new_comm=false;
 var view_mode='all';
 */
 
-var DB=[];
-var TM=[];
 
+var TM=[];
 TM['current_page']=false;
 TM['tasks_mode']='all';
 TM['projects_mode']='all';
-
+TM['update_db']=false;
 if(SERVER) {
     TM['USER_ID'] = SERVER['ID'];
     TM['USER_NAME'] = SERVER['NAME'];
     TM['USER_PIC'] = SERVER['PIC'];
     TM['current_page'] = SERVER['PAGE']?SERVER['PAGE']:false;
 }
+if(!DB){
+    var DB=[];
+    TM['update_db']=true;
+}
 
 function main(){
+    io({'action':'check'});
     /*
     check();
     if(comments!=false){
@@ -49,10 +53,15 @@ function sizing() {
 }
 
 function init() {
+
     sizing();
     if (TM['USER_ID']) {
 
         page(TM['current_page']!=false?TM['current_page']:'tasks',true);
+
+        if(TM['update_db']==true){
+            io({'action':'load_db'});
+        }
 
         // AutoUpdate
         setInterval('main()', 1000);

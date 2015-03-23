@@ -13,7 +13,8 @@ function Ajax(method,url,callback){
         if (xmlhttp.readyState==4 && xmlhttp.status==200)
         {
             response=xmlhttp.responseText;
-            eval(callback+'(\''+response+'\');');
+            //eval(callback+'(\''+response+'\');');
+            callback(response);
         }
     }
     xmlhttp.open(method,url,true);
@@ -22,7 +23,7 @@ function Ajax(method,url,callback){
 
 function io(array,callback){
     query=JSON.stringify(array);
-    Ajax('GET','/ajax.php?query='+query+'&rand='+new Date().getTime(),callback||'handler');
+    Ajax('GET','/ajax.php?query='+query+'&rand='+new Date().getTime(),callback?callback():handler());
 }
 
 function check(mode) {

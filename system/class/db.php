@@ -13,7 +13,7 @@ class DB {
 
     }
 
-    protected static function select($table_name, $fields, $where = "", $order = "", $up = true, $limit = ""){
+    public static function select($table_name, $fields, $where = "", $order = "", $up = true, $limit = ""){
         global $MYSQL_CONNECTION;
         for ($i = 0; $i < count ($fields); $i++){
             if ((strpos($fields[$i], "(") === false) && ($fields[$i] != "*")) $fields[$i] = "`".$fields[$i]."`";
@@ -34,7 +34,7 @@ class DB {
         return $res;
     }
 
-    protected static function update ($table_name, $upd_fields, $where){
+    public static function update ($table_name, $upd_fields, $where){
         global $MYSQL_CONNECTION;
         $query = "UPDATE $table_name SET ";
         foreach ($upd_fields as $field => $value) $query .= "`$field` = '".addslashes($value)."',";
@@ -47,7 +47,7 @@ class DB {
         else return false;
     }
 
-    protected static function insert ($table_name, $new_value){
+    public static function insert ($table_name, $new_value){
         global $MYSQL_CONNECTION;
         $table_name = $table_name;
         $query = "INSERT INTO $table_name (";
@@ -63,7 +63,7 @@ class DB {
 
 
 
-    protected static function delete ($table_name, $where = ""){
+    public static function delete ($table_name, $where = ""){
         global $MYSQL_CONNECTION;
         if ($where){
             $query = "DELETE FROM $table_name WHERE $where";
