@@ -25,7 +25,7 @@ if(!DB){
 }
 
 function main(){
-    io({'action':'check'});
+    io({"action":"check"});
     /*
     check();
     if(comments!=false){
@@ -53,7 +53,6 @@ function sizing() {
 }
 
 function init() {
-
     sizing();
     if (TM['USER_ID']) {
 
@@ -64,7 +63,9 @@ function init() {
         }
 
         // AutoUpdate
-        setInterval('main()', 1000);
+        if(!TM['AUID']) {
+            TM['AUID'] = setInterval('main()', 1000);
+        }
 
         //document.getElementById('user_name').innerHTML=TM['USER_NAME'];
         //document.getElementById('user_pic').src=TM['USER_PIC'];

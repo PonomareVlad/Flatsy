@@ -1,44 +1,31 @@
 function handler(response) {
     response=JSON.parse(response);
     if (response['auth']==true) {
-        auth=true;
-        if (response['tasks']) {
-            TASK=response['tasks'];
-            tasks_upd();
-        }
-        if(response['tasks']==false){
-            document.getElementById('tasks').innerHTML = '<div class="task_info">(нет элементов)</div>';
-        }
-        if (response['add_task']){
-            if(response['add_task']=='EMPTY DATA'){
-                alert('Заполнены не все данные или не корректное заполнение');
-            }else{
-                Show_it=response['add_task'];
-                check('all');
+        if(response['check']){
+            if(response['NEW']){
+                if(response['NEW']['TASK']){
+                    for(i in response['NEW']['TASK']){
+                        // BUILD UPD DB
+                    }
+                }
+                if(response['NEW']['COMMENT']){
+                    for(i in response['NEW']['COMMENT']){
+                        // BUILD UPD DB
+                    }
+                }
             }
         }
-        if(response['set_task']){
-            if(response['set_task']!=false){
-                Show_it=response['set_task'];
-                check('all');
-            }
-        }
-        if (response['projects']) {
-            PROJECT=response['projects'];
-            projects_upd();
-        }
-        if (response['add_project']){
-            if(response['add_project']=='EMPTY DATA'){
-                alert('Заполнены не все данные или не корректное заполнение');
-            }else{
-                Show_it=response['add_project'];
-                check();
-            }
+        if(response['DB']){
+            DB=response['DB'];
+            TM['update_db']=false;
+            // BUILD REFRESH VIEW
         }
     }else{
-        if(auth==true){
-            auth=false;
-            window.location='/auth';
+        if(TM['USER_ID']){
+            TM['USER_ID']=false;
+            TM['USER_NAME']=false;
+            TM['USER_PIC']=false;
+            page('auth');
         }
     }
 }
@@ -403,4 +390,34 @@ function project_show(id) {
     //init_comments(proji['id']);
     sizing();
     return false;
+}
+abcde='';
+function gen_list(){
+    source='';
+    if(TM['current_page']=='tasks'){
+        if(!DB['TASK']){
+            TM['update_db']=true;
+        }else{
+            TASK=[];
+            DAY=[];
+            for(i in DB['TASK']){
+                task=DB['TASK'][i];
+                date_finish=task['date_finish'].split(' ');
+                date_finish=date_finish[0].split('-');
+                key=date_finish[2]+'.'+date_finish[1]+'.'+date_finish[0];
+                DAY[key]=new Date(date_finish[0], date_finish[1], date_finish[2]).getTime();
+                if(!TASK[key]){
+                    TASK['key']=[];
+                }
+                TASK[key][TASK['key'].length]=task; // BUILD SORT BY TIME
+            }
+            DAY.sort();
+            for(i in DAY){
+                key=Object.keys(DAY)[i];
+                for(j in TASK[key]){
+                    source+='<p>'+TASK[key][j]['name']+'</p>'; // BUILD VIEW LINK
+                }
+            }
+        }
+    }
 }

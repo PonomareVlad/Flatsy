@@ -23,30 +23,17 @@ function Ajax(method,url,callback){
 
 function io(array,callback){
     query=JSON.stringify(array);
-    Ajax('GET','/ajax.php?query='+query+'&rand='+new Date().getTime(),callback?callback():handler());
-}
-
-function check(mode) {
-    current_page = location.pathname;
-    if (current_page == '/projects') {
-        io({"action":"show_projects"});
-    } else {
-        send = {"check": mode || "simple"};
-        io(send);
-    }
+    Ajax('GET','/ajax.php?query='+query+'&rand='+new Date().getTime(),callback?callback:handler);
 }
 
 function logout(){
-    send={"action":"logout"}
-    io(send);
+    io({"action":"logout"});
 }
 
 function set_vmode(mode){
-    view_mode=mode;
-    document.getElementById('currentv').innerHTML=document.getElementById(view_mode).innerHTML;
-    tasks_mode=view_mode;
-    projects_mode=view_mode;
-    tasks_upd();
+    TM[TM['current_page'] + '_mode']=mode;
+    document.getElementById('currentv').innerHTML=document.getElementById(TM[TM['current_page'] + '_mode']).innerHTML;
+    gen_list();
 }
 
 function page(name,headgen){
@@ -67,4 +54,8 @@ function page(name,headgen){
             document.getElementById('currentv').innerHTML = document.getElementById(TM[TM['current_page'] + '_mode']).innerHTML;
         }
     }
+}
+
+function sort(){
+
 }
