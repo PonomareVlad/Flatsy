@@ -136,6 +136,7 @@ header{
     transition-duration: 150ms;
 }
 
+
 .user_menu{
     color: #929292;
     float: right;
@@ -387,6 +388,11 @@ header{
     transition-duration: 200ms;
 }
 .task_info:hover{
+    background: #FF9C00;
+    color: #fff;
+    transition-duration: 200ms;
+}
+.task_active{
     background: #FF9C00;
     color: #fff;
     transition-duration: 200ms;
