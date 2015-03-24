@@ -34,7 +34,7 @@ class User extends DB{
             global $MYSQL_CONNECTION;
             //$query = $this->select('users', array('*'), 'mail="' . strtolower($login) . '"');
 
-            $query = mysqli_query($MYSQL_CONNECTION,'SELECT * FROM users WHERE mail="' . strtolower(Checkdata($login, true)) . '"'); //СМОТРИ
+            $query = DB::select('users',['*'],'mail="'.strtolower(Checkdata($login, true)).'"');
 
             $user = mysqli_fetch_assoc($query);
 
@@ -48,7 +48,13 @@ class User extends DB{
 
                     setcookie('HASH', $hash, 7000000000);
 
-                    return $user['id'];
+                    $user['FULL_NAME'] = $user['lastname'] . ' ' . $user['firstname'];
+
+                    $user['PHOTO']=$user['photo'] == '' ? '/templates/default/images/avatar.png' : $user['photo'];
+
+                    $return=['id'=>$user['id'],'full_name'=>$user['FULL_NAME'],'photo'=>$user['PHOTO']];
+
+                    return $return;
 
                 }
 
@@ -147,14 +153,19 @@ class User extends DB{
     {
         if ($private == true && !is_numeric($id)) {
             $mail = strtolower(Checkdata($id));
-            $user = DB::select('users',['photo'],'mail="'.$mail.'"');
+            $user = DB::select('users', ['photo'], 'mail="' . $mail . '"');
         } else {
-            $user = DB::select('users',['id','lastname','firstname','patronymic','last_act','photo'],'id='.$id);
+            $user = DB::select('users', ['id', 'lastname', 'firstname', 'patronymic', 'last_act', 'photo'], 'id=' . $id);
         }
         $user = mysqli_fetch_assoc($user);
         if (isset($user['photo'])) {
             $user['photo'] = $user['photo'] == '' ? '/templates/default/images/avatar.png' : $user['photo'];
-            return $user;
+            if ($private == true) {
+                $return = ['photo' => $user['photo']];
+            }else{
+                $return = $user;
+            }
+            return $return;
         } else {
             return false;
         }

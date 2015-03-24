@@ -60,11 +60,11 @@ function set_vmode(mode){
 }
 
 function page(name,headgen){
-    if(TM['current_page']!=name||headgen) {
+    if((TM['current_page']!=name)||headgen) {
         if (name == 'auth') {
             document.getElementById('header').innerHTML = '';
         } else {
-            if (TM['current_page'] == 'auth' || headgen) {
+            if ((TM['current_page'] == 'auth') || headgen) {
                 document.getElementById('header').innerHTML = PART['header'];
                 document.getElementById('user_name').innerHTML = TM['USER_NAME'];
                 document.getElementById('user_pic').src = TM['USER_PIC'];
@@ -76,9 +76,58 @@ function page(name,headgen){
         if (document.getElementById('currentv')) {
             document.getElementById('currentv').innerHTML = document.getElementById(TM[TM['current_page'] + '_mode']).innerHTML;
         }
+        if(document.getElementById('email')){
+            document.getElementById('email').focus();
+        }
+        if(document.getElementById('calendar')){
+            init_cal();
+        }
     }
 }
 
 function sort(){
 
+}
+
+function auth_send(response) {
+    if (response) {
+        response = JSON.parse(response);
+        if (response['auth'] == false) {
+            //document.getElementById('pass').value='';
+            //alert('Incorrect');
+            document.getElementById('pass').placeholder='Неверный пароль!';
+        } else {
+            TM['UID']=response['auth']['id'];
+            TM['USER_NAME']=response['auth']['full_name'];
+            TM['USER_PIC']=response['auth']['photo'];
+            TM['wait_load']=true;
+            document.getElementById('wrapper').style="-webkit-filter: blur(5px); -moz-filter: blur(5px); -o-filter: blur(5px); -ms-filter: blur(5px); filter: blur(5px);";
+            io({'action':'load_db'});
+        }
+    }else{
+        send = {
+            "action": "auth",
+            "email": document.getElementById('email').value,
+            "pass": document.getElementById('pass').value
+        };
+        document.getElementById('pass').value='';
+        //query = JSON.stringify(send);
+        //Ajax('GET', '/ajax.php?query=' + query + '&rand=' + new Date().getTime(), 'authi');
+        io(send,auth_send);
+    }
+};
+
+function load_enter_pic(response){
+    document.getElementById('pass').placeholder='Пароль';
+    if(response){
+        response = JSON.parse(response);
+        if(response['get_user']!=false){
+            document.getElementById('pic').innerHTML='<div class="avatar"><img src="'+response['get_user']['photo']+'"></div>';
+        }
+    }else {
+        if (TM['apic_loaded'] == false) {
+            TM['apic_loaded']=true;
+            io({"action": "get_user", "email": document.getElementById('email').value},load_enter_pic);
+        }
+    }
 }

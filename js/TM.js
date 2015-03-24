@@ -32,6 +32,11 @@ function handler(response) {
         if(response['DB']){
             DB=response['DB'];
             TM['update_db']=false;
+            if(TM['wait_load']){
+                TM['wait_load']=false;
+                document.getElementById('wrapper').style='';
+                page('tasks',true);
+            }
             // BUILD REFRESH VIEW
             gen_list();
         }
@@ -52,11 +57,12 @@ function handler(response) {
             }
         }
     }else{
-        if(TM['USER_ID']){
-            TM['USER_ID']=false;
+        if(TM['UID']){
+            TM['UID']=false;
             TM['USER_NAME']=false;
             TM['USER_PIC']=false;
             page('auth');
+            clearInterval(TM['AUID']);
         }
     }
 }

@@ -20,11 +20,11 @@ PAGE['tasks']['source']='<div class="left_bar"><div class="action_bar"><a href="
 
 PAGE['auth']=[];
 PAGE['auth']['title']='Авторизация';
-PAGE['auth']['source']='<div class="authbody wrapperautreg"><div class="formauth"><span class="Au1">Авторизация</span>' +
+PAGE['auth']['source']='<div class="authbody wrapperautreg" id="wrapper"><div class="formauth"><span class="Au1">Авторизация</span>' +
 '<form name="auth"><div class="auth" id="E"><div id="pic" style="height: 41px"></div>' +
-'<input type="login" id="emaili" name="email" class="Au2" onfocus="pic_loaded=false;document.getElementById(\'pic\').innerHTML=\'\';" autofocus placeholder="E-mail">' +
+'<input type="login" id="email" name="email" class="Au2" onfocus="TM[\'apic_loaded\']=false;document.getElementById(\'pic\').innerHTML=\'\';" autofocus placeholder="E-mail">' +
 '</div><div class="auth">' +
-'<input name="pass" id="passi" type="password" class="Au2" onfocus="load_enter_pic();" placeholder="Пароль">' +
+'<input name="pass" id="pass" type="password" class="Au2" onfocus="load_enter_pic();" placeholder="Пароль">' +
 '</div><div class="auth" id="In">' +
-'<a href="#" onclick=\'authi();\' class="button box-shadow-outset">Вход</a></div></form>' +
-'<a href="reg" >Регистрация</a><br><a href="recovery.php" >Восстановить пароль</a></div></div>';
+'<a href="#" onclick=\'auth_send();\' class="button box-shadow-outset">Вход</a></div></form>' +
+'<a href="#" onclick="page(\'reg\');">Регистрация</a><br><a href="#" onclick="page(\'recovery\');>Восстановить пароль</a></div></div>';

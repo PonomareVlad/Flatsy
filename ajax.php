@@ -100,7 +100,7 @@ if(defined('USER_ID')) { // Статус авторизации
             $RESPONSE['auth'] = $auth;
         }
         if ($QUERY['action'] == 'get_user') {
-            $RESPONSE['get_user'] = User::get_user($QUERY, true);
+            $RESPONSE['get_user'] = User::get_user($QUERY['email'], true);
         }
     }
 }
