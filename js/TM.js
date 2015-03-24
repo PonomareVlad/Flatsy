@@ -34,7 +34,7 @@ function handler(response) {
             TM['update_db']=false;
             if(TM['wait_load']){
                 TM['wait_load']=false;
-                document.getElementById('wrapper').style='';
+                //document.getElementById('wrapper').style='';
                 page('tasks',true);
             }
             // BUILD REFRESH VIEW

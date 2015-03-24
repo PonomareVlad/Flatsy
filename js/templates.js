@@ -8,6 +8,8 @@ PART['header']='<header><ul class="menu"><li><a href="#" onclick="page(\'tasks\'
 '<div class="arrow"></div><ul><li><a>Мои данные</a></li><li><a>Настройки</a></li><li><a onclick="logout();">Выход</a>' +
 '</li></ul></div></header><div class="arrow-top"></div><div class="calendar"><div id="calendar"></div></div>';
 
+PART['loader']='<div class="overlay"><div class="spinner center"><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div></div></div>'
+
 PAGE['tasks']=[];
 PAGE['tasks']['title']='Задачи';
 PAGE['tasks']['source']='<div class="left_bar"><div class="action_bar"><a href="#" onclick="show_add_task();">' +
@@ -20,7 +22,8 @@ PAGE['tasks']['source']='<div class="left_bar"><div class="action_bar"><a href="
 
 PAGE['auth']=[];
 PAGE['auth']['title']='Авторизация';
-PAGE['auth']['source']='<div class="authbody wrapperautreg" id="wrapper"><div class="formauth"><span class="Au1">Авторизация</span>' +
+PAGE['auth']['source']='<div style="display:none" id="load_pic"></div>' +
+'<div class="authbody wrapperautreg" id="wrapper"><div class="formauth"><span class="Au1">Авторизация</span>' +
 '<form name="auth"><div class="auth" id="E"><div id="pic" style="height: 41px"></div>' +
 '<input type="login" id="email" name="email" class="Au2" onfocus="TM[\'apic_loaded\']=false;document.getElementById(\'pic\').innerHTML=\'\';" autofocus placeholder="E-mail">' +
 '</div><div class="auth">' +
@@ -28,3 +31,4 @@ PAGE['auth']['source']='<div class="authbody wrapperautreg" id="wrapper"><div cl
 '</div><div class="auth" id="In">' +
 '<a href="#" onclick=\'auth_send();\' class="button box-shadow-outset">Вход</a></div></form>' +
 '<a href="#" onclick="page(\'reg\');">Регистрация</a><br><a href="#" onclick="page(\'recovery\');>Восстановить пароль</a></div></div>';
+
