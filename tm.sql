@@ -52,6 +52,8 @@ CREATE TABLE IF NOT EXISTS `files` (
 `idfile` int(10) NOT NULL COMMENT 'ID файла',
   `iduser` int(10) NOT NULL COMMENT 'ID пользователя',
   `namefile` varchar(100) NOT NULL COMMENT 'Имя файла',
+  `idobject` int(10) NOT NULL COMMENT 'ID объекта',
+  `type` varchar(30) NOT NULL COMMENT 'Тип объекта',
   `timeload` datetime NOT NULL COMMENT 'Дата загрузки'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица хранения информации о файлах';
 
