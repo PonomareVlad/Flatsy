@@ -404,7 +404,9 @@ header{
 .galka{
     margin-right: 10px;
 }
-
+#new_comm{
+    width: 100%;
+}
 
 /* Left_bar - end */
 
