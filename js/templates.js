@@ -29,6 +29,6 @@ PAGE['auth']['source']='<div style="display:none" id="load_pic"></div>' +
 '</div><div class="auth">' +
 '<input name="pass" id="pass" type="password" class="Au2" onfocus="load_enter_pic();" placeholder="Пароль">' +
 '</div><div class="auth" id="In">' +
-'<a href="#" onclick=\'auth_send();\' class="button box-shadow-outset">Вход</a></div></form>' +
-'<a href="#" onclick="page(\'reg\');">Регистрация</a><br><a href="#" onclick="page(\'recovery\');>Восстановить пароль</a></div></div>';
+'<a href="#" onclick=\'auth_send();\' class="button box-shadow-outset"><div class="authregbtn">Вход</div></a></div></form>' +
+'<a href="#" onclick="page(\'reg\');"><div class="authregbtn" >Регистрация</div></a></div></div>';
 

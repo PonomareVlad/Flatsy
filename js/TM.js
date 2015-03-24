@@ -53,7 +53,7 @@ function handler(response) {
                     TM['empty_comments']=false;
                 }
                 document.getElementById('comments').innerHTML += source;
-                document.getElementById('comments').scrollTop=9999;
+                document.getElementById('comments').scrollTop = 9999;
             }
         }
     }else{

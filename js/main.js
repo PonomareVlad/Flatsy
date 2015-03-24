@@ -32,6 +32,9 @@ function sizing() {
         // CORRECT HEIGHT
         document.getElementById('comments').style.height = window.innerHeight - document.getElementById('comments').offsetTop - document.getElementById('new_comm').scrollHeight-57 + "px"
     }
+    if(TM['current_page']=='auth'){
+        document.getElementById('wrapper').style.height = window.innerHeight-240+'px'
+    }
 }
 
 function init() {
