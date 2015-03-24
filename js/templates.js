@@ -5,7 +5,7 @@ PART['header']='<header><ul class="menu"><li><a href="#" onclick="page(\'tasks\'
 '<a href="#" onclick="page(\'tasks\');">Задачи</a></li><li><a href="#" onclick="page(\'projects\');">Проекты</a></li><li>' +
 '<a href="#" onclick="page(\'groups\');">Группы</a></li></ul><div class="user_menu">' +
 '<div class="avatar"><img id="user_pic" src="/templates/default/images/avatar.png"></div><div><span id="user_name">USER_NAME</span></div>' +
-'<div class="arrow"></div><ul><li><a>Мои данные</a></li><li><a>Настройки</a></li><li><a onclick="logout();">Выход</a>' +
+'<div class="arrow"></div><ul><li><a>Мои данные</a></li><li><a>Настройки</a></li><li onclick="logout();"><a>Выход</a>' +
 '</li></ul></div></header><div class="arrow-top"></div><div class="calendar"><div id="calendar"></div></div>';
 
 PART['loader']='<div class="overlay"><div class="spinner center"><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div></div></div>'
