@@ -383,6 +383,13 @@ header{
 
 .task_info{
     padding: 7px 0 7px 30px;
+    cursor: pointer;
+    transition-duration: 200ms;
+}
+.task_info:hover{
+    background: #FF9C00;
+    color: #fff;
+    transition-duration: 200ms;
 }
 .alert, .dia, .screpka, .galka{
     float: left;
@@ -532,7 +539,7 @@ header{
     border-radius: 99px;
 }
 .project textarea,.task textarea{
-    width: 100%;
+
     height: 60px;
     margin: 5px 0 0 ;
 }
@@ -601,12 +608,30 @@ h4{
     margin: 0 ;
 }
 
-.group_center ul{
-    list-style: none;
-}
-.group_center ul li ul li{
-    display: inline-block;
+
+.group_table{
+    display: table;
+    width: auto;
+    margin: 20px;
     text-align: center;
-    vertical-align: middle;
+}
+.group_tr{
+    display: table-row;
+}
+.group_tr > div{
+    display: table-row;
+}
+.group_tr > div  div{
+    display: table-cell;
+
+}
+.account{
     width: 150px;
+}
+.account a{
+    line-height: 37px;
+}
+
+.job_pos {
+    width: 120px;
 }
