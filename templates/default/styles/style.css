@@ -539,11 +539,15 @@ header{
 .project input{
     float: right;
 }
-.project_title h4{
-
+h4{
+    margin: 0;
+    padding-top:10px;
 }
 #edit_pen{
     margin: 0 10px;
 }
 
+#page{
+    margin: 0;
+}
 
