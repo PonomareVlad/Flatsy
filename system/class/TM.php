@@ -21,9 +21,12 @@ class TM extends DB
             $add=mysqli_query($MYSQL_CONNECTION,'INSERT INTO task (name,description,initiator,executor,date_start,date_finish,fact_finish,finished,idproject,parentask) VALUES("'.$name.'","'.$description.'","'.USER_ID.'","'.$executor.'","'.$now.'","'.$date_finish.'","'.$date_finish.'","0","'.$idproject.'","'.$parentask.'")');
 
             if($add==1){
-                $chck=mysqli_query($MYSQL_CONNECTION,'SELECT id FROM task WHERE initiator="'.USER_ID.'" AND date_start="'.$now.'"');
-                $chck=mysqli_fetch_array($chck);
-                return $chck['id'];
+                $chck=mysqli_query($MYSQL_CONNECTION,'SELECT * FROM task WHERE initiator="'.USER_ID.'" AND date_start="'.$now.'"');
+                $chck=mysqli_fetch_assoc($chck);
+                $chck['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$chck['initiator'])));
+                $chck['executor_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$chck['executor'])));
+                $chck['projectname'] = @mysqli_fetch_assoc(DB::select('project',['nameproject'],'idproject='.$chck['idproject']))['nameproject'];
+                return $chck;
             }
 
         }else{

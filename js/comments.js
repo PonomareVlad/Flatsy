@@ -27,15 +27,3 @@ function add_comment(){
     document.getElementById('new_comm').value='';
     io({"action":"add_comment","id":TM['CID'],"type":TM['comments_loaded'],"text":text});
 }
-/*
-document.onkeyup = function (e) {
-    e = e || window.event;
-    if (e.keyCode === 13) {
-        if(document.getElementById('new_comm')) {
-            if (document.getElementById('new_comm').value != ''&&new_comm!=true) {
-                add_comment();
-            }
-        }
-    }
-    return false;
-}*/

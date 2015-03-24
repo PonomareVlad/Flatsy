@@ -56,6 +56,18 @@ function handler(response) {
                 document.getElementById('comments').scrollTop = 9999;
             }
         }
+        if(response['add_task']) {
+            if (response['add_task'] == 'EMPTY DATA') {
+                alert('Некорректное заполнение полей');
+            } else {
+                task = response['add_task'];
+                if (TM['current_page'] == 'tasks') {
+                    DB['TASK'][DB['TASK'].length] = task;
+                    gen_list();
+                    view(task['id'], 'task');
+                }
+            }
+        }
     }else{
         if(TM['UID']){
             DB=false;
@@ -76,7 +88,7 @@ function handler(response) {
     }
 }
 
-function tasks_upd() {
+/*function tasks_upd() {
     date = new Date();
     now = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
     source = '';
@@ -197,9 +209,9 @@ function tasks_upd() {
     if(postload_show){
         task_show(postload_show[0],postload_show[1],postload_show[2]?postload_show[2]:false);
     }
-}
+}*/
 
-function task_show(id,type,dat){
+/*function task_show(id,type,dat){
     if(type=='PROJECT'){
         taski=PROJECT[dat]['tasks'][id];
         if(taski['finished']!=1) {
@@ -283,27 +295,29 @@ function task_show(id,type,dat){
     init_comments(taski['id']);
     sizing();
     return false;
-}
+}*/
 
 function show_add_task() {
-    source = '<div class="title"><h4>Создание новой задачи</h4></div><p>' +
+    source = '<div class="task_add"><div class="title">' +
+    '<h4>Создание новой задачи</h4></div><p>' +
     '<label for="name">Постановка задачи</label><input type="text" name="task_title" id="name"></p>' +
     '<p><label for="description">Описание</label>' +
     '<textarea type="text" name="task_description" id="description"></textarea></p>' +
     '<p><label for="date_finish">Дата завершения:</label>' +
     '<input onfocus="this.select();lcs(this);position_calen();" onclick="event.cancelBubble=true;this.select();lcs(this);position_calen()" style="width: 5em;" type="text" name="date_final" id="date_finish">' +
-    ' Часы: <input type="number" min="0" max="23" style="width: 3em;" id="hours">' +
-    ' Минуты: <input type="number" min="0" max="59" style="width: 3em;" id="minuts">' +
+    ' Часы: <input type="number" min="0" max="23" value="12" style="width: 3em;" id="hours">' +
+    ' Минуты: <input type="number" min="0" max="59" value="00" style="width: 3em;" id="minuts">' +
     '<span id="minical"></span></p>' +
-    //'<p><label for="project_id">Проект</label>' +
-    //'<input type="text" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его"></p>' +
+    '<p><label for="project_id">Проект</label>' +
+    '<input type="text" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его"></p>' +
     '<p><label for="executor">Отвественный</label>' +
     '<input size="33" type="text" class="livesearch" placeholder="Начните набирать имя пользователя" name="main_user" value="" autocomplete="off" id="executor">' +
     '<div id="search_advice_wrapper"></div></p>' +
     //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
     //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
-    '<p><input type="button" style="width: 10em;" value="Создать" id="new_send" onclick="send_task();">' +
-    ' * Отображаются, на данный момент,только те поля, которые, функционально, имеют возможность обрабатываться системой!</p>';
+    '<p><input type="image" src="templates/default/images/create.png" class="create" onclick="send_task();">' +
+    //' * Отображаются, на данный момент,только те поля, которые, функционально, имеют возможность обрабатываться системой!' +
+    '<a href="#">Прикрепить</a></p></div>';
     document.getElementById('view').innerHTML = source;
     loadSearch();
     calendar_init();
@@ -436,10 +450,11 @@ function project_show(id) {
     //init_comments(proji['id']);
     sizing();
     return false;
-}
+} // DELETE THIS
 
 function gen_list(){
     source='';
+    empty_list=true;
     date=new Date();
     //day=(date.getDate()<10?'0':'')+date.getDate();month=((date.getMonth()+1)<10?'0':'')+(date.getMonth()+1);
     //today=day+'.'+month+'.'+date.getFullYear();
@@ -453,6 +468,7 @@ function gen_list(){
             DAY=[];
             for(i in DB['TASK']){
                 empty=false;
+                empty_list=false;
                 task=DB['TASK'][i];
                 if(TM['tasks_mode']=='unfinished'&&task['finished']==1){
                     continue;
@@ -462,19 +478,23 @@ function gen_list(){
                 }
                 date_finish=task['date_finish'].split(' ');
                 date_finish=date_finish[0].split('-');
-                key=date_finish[2]+'.'+date_finish[1]+'.'+date_finish[0];
-                DAY[key]=new Date(date_finish[0], date_finish[1]-1, date_finish[2]).getTime();
+                //key=date_finish[2]+'.'+date_finish[1]+'.'+date_finish[0];
+                key=false;
+                time=new Date(date_finish[0], date_finish[1]-1, date_finish[2]).getTime();
+                for(t in DAY){if(DAY[t]==time){key=t}};
+                if(!key){key=DAY.length};
+                DAY[key]=time;
                 //alert(date_finish[0]+'.'+(date_finish[1]-1)+'.'+date_finish[2]);
-                if(!TASK[key]){
-                    TASK[key]=[];
+                if(!TASK[time]){
+                    TASK[time]=[];
                 }
-                num=TASK[key].length;
-                TASK[key][num]='<div class="task_info" onclick="view('+task['id']+',\'task\')"><div>';
-                TASK[key][num]+='</div><div class="task_text">'+task['name']+'</div></div>';
+                num=TASK[time].length;
+                TASK[time][num]='<div class="task_info" onclick="view('+task['id']+',\'task\')"><div>';
+                TASK[time][num]+='</div><div class="task_text">'+task['name']+'</div></div>';
                 // BUILD SORT BY TIME
             }
             DAY.sort();
-            overdue='<div class="task_day"><div class="task_name">Просрочено</div>';
+            overdue='<div class="task_day" id="overdue"><div class="task_name">Просрочено</div>';
             overdue_view=false;
             for(d in DAY) {
                 over=false;
@@ -484,16 +504,19 @@ function gen_list(){
                     overdue_view=true;
                 }else {
                     if (DAY[d] == now) {
-                        source += '<div class="task_day active_day"><div class="task_name">Сегодня</div>';
+                        source += '<div class="task_day" id="'+DAY[d]+'"><div class="task_name">Сегодня</div>';
                     } else {
-                        source += '<div class="task_day"><div class="task_name">' + d + '</div>';
+                        date = new Date(DAY[d]);
+                        day = (date.getDate() < 10 ? '0' : '') + date.getDate();
+                        month = ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1);
+                        source += '<div class="task_day" id="'+DAY[d]+'"><div class="task_name">' + day + '.' + month + '.' + date.getFullYear() + '</div>';
                     }
                 }
-                for (t in TASK[d]) {
+                for (t in TASK[DAY[d]]) {
                     if(over) {
-                        overdue += TASK[d][t];
+                        overdue += TASK[DAY[d]][t];
                     }else{
-                        source += TASK[d][t];
+                        source += TASK[DAY[d]][t];
                     }
                 }
                 if(!over) {
@@ -505,7 +528,7 @@ function gen_list(){
             }
         }
     }
-    document.getElementById('tasks').innerHTML=source; // BUILD WRITE
+    document.getElementById('tasks').innerHTML=empty_list?'Нет задач':source; // BUILD WRITE
 }
 
 function view(id,type){
@@ -518,6 +541,15 @@ function view(id,type){
                 break;
             }
         }
+        date=new Date();
+        now = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+        if(TM['highlight_day']){document.getElementById(TM['highlight_day']).className='task_day';TM['highlight_day']=false;}
+        date_finish=task['date_finish'].split(' ');
+        date_finish=date_finish[0].split('-');
+        time=new Date(date_finish[0], date_finish[1]-1, date_finish[2]).getTime();
+        time=time<now?'overdue':time;
+        TM['highlight_day']=time;
+        document.getElementById(TM['highlight_day']).className='task_day active_day';
         source+='<h4 class="task_title">'+task['name']+'</h4>';
         source+='<p class="task_description">'+task['description']+'</p>';
         source+='<div class="info_task">';

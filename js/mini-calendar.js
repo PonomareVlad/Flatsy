@@ -17,11 +17,12 @@ var mnl=new Array('31','29','31','30','31','30','31','31','30','31','30','31');
 var calvalarr=new Array(42);
 
 function position_calen(){
-    document.getElementById('fc').style.left=document.getElementById('date_finish').offsetLeft+'px';
+    document.getElementById('fc').style.left=document.getElementById('date_finish').offsetLeft+'px'; // САША ОБРАТИ ВНИМАНИЕ!
+    // ЭТО ОТВЕЧАЕТ ЗА ПОЗИЦИОНИРОВАНИЕ КАЛЕНДАРЯ ВЫБОРА ДАТЫ НОВОЙ ЗАДАЧИ
+    // ПОФИКСИ ЕСЛИ УДАСТСЯ
 }
 
-function getObj(objID)
-{
+function getObj(objID) {
     if (document.getElementById) {return document.getElementById(objID);}
     else if (document.all) {return document.all[objID];}
     else if (document.layers) {return document.layers[objID];}
@@ -45,8 +46,7 @@ function isChild(s,d) {
     return false;
 }
 
-function Left(obj)
-{
+function Left(obj){
     var curleft = 0;
     if (obj.offsetParent)
     {
@@ -61,8 +61,7 @@ function Left(obj)
     return curleft;
 }
 
-function Top(obj)
-{
+function Top(obj){
     var curtop = 0;
     if (obj.offsetParent)
     {
@@ -230,8 +229,7 @@ function prepcalendar(hd,cm,cy) {
     }
 }
 
-function upmonth(s)
-{
+function upmonth(s){
     marr=((ccy%4)==0)?mnl:mnn;
 
     ccm+=s;
@@ -254,8 +252,7 @@ function today() {
     prepcalendar('',sccm,sccy);
 }
 
-function addnull(d,m,y)
-{
+function addnull(d,m,y){
     var d0='',m0='';
     if (d<10)d0='0';
     if (m<10)m0='0';
