@@ -550,4 +550,54 @@ h4{
 #page{
     margin: 0;
 }
+.groupflag{
+    width: 300px !important;
+}
+
+.groupflag .action_bar{
+    height: 80px;
+    width: 200px !important;
+}
+.add_group{
+    color: #929292;
+    font-weight: bold;
+}
+.group,.pod_group{
+    background: #EFEFEF;
+    color: #929292;
+}
+.pod_group{
+    background: #fff;
+    padding-left: 10px;
+}
+.group_name{
+    padding: 5px 0 5px 10px;
+    font-weight: bold;
+}
+.group_count{
+    padding: 5px 0 5px 10px;
+}
+
+.group_center{
+    margin-left: 300px;
+    padding: 0;
+}
+.group_center .item_title{
+    background: #EFEFEF;
+    padding: 10px 0 10px 30px;
+}
+.group_center .man{
+    margin-left: 50px;
+    padding: 5px 0;
+}
+.group_center .solution{
+    float: right;
+    margin-right: 30px;
+}
+.group_center .solution a{
+    margin-left: 10px;
+}
+.group_center .title h4{
+    margin: 0 ;
+}
 
