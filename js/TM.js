@@ -535,7 +535,7 @@ function view(id,type){
         '</div>';
         source+='<h4 class="comments_title">Обсуждение</h4><div style="height: 0px" class="comments" id="comments"></div>' +
         '<textarea id="new_comm" placeholder="Ваш комментарий..."></textarea><p>' +
-        '<input type="image" onclick="add_comment()" src="templates/default/images/create.png" class="create"><a href="#">Прикрепить</a></p></div>';
+        '<input type="image" onclick="add_comment()" src="templates/default/images/b_send.png" class="create"><a href="#">Прикрепить</a></p></div>';
         document.getElementById('view').innerHTML=source;
         init_comments(task['id'],type);
         sizing();
