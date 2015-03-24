@@ -463,7 +463,7 @@ function gen_list(){
     if(TM['current_page']=='tasks'){
         if(!DB['TASK']){
             TM['update_db']=true;
-        }else{ // BUILD FILTER
+        }else{
             TASK=[];
             DAY=[];
             for(i in DB['TASK']){
@@ -489,12 +489,12 @@ function gen_list(){
                     TASK[time]=[];
                 }
                 num=TASK[time].length;
-                TASK[time][num]='<div class="task_info" onclick="view('+task['id']+',\'task\')"><div>';
+                TASK[time][num]='<div id="'+task['id']+'" class="task_info'+(TM['highlight_element']==task['id']?' task_active':'')+'" onclick="view('+task['id']+',\'task\')"><div>';
                 TASK[time][num]+='</div><div class="task_text">'+task['name']+'</div></div>';
                 // BUILD SORT BY TIME
             }
             DAY.sort();
-            overdue='<div class="task_day" id="overdue"><div class="task_name">Просрочено</div>';
+            overdue='<div class="task_day'+(TM['highlight_day']=='overdue'?' active_day':'')+'" id="overdue"><div class="task_name">Просрочено</div>';
             overdue_view=false;
             for(d in DAY) {
                 over=false;
@@ -504,12 +504,12 @@ function gen_list(){
                     overdue_view=true;
                 }else {
                     if (DAY[d] == now) {
-                        source += '<div class="task_day" id="'+DAY[d]+'"><div class="task_name">Сегодня</div>';
+                        source += '<div class="task_day'+(TM['highlight_day']==DAY[d]?' active_day':'')+'" id="'+DAY[d]+'"><div class="task_name">Сегодня</div>';
                     } else {
                         date = new Date(DAY[d]);
                         day = (date.getDate() < 10 ? '0' : '') + date.getDate();
                         month = ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1);
-                        source += '<div class="task_day" id="'+DAY[d]+'"><div class="task_name">' + day + '.' + month + '.' + date.getFullYear() + '</div>';
+                        source += '<div class="task_day'+(TM['highlight_day']==DAY[d]?' active_day':'')+'" id="'+DAY[d]+'"><div class="task_name">' + day + '.' + month + '.' + date.getFullYear() + '</div>';
                     }
                 }
                 for (t in TASK[DAY[d]]) {
@@ -544,12 +544,15 @@ function view(id,type){
         date=new Date();
         now = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
         if(TM['highlight_day']){document.getElementById(TM['highlight_day']).className='task_day';TM['highlight_day']=false;}
+        if(TM['highlight_element']){document.getElementById(TM['highlight_element']).className='task_info';TM['highlight_element']=false;}
         date_finish=task['date_finish'].split(' ');
         date_finish=date_finish[0].split('-');
         time=new Date(date_finish[0], date_finish[1]-1, date_finish[2]).getTime();
         time=time<now?'overdue':time;
         TM['highlight_day']=time;
+        TM['highlight_element']=task['id'];
         document.getElementById(TM['highlight_day']).className='task_day active_day';
+        document.getElementById(TM['highlight_element']).className='task_info task_active';
         source+='<h4 class="task_title">'+task['name']+'</h4>';
         source+='<p class="task_description">'+task['description']+'</p>';
         source+='<div class="info_task">';

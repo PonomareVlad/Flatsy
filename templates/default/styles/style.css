@@ -388,12 +388,12 @@ header{
     transition-duration: 200ms;
 }
 .task_info:hover{
-    background: #FF9C00;
-    color: #fff;
+    background: #ffe492;
+    color: #000;
     transition-duration: 200ms;
 }
 .task_active{
-    background: #FF9C00;
+    background: #ffb13e;
     color: #fff;
     transition-duration: 200ms;
 }

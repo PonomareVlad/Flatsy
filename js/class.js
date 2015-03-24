@@ -86,6 +86,8 @@ function page(name,headgen){
             if (document.getElementById('load_pic')) {
                 document.getElementById('load_pic').style = "display:none";
             }
+            TM['highlight_day']=false;
+            TM['highlight_element']=false;
         }
         sizing();
     }
