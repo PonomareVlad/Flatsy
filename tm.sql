@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `auth` (
 CREATE TABLE IF NOT EXISTS `comments` (
 `id` int(10) NOT NULL,
   `idobject` int(10) NOT NULL COMMENT 'ID объекта',
-  `type` int(10) NOT NULL COMMENT 'Тип объекта',
+  `type` varchar(30) NOT NULL COMMENT 'Тип объекта',
   `numbercom` int(10) NOT NULL COMMENT 'Порядковый номер комментария',
   `usercom` int(10) NOT NULL COMMENT 'Владелец комментария',
   `comment` varchar(1000) NOT NULL COMMENT 'Комментарий',
