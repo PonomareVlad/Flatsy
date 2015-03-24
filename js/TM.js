@@ -58,11 +58,20 @@ function handler(response) {
         }
     }else{
         if(TM['UID']){
+            DB=false;
+            clearInterval(TM['AUID']);
+            page('auth');
+            TM=false;
+            TM=[];
             TM['UID']=false;
             TM['USER_NAME']=false;
             TM['USER_PIC']=false;
-            page('auth');
-            clearInterval(TM['AUID']);
+
+            TM['current_page']='auth';
+            TM['tasks_mode']='all';
+            TM['projects_mode']='all';
+            TM['update_db']=false;
+            TM['apic_loaded']=false;
         }
     }
 }
@@ -445,6 +454,12 @@ function gen_list(){
             for(i in DB['TASK']){
                 empty=false;
                 task=DB['TASK'][i];
+                if(TM['tasks_mode']=='unfinished'&&task['finished']==1){
+                    continue;
+                }
+                if(TM['tasks_mode']=='my'&&task['executor']!=TM['UID']){
+                    continue;
+                }
                 date_finish=task['date_finish'].split(' ');
                 date_finish=date_finish[0].split('-');
                 key=date_finish[2]+'.'+date_finish[1]+'.'+date_finish[0];
@@ -497,7 +512,7 @@ function view(id,type){
     source='';
     if(type=='task'){
         task=false;
-        for(t in DB['TASK']){
+        for(t in DB['TASK']){ // Поиск запрошенной задачи в БД
             if(DB['TASK'][t]['id']==id){
                 task=DB['TASK'][t];
                 break;

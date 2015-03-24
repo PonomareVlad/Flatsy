@@ -28,7 +28,7 @@ function sizing() {
     } else if (TM['current_page'] == 'projects') {
         document.getElementById('projects').style.height = window.innerHeight - document.getElementById('projects').offsetTop + 'px';
     }
-    if (TM['comments_loaded']) {
+    if (document.getElementById('comments')) {
         // CORRECT HEIGHT
         document.getElementById('comments').style.height = window.innerHeight - document.getElementById('comments').offsetTop - document.getElementById('new_comm').scrollHeight-57 + "px"
     }

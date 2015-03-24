@@ -1,6 +1,7 @@
 function init_comments(id,type){
     TM['comments_loaded']=type;
     TM['CID']=id;
+    TM['empty_comments']=false;
     io({"action":"get_comments","id":id,"type":type},gen_comments);
 }
 

@@ -86,6 +86,7 @@ function page(name,headgen){
             document.getElementById('load_pic').style="display:none";
         }
     }
+    sizing();
 }
 
 function sort(){
