@@ -50,6 +50,7 @@ function io(array,callback){
 }
 
 function logout(){
+    document.getElementById('main').className='blur';
     io({"action":"logout"});
 }
 
@@ -71,6 +72,11 @@ function page(name,headgen){
                     document.getElementById('user_pic').src = TM['USER_PIC'];
                 }
             }
+            TM['highlight_day']=false;
+            TM['highlight_element']=false;
+            TM['comments_loaded']=false;
+            TM['CID']=false;
+            TM['empty_comments']=false;
             document.title = PAGE[name]['title'] + ' | EasyTM';
             document.getElementById('page').innerHTML = PAGE[name]['source'];
             TM['current_page'] = name;
@@ -86,8 +92,12 @@ function page(name,headgen){
             if (document.getElementById('load_pic')) {
                 document.getElementById('load_pic').style = "display:none";
             }
-            TM['highlight_day']=false;
-            TM['highlight_element']=false;
+            if(name=='tasks'||name=='projects'){
+                gen_list();
+                if(!TM['AUID']) {
+                    TM['AUID'] = setInterval('main()', 1000);
+                }
+            }
         }
         sizing();
     }
@@ -106,10 +116,10 @@ function auth_send(response) {
             TM['USER_PIC']=response['auth']['photo'];
             TM['wait_load']=true;
             document.getElementById('load_pic').innerHTML='<div class="avatar"><img src="'+TM['USER_PIC']+'"></div>'+PART['loader'];
-            document.getElementById('wrapper').style="transition: all 0.5s ease;-webkit-filter: blur(5px); -moz-filter: blur(5px); -o-filter: blur(5px); -ms-filter: blur(5px); filter: blur(5px);";
+            document.getElementById('wrapper').style="transition: all 0.3s ease;-webkit-filter: blur(5px); -moz-filter: blur(5px); -o-filter: blur(5px); -ms-filter: blur(5px); filter: blur(5px);";
             document.getElementById('load_pic').style="position: absolute;left: 48.7%;top: 34.6%;z-index:9999";
-            setTimeout("io({'action':'load_db'})",1000);
-            //io({'action':'load_db'});
+            //setTimeout("io({'action':'load_db'})",1000);
+            io({'action':'load_db'});
         }
     }else{
         send = {

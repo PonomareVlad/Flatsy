@@ -91,6 +91,9 @@ if(defined('USER_ID')) { // Статус авторизации
     $RESPONSE['auth'] = false;
 
     if (isset($QUERY['action'])) {
+        if($QUERY['action']=='check'){
+            $RESPONSE['check'] = false;
+        }
         if ($QUERY['action'] == 'reg') { // Регистрация
             $reg = User::registration($QUERY);
             $RESPONSE['reg'] = $reg;

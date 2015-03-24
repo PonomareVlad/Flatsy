@@ -13,7 +13,7 @@ if(typeof SERVER !='undefined') {
 if(!DB){
     var DB=[];
     TM['update_db']=true;
-}
+}TM['update_db']=true;
 
 function main(){
     io({"action":"check"});
@@ -39,23 +39,24 @@ function sizing() {
 
 function init() {
     if (TM['UID']) {
-
-        page(TM['current_page']!=false?TM['current_page']:'tasks',true);
-
         if(TM['update_db']==true){
+            TM['wait_load']=true;
+            document.getElementById('main').className="blur";
             io({'action':'load_db'});
         }else{
-            gen_list();
+            page(TM['current_page']!=false?TM['current_page']:'tasks',true);
         }
 
-        sizing();
+        //else{
+        //    gen_list();
+        //}
+
+        //sizing();
 
         // AutoUpdate
-        if(!TM['AUID']) {
-            TM['AUID'] = setInterval('main()', 1000);
-        }
 
-        init_cal();
+
+        //init_cal();
 
     }else{
         page('auth',false);

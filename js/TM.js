@@ -34,11 +34,11 @@ function handler(response) {
             TM['update_db']=false;
             if(TM['wait_load']){
                 TM['wait_load']=false;
-                //document.getElementById('wrapper').style='';
                 page('tasks',true);
+                document.getElementById('main').className='noblur';
             }
             // BUILD REFRESH VIEW
-            gen_list();
+            //gen_list();
         }
         if(response['new_comment']){
             // BUILD UPD COMMENT LIST
@@ -74,6 +74,9 @@ function handler(response) {
             clearInterval(TM['AUID']);
             page('auth');
             TM=false;
+            TASK=false;
+            task=false;
+            DAY=false;
             TM=[];
             TM['UID']=false;
             TM['USER_NAME']=false;
@@ -84,6 +87,7 @@ function handler(response) {
             TM['projects_mode']='all';
             TM['update_db']=false;
             TM['apic_loaded']=false;
+            document.getElementById('main').className='noblur';
         }
     }
 }

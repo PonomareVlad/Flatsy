@@ -7,7 +7,7 @@
     <link href="<?=DIR_TMPL?>styles/loader.css" rel="stylesheet" type="text/css" />
 </head>
 <body onload="init();" onresize="sizing();">
-<div class="wrapper">
+<div class="wrapper" id="main">
     <div id="header"></div>
     <div id="page"></div>
 </div>
