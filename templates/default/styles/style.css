@@ -83,6 +83,9 @@
 .avatar img{
     border-radius: 99px;
 }
+.comment img{
+    border-radius: 99px;
+}
 #status {
     color:#777;
 }

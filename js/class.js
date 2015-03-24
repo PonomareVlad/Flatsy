@@ -93,10 +93,6 @@ function page(name,headgen){
     }
 }
 
-function sort(){
-
-}
-
 function auth_send(response) {
     if (response) {
         response = JSON.parse(response);

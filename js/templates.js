@@ -8,7 +8,7 @@ PART['header']='<header><ul class="menu"><li><a href="#" onclick="page(\'tasks\'
 '<div class="arrow"></div><ul><li><a>Мои данные</a></li><li><a>Настройки</a></li><li onclick="logout();"><a>Выход</a>' +
 '</li></ul></div></header><div class="arrow-top"></div><div class="calendar"><div id="calendar"></div></div>';
 
-PART['loader']='<div class="overlay"><div class="spinner center"><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div></div></div>'
+PART['loader']='<div id="overlay" class="overlay"><div id="spinner" class="spinner center"><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div></div></div>'
 
 PAGE['tasks']=[];
 PAGE['tasks']['title']='Задачи';

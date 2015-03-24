@@ -464,6 +464,8 @@ function gen_list(){
         if(!DB['TASK']){
             TM['update_db']=true;
         }else{
+            //highlightd=false;
+            highlight=false;
             TASK=[];
             DAY=[];
             for(i in DB['TASK']){
@@ -489,12 +491,15 @@ function gen_list(){
                     TASK[time]=[];
                 }
                 num=TASK[time].length;
-                TASK[time][num]='<div id="'+task['id']+'" class="task_info'+(TM['highlight_element']==task['id']?' task_active':'')+'" onclick="view('+task['id']+',\'task\')"><div>';
+                TASK[time][num]='<div id="'+task['id']+'" class="task_info';
+                if(TM['highlight_element']==task['id']){
+                    TASK[time][num]+=' task_active';highlight=true;}
+                TASK[time][num]+='" onclick="view('+task['id']+',\'task\')"><div>';
                 TASK[time][num]+='</div><div class="task_text">'+task['name']+'</div></div>';
                 // BUILD SORT BY TIME
             }
             DAY.sort();
-            overdue='<div class="task_day'+(TM['highlight_day']=='overdue'?' active_day':'')+'" id="overdue"><div class="task_name">Просрочено</div>';
+            overdue='<div class="task_day'+(highlight&&TM['highlight_day']=='overdue'?' active_day':'')+'" id="overdue"><div class="task_name">Просрочено</div>';
             overdue_view=false;
             for(d in DAY) {
                 over=false;
@@ -504,12 +509,12 @@ function gen_list(){
                     overdue_view=true;
                 }else {
                     if (DAY[d] == now) {
-                        source += '<div class="task_day'+(TM['highlight_day']==DAY[d]?' active_day':'')+'" id="'+DAY[d]+'"><div class="task_name">Сегодня</div>';
+                        source += '<div class="task_day'+(highlight&&TM['highlight_day']==DAY[d]?' active_day':'')+'" id="'+DAY[d]+'"><div class="task_name">Сегодня</div>';
                     } else {
                         date = new Date(DAY[d]);
                         day = (date.getDate() < 10 ? '0' : '') + date.getDate();
                         month = ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1);
-                        source += '<div class="task_day'+(TM['highlight_day']==DAY[d]?' active_day':'')+'" id="'+DAY[d]+'"><div class="task_name">' + day + '.' + month + '.' + date.getFullYear() + '</div>';
+                        source += '<div class="task_day'+(highlight&&TM['highlight_day']==DAY[d]?' active_day':'')+'" id="'+DAY[d]+'"><div class="task_name">' + day + '.' + month + '.' + date.getFullYear() + '</div>';
                     }
                 }
                 for (t in TASK[DAY[d]]) {
@@ -525,6 +530,10 @@ function gen_list(){
             }
             if(overdue_view){
                 source=overdue+'</div>'+source;
+            }
+            if(highlight==false){
+                TM['highlight_day']=false;
+                TM['highlight_element']=false;
             }
         }
     }
@@ -568,10 +577,12 @@ function view(id,type){
         source+='<div class="files"><div>Прикрепленные файлы</div>' +
         'IS DEVELOPING...'+//'<a href="#user2">Doc1.doc</a>, <a href="#user2">Doc1.doc</a>, <a href="#user2">Doc1.doc</a>' +
         '</div>';
-        source+='<h4 class="comments_title">Обсуждение</h4><div style="height: 0px" class="comments" id="comments"></div>' +
-        '<textarea id="new_comm" placeholder="Ваш комментарий..."></textarea><p>' +
+        source+='<h4 class="comments_title">Обсуждение</h4><div style="height: 0px" class="comments" id="comments">'+PART['loader']+
+        '</div><textarea id="new_comm" placeholder="Ваш комментарий..."></textarea><p>' +
         '<input type="image" onclick="add_comment()" src="templates/default/images/b_send.png" class="create"><a href="#">Прикрепить</a></p></div>';
         document.getElementById('view').innerHTML=source;
+        document.getElementById('spinner').style.position='relative';
+        document.getElementById('overlay').style.marginTop='0px';
         init_comments(task['id'],type);
         sizing();
     }
