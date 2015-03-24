@@ -32,3 +32,10 @@ PAGE['auth']['source']='<div style="display:none" id="load_pic"></div>' +
 '<a href="#" onclick=\'auth_send();\' class="button box-shadow-outset"><div class="authregbtn">Вход</div></a></div></form>' +
 '<a href="#" onclick="page(\'reg\');"><div class="authregbtn" >Регистрация</div></a></div></div>';
 
+PAGE['projects']=[];
+PAGE['projects']['title']='Проекты';
+PAGE['projects']['source']='<div class="left_bar"><div class="action_bar"><a href="#" onclick="show_add_project();">' +
+'<div class="add_task"><div class="plus"><div id="p1"></div><div id="p2"></div><div id="p3"></div>' +
+'<div id="p4"></div></div>Создать проект</div></a>' +
+'<div class="select"></div><div style="clear: both"></div></div><div id="projects"></div></div>' +
+'<div class="center"><div class="project" id="view"></div></div>';

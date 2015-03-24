@@ -108,10 +108,10 @@ function auth_send(response) {
             TM['USER_PIC']=response['auth']['photo'];
             TM['wait_load']=true;
             document.getElementById('load_pic').innerHTML='<div class="avatar"><img src="'+TM['USER_PIC']+'"></div>'+PART['loader'];
-            document.getElementById('wrapper').style="-webkit-filter: blur(5px); -moz-filter: blur(5px); -o-filter: blur(5px); -ms-filter: blur(5px); filter: blur(5px);";
-            document.getElementById('load_pic').style="position: absolute;left: 49%;top: 47%;z-index:9999";
-
-            io({'action':'load_db'});
+            document.getElementById('wrapper').style="transition: all 0.5s ease;-webkit-filter: blur(5px); -moz-filter: blur(5px); -o-filter: blur(5px); -ms-filter: blur(5px); filter: blur(5px);";
+            document.getElementById('load_pic').style="position: absolute;left: 48.7%;top: 34.6%;z-index:9999";
+            setTimeout("io({'action':'load_db'})",2000);
+            //io({'action':'load_db'});
         }
     }else{
         send = {

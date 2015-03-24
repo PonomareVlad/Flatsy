@@ -560,7 +560,7 @@ function view(id,type){
         source+='<div class="task_table"><div>Инициатор</div>' +
         '<a href="#" onclick=\'view('+task['initiator']+',"user")\'>'+task['initiator_name']+'</a></div>';
         source+='<div class="task_table"><div>Исполнитель</div>' +
-        'IS DEVELOPING...'+//'<a href="#" onclick=\'view('+task['initiator']+',"user")\'>'+task['initiator_name']+'</a>' +
+        '<a href="#" onclick=\'view('+task['executor']+',"user")\'>'+task['executor_name']+'</a>' +
         '</div>';
         source+='<div class="files"><div>Прикрепленные файлы</div>' +
         'IS DEVELOPING...'+//'<a href="#user2">Doc1.doc</a>, <a href="#user2">Doc1.doc</a>, <a href="#user2">Doc1.doc</a>' +
