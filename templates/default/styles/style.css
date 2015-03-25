@@ -438,6 +438,7 @@ header{
 /* Task_add*/
 .task_add{
     color: #929292;
+    position: relative;
 }
 .task_add label{
     width: 200px;
@@ -457,7 +458,15 @@ header{
 .task_add textarea{
     height: 120px;
 }
-
+.task_add .create{
+    position: absolute;
+    left: 70%;
+    margin-left: 85px;
+}
+#search_advice_wrapper{
+    left: 200px;
+    margin-top: -15px;
+}
 #date_finish, #hours, #minuts{
     outline: none;
 }
@@ -465,10 +474,12 @@ header{
     float: right;
     height: 25px;
     width: 120px !important;
-    margin-bottom: 10px;
-}
-.create input:focus{
-    outline: none;
+    margin-top: -5px;
+    background: #FF9C00;
+    color: #fff;
+    text-align: center;
+    line-height: 25px;
+    cursor: pointer;
 }
 .create+div{
     font-weight: bold;
