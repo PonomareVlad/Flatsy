@@ -9,14 +9,25 @@ function handler(response) {
                     }
                 }
                 if(response['NEW']['COMMENT']){
+                    offset=3600000*5;
+                    MONTH=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+                    date=new Date(new Date().getTime()+offset);
+                    now = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
                     for(i in response['NEW']['COMMENT']){
                         comment=response['NEW']['COMMENT'][i];
                         // BUILD UPD DB
                         if(comment['idobject']==TM['CID']&&comment['type']==TM['comments_loaded']) {
-                            source = '<div class="comment">' +
-                            '<img src="' + comment['usercom_photo'] + '"><div class="info_text">' +
-                            '<div class="name">' + comment['usercom_name'] + '</div><div class="date">' + comment['datacom'] + '</div>' +
-                            '<p class="text">' + comment['comment'] + '</p></div></div>';
+                            datacom=comment['datacom'].split(' ');
+                            datestring=datacom[0]+'T'+datacom[1];
+                            date= new Date(new Date(datestring).getTime()+offset);
+                            timecom=[(date.getHours()<10?'0':'')+date.getHours(),(date.getMinutes()<10?'0':'')+date.getMinutes()];
+                            datacom=[(date.getDate()<10?'0':'')+date.getDate(),date.getMonth()];
+                            datestring=new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+                            source+='<div class="comment">' +
+                            '<img src="'+comment['usercom_photo']+'"><div class="info_text">' +
+                            '<a href="#" onclick=\'view('+comment['usercom']+',"user")\'><div class="name">'+comment['usercom_name']+'</div></a>' +
+                            '<div class="date">'+(now==datestring?('сегодня в '+timecom[0]+':'+timecom[1]):datacom[0]+' '+MONTH[parseInt(datacom[1])])+'</div>' +
+                            '<p class="text">'+comment['comment']+'</p></div></div>';
                             if(TM['empty_comments']){
                                 document.getElementById('comments').innerHTML='';
                                 TM['empty_comments']=false;
@@ -41,13 +52,23 @@ function handler(response) {
             //gen_list();
         }
         if(response['new_comment']){
-            // BUILD UPD COMMENT LIST
             comment=response['new_comment'];
             if(comment['idobject']==TM['CID']&&comment['type']==TM['comments_loaded']) {
-                source = '<div class="comment">' +
-                '<img src="' + comment['usercom_photo'] + '"><div class="info_text">' +
-                '<div class="name">' + comment['usercom_name'] + '</div><div class="date">' + comment['datacom'] + '</div>' +
-                '<p class="text">' + comment['comment'] + '</p></div></div>';
+                offset=3600000*5;
+                MONTH=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+                date=new Date(new Date().getTime()+offset);
+                now = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+                datacom=comment['datacom'].split(' ');
+                datestring=datacom[0]+'T'+datacom[1];
+                date= new Date(new Date(datestring).getTime()+offset);
+                timecom=[(date.getHours()<10?'0':'')+date.getHours(),(date.getMinutes()<10?'0':'')+date.getMinutes()];
+                datacom=[(date.getDate()<10?'0':'')+date.getDate(),date.getMonth()];
+                datestring=new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+                source+='<div class="comment">' +
+                '<img src="'+comment['usercom_photo']+'"><div class="info_text">' +
+                '<a href="#" onclick=\'view('+comment['usercom']+',"user")\'><div class="name">'+comment['usercom_name']+'</div></a>' +
+                '<div class="date">'+(now==datestring?('сегодня в '+timecom[0]+':'+timecom[1]):datacom[0]+' '+MONTH[parseInt(datacom[1])])+'</div>' +
+                '<p class="text">'+comment['comment']+'</p></div></div>';
                 if(TM['empty_comments']){
                     document.getElementById('comments').innerHTML='';
                     TM['empty_comments']=false;
@@ -457,17 +478,19 @@ function project_show(id) {
 } // DELETE THIS
 
 function gen_list(){
-    source='';
-    empty_list=true;
+    MONTH=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
     date=new Date();
+    now = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
     //day=(date.getDate()<10?'0':'')+date.getDate();month=((date.getMonth()+1)<10?'0':'')+(date.getMonth()+1);
     //today=day+'.'+month+'.'+date.getFullYear();
-    now = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
     // BUILD NEXT DAY
+    tomorrow=new Date(date.getFullYear(), date.getMonth(), date.getDate()+1).getTime();
     if(TM['current_page']=='tasks'){
         if(!DB['TASK']){
             TM['update_db']=true;
         }else{
+            source='';
+            empty_list=true;
             //highlightd=false;
             highlight=false;
             TASK=[];
@@ -514,11 +537,13 @@ function gen_list(){
                 }else {
                     if (DAY[d] == now) {
                         source += '<div class="task_day'+(highlight&&TM['highlight_day']==DAY[d]?' active_day':'')+'" id="'+DAY[d]+'"><div class="task_name">Сегодня</div>';
+                    } else if (DAY[d] == tomorrow) {
+                        source += '<div class="task_day'+(highlight&&TM['highlight_day']==DAY[d]?' active_day':'')+'" id="'+DAY[d]+'"><div class="task_name">Завтра</div>';
                     } else {
                         date = new Date(DAY[d]);
                         day = (date.getDate() < 10 ? '0' : '') + date.getDate();
-                        month = ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1);
-                        source += '<div class="task_day'+(highlight&&TM['highlight_day']==DAY[d]?' active_day':'')+'" id="'+DAY[d]+'"><div class="task_name">' + day + '.' + month + '.' + date.getFullYear() + '</div>';
+                        month = MONTH[date.getMonth()];//((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1);
+                        source += '<div class="task_day'+(highlight&&TM['highlight_day']==DAY[d]?' active_day':'')+'" id="'+DAY[d]+'"><div class="task_name">' + day + ' ' + month + ' ' + date.getFullYear() + '</div>';
                     }
                 }
                 for (t in TASK[DAY[d]]) {
@@ -539,9 +564,15 @@ function gen_list(){
                 TM['highlight_day']=false;
                 TM['highlight_element']=false;
             }
+            document.getElementById('tasks').innerHTML=empty_list?'Нет задач':source; // BUILD WRITE
         }
     }
-    document.getElementById('tasks').innerHTML=empty_list?'Нет задач':source; // BUILD WRITE
+    if(TM['current_page']=='projects'){
+        if(!DB['PROJECT']){
+            TM['update_db']=true;
+        }else{
+        }
+    }
 }
 
 function view(id,type){

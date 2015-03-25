@@ -46,18 +46,6 @@ function init() {
         }else{
             page(TM['current_page']!=false?TM['current_page']:'tasks',true);
         }
-
-        //else{
-        //    gen_list();
-        //}
-
-        //sizing();
-
-        // AutoUpdate
-
-
-        //init_cal();
-
     }else{
         page('auth',false);
     }

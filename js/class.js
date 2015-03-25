@@ -101,6 +101,7 @@ function page(name,headgen){
         }
         sizing();
     }
+    return false;
 }
 
 function auth_send(response) {

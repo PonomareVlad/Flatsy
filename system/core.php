@@ -28,7 +28,8 @@ if(!defined('AJAX')) { // Генерация интерфейса включен
 
     $link = explode('/', $_SERVER['REQUEST_URI']);
     if (!empty($link[1])) {
-        define('PAGE',strtolower($link[1]));
+        $page=($link[1]=='auth'||$link[1]=='tasks'||$link[1]=='projects'||$link[1]=='reg')?$link[1]:'tasks';
+        define('PAGE',strtolower($page));
     }
 
     require_once TMPL.'index.php'; // Подключаем макет странцы
