@@ -54,6 +54,7 @@ function handler(response) {
         if(response['new_comment']){
             comment=response['new_comment'];
             if(comment['idobject']==TM['CID']&&comment['type']==TM['comments_loaded']) {
+                source='';
                 offset=3600000*5;
                 MONTH=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
                 date=new Date(new Date().getTime()+offset);
@@ -70,8 +71,8 @@ function handler(response) {
                 '<div class="date">'+(now==datestring?('сегодня в '+timecom[0]+':'+timecom[1]):datacom[0]+' '+MONTH[parseInt(datacom[1])])+'</div>' +
                 '<p class="text">'+comment['comment']+'</p></div></div>';
                 if(TM['empty_comments']){
-                    document.getElementById('comments').innerHTML='';
                     TM['empty_comments']=false;
+                    document.getElementById('comments').innerHTML='';
                 }
                 document.getElementById('comments').innerHTML += source;
                 document.getElementById('comments').scrollTop = 9999;
