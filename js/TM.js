@@ -341,7 +341,7 @@ function show_add_task() {
     '<div id="search_advice_wrapper"></div></p>' +
     //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
     //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
-    '<p><input type="image" src="templates/default/images/create.png" class="create" onclick="send_task();">' +
+    '<p><div class="create" onclick="send_task();">Создать</div>' +
     //' * Отображаются, на данный момент,только те поля, которые, функционально, имеют возможность обрабатываться системой!' +
     '<a href="#">Прикрепить</a></p></div>';
     document.getElementById('view').innerHTML = source;
@@ -615,7 +615,7 @@ function view(id,type){
         '</div>';
         source+='<h4 class="comments_title">Обсуждение</h4><div style="height: 0px" class="comments" id="comments">'+PART['loader']+
         '</div><textarea id="new_comm" placeholder="Ваш комментарий..."></textarea><p>' +
-        '<input type="image" onclick="add_comment()" src="templates/default/images/b_send.png" class="create"><a href="#">Прикрепить</a></p></div>';
+        '<div class="create" onclick="add_comment()">Отправить</div><a href="#">Прикрепить</a></p></div>';
         document.getElementById('view').innerHTML=source;
         document.getElementById('spinner').style.position='relative';
         document.getElementById('overlay').style.marginTop='0px';
