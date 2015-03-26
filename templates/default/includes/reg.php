@@ -58,10 +58,16 @@
                     <input class="Au2" id="password" type="password" name="password" placeholder="<?=$LANG['PASSWORD']?>">
                 </div>
                 <div class="auth">
-                    <input class="Au2" id="email" type="email" name="email" placeholder="E-mail">
+                    <input class="Au2" id="repeat_password" type="password" name="repeat_password" placeholder="<?=$LANG['REPEAT_PASSWORD']?>">
                 </div>
                 <div class="auth">
-                    <input type="button" class="Au2" name="reg_submit" onclick="regi();return false;" value="Хочу зарегистрироваться">
+                    <input class="Au2" id="email" type="email" name="email" placeholder="<?=$LANG['EMAIL']?>">
+                </div>
+                <div class="auth">
+                    <input class="Au2" id="repeat_email" type="email" name="repeat_email" placeholder="<?=$LANG['REPEAT_EMAIL']?>">
+                </div>
+                <div class="auth">
+                    <div onclick="regi();" class="authregbtn">Хочу зарегистрироваться</div>
                 </div>
             </form>
             <div id="status"></div>
