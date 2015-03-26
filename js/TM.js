@@ -89,6 +89,13 @@ function handler(response) {
                 task = response['add_task'];
                 if (TM['current_page'] == 'tasks') {
                     DB['TASK'][DB['TASK'].length] = task;
+                    if(task['idproject']!=0){
+                        for(p in DB['PROJECT']){
+                            if(DB['PROJECT'][p]['idproject']==task['idproject']){
+                                DB['PROJECT'][p]['tasks'][DB['PROJECT'][p]['tasks'].length]=task;
+                            }
+                        }
+                    }
                     gen_list();
                     view(task['id'], 'task');
                 }
@@ -372,17 +379,19 @@ function show_add_task() {
     ' Минуты: <input type="number" min="0" max="59" value="00" style="width: 3em;" id="minuts">' +
     '<span id="minical"></span></p>' +
     '<p><label for="project_id">Проект</label>' +
-    '<input type="text" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его"></p>' +
+    '<input type="text" class="livesearch_prj" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его">' +
+    '<div class="search_advice_wrapper" id="search_advice_wrapper_prj"></div></p>' +
     '<p><label for="executor">Отвественный</label>' +
-    '<input size="33" type="text" class="livesearch" placeholder="Начните набирать имя пользователя" name="main_user" value="" autocomplete="off" id="executor">' +
-    '<div id="search_advice_wrapper"></div></p>' +
+    '<input type="text" class="livesearch_exe" placeholder="Начните набирать имя пользователя" name="main_user" value="" autocomplete="off" id="executor">' +
+    '<div class="search_advice_wrapper" id="search_advice_wrapper_exe"></div></p>' +
     //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
     //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
     '<p><div class="create" onclick="send_task();">Создать</div>' +
     //' * Отображаются, на данный момент,только те поля, которые, функционально, имеют возможность обрабатываться системой!' +
     '<a href="javascript:void(0)">Прикрепить</a></p></div>';
     document.getElementById('view').innerHTML = source;
-    loadSearch();
+    loadSearch('#executor','#search_advice_wrapper_exe','get_users');
+    loadSearch('#idproject','#search_advice_wrapper_prj','get_projects');
     calendar_init();
     return false;
 }
@@ -391,7 +400,8 @@ function send_task(){
 
     name=document.getElementById('name').value;
     description=document.getElementById('description').value;
-    executor=selected_id;
+    executor=LSEARCH['get_users']['selected_id'];//selected_id;
+    project=LSEARCH['get_projects']['selected_id'];
     hours=document.getElementById('hours').value;
     minuts=document.getElementById('minuts').value;
     date_finish=document.getElementById('date_finish').value;
@@ -404,7 +414,8 @@ function send_task(){
             "name": name,
             "description": description,
             "executor": executor,
-            "date_finish": date_finish
+            "date_finish": date_finish,
+            "project":project
         });
     }
 }

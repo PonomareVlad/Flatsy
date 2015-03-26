@@ -11,7 +11,7 @@ class TM extends DB
             $description=Checkdata($query['description']);
             $executor=Checkdata($query['executor']);
             $date_finish=$query['date_finish'].':00';
-            $idproject='0';
+            $idproject=$query['project']?$query['project']:'0';
             $parentask='0';
 
             if($name==''||$description==''||$executor==''||$date_finish==''){

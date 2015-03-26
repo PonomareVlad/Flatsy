@@ -471,9 +471,34 @@ header{
     left: 70%;
     margin-left: 85px;
 }
-#search_advice_wrapper{
+.search_advice_wrapper{
     left: 200px;
     margin-top: -15px;
+    display:none;
+    width: 250px;
+    background-color: rgb(220,220,220);
+    color: rgb(50,50,50);
+    -moz-opacity: 0.95;
+    opacity: 0.95;
+    filter:alpha(opacity=95);
+    z-index:999;
+    position: absolute;
+}
+.search_advice_wrapper .advice_variant{
+    cursor: pointer;
+    padding: 5px;
+    text-align: left;
+}
+.search_advice_wrapper .advice_variant:hover{
+    color: #000000;
+    background-color: #a8a8ae;
+}
+.search_advice_wrapper .active{
+    cursor: pointer;
+    padding: 5px;
+    color:#FEFFBD;
+    background-color:
+    #818187;
 }
 #date_finish, #hours, #minuts{
     outline: none;
