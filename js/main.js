@@ -20,6 +20,7 @@ if(!DB){
 
 function main(){
     io({"action":"check"});
+    TM['now'] = new Date(new Date().getTime()+TM['time_offset']).getTime();
 }
 
 function sizing() {

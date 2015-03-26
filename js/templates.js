@@ -38,7 +38,7 @@ PAGE['projects']['source']='<div class="left_bar"><div class="action_bar"><a hre
 '<div class="add_task"><div class="plus"><div id="p1"></div><div id="p2"></div><div id="p3"></div>' +
 '<div id="p4"></div></div>Создать проект</div></a>' +
 '<div class="select"></div><div style="clear: both"></div></div><div id="projects"></div></div>' +
-'<div class="center"><div class="project" id="view"></div></div>';
+'<div class="center"><div class="task" id="view"></div></div>';
 
 PAGE['reg']=[];
 PAGE['reg']['title']='Регистрация';

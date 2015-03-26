@@ -94,6 +94,18 @@ function handler(response) {
                 }
             }
         }
+        if(response['add_project']) {
+            if (response['add_project'] == 'EMPTY DATA') {
+                alert('Некорректное заполнение полей');
+            } else {
+                project = response['add_project'];
+                if (TM['current_page'] == 'projects') {
+                    DB['PROJECT'][DB['PROJECT'].length] = project;
+                    gen_list();
+                    view(project['idproject'], 'project');
+                }
+            }
+        }
     }else{
         if(TM['UID']){
             DB=false;
@@ -113,6 +125,9 @@ function handler(response) {
             TM['projects_mode']='all';
             TM['update_db']=false;
             TM['apic_loaded']=false;
+            TM['time_offset']=3600000*5;
+            TM['months']=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+            TM['now'] = new Date(new Date().getTime()+TM['time_offset']).getTime();
             //document.getElementById('main').className='noblur';
         }
     }
@@ -400,26 +415,26 @@ function projects_upd(){
 }
 
 function show_add_project() {
-    source = '<div class="title"><h4>Создание нового проекта</h4></div><p>' +
+    source = '<div class="task_add"><div class="title"><h4>Создание нового проекта</h4></div><p>' +
     '<label for="name">Название</label><input type="text" name="task_title" id="name"></p>' +
     '<p><label for="description">Описание</label>' +
     '<textarea type="text" name="task_description" id="description"></textarea></p>' +
     '<p><label for="date_finish">Дата завершения:</label>' +
     '<input onfocus="this.select();lcs(this);position_calen();" onclick="event.cancelBubble=true;this.select();lcs(this);position_calen()" style="width: 5em;" type="text" name="date_final" id="date_finish">' +
-    ' Часы: <input type="number" min="0" max="23" style="width: 3em;" id="hours">' +
-    ' Минуты: <input type="number" min="0" max="59" style="width: 3em;" id="minuts">' +
+    ' Часы: <input type="number" min="0" value="12" max="23" style="width: 3em;" id="hours">' +
+    ' Минуты: <input type="number" min="0" value="00" max="59" style="width: 3em;" id="minuts">' +
     '<span id="minical"></span></p>' +
         //'<p><label for="project_id">Проект</label>' +
         //'<input type="text" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его"></p>' +
-    //'<p><label for="executor">Отвественный</label>' +
-    //'<input size="33" type="text" class="livesearch" placeholder="Начните набирать имя пользователя" name="main_user" value="" autocomplete="off" id="executor">' +
-    //'<div id="search_advice_wrapper"></div></p>' +
+    '<p><label for="executor">Отвественный</label>' +
+    '<input size="33" type="text" class="livesearch" placeholder="Начните набирать имя пользователя" name="main_user" value="" autocomplete="off" id="executor">' +
+    '<div id="search_advice_wrapper"></div></p>' +
         //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
         //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
-    '<p><input type="button" style="width: 10em;" value="Создать" id="new_send" onclick="new_project();">' +
-    ' * Отображаются, на данный момент,только те поля, которые, функционально, имеют возможность обрабатываться системой!</p>';
+    '<p><div class="create" onclick="new_project();">Создать</div><a href="#">Прикрепить</a></div></p>';
+    //' * Отображаются, на данный момент,только те поля, которые, функционально, имеют возможность обрабатываться системой!</p>';
     document.getElementById('view').innerHTML = source;
-    //loadSearch();
+    loadSearch();
     calendar_init();
     return false;
 }
@@ -642,10 +657,12 @@ function view(id,type){
         for(p in DB['PROJECT']){ // Поиск запрошенного проекта в БД
             if(DB['PROJECT'][p]['idproject']==id){
                 project=DB['PROJECT'][p];
+                id=p;
                 break;
             }
         }
-        if(!DB['PROJECT'][id]['percent']){
+        //alert(DB['PROJECT'][id]['percent']);
+        //if(!DB['PROJECT'][id]['percent']){
         DB['PROJECT'][id]['time_finish'] = new Date(new Date(project['date_finish'].replace(' ', 'T')).getTime()+TM['time_offset']).getTime();
         DB['PROJECT'][id]['time_start'] = new Date(new Date(project['date_start'].replace(' ', 'T')).getTime()+TM['time_offset']).getTime();
         now = TM['now'] - DB['PROJECT'][id]['time_start'];
@@ -655,7 +672,8 @@ function view(id,type){
         DB['PROJECT'][id]['percent_view']=DB['PROJECT'][id]['percent_view'].toString();
         DB['PROJECT'][id]['percent_view'] = DB['PROJECT'][id]['percent_view'].split('.');
         DB['PROJECT'][id]['percent_view'] = DB['PROJECT'][id]['percent_view'][0];
-        if (DB['PROJECT'][id]['percent'] >= 100){DB['PROJECT'][id]['percent'] = 100;DB['PROJECT'][id]['percent_view'] = 'Завершено';}else{DB['PROJECT'][id]['percent_view']+='%';}}
+        if(DB['PROJECT'][id]['percent']<0){DB['PROJECT'][id]['percent']=100;DB['PROJECT'][id]['percent_view']='Завершено'}else
+        if(DB['PROJECT'][id]['percent'] >= 100){DB['PROJECT'][id]['percent'] = 100;DB['PROJECT'][id]['percent_view'] = 'Завершено';}else{DB['PROJECT'][id]['percent_view']+='%';}//}
         if(TM['highlight_day']){document.getElementById(TM['highlight_day']).className='task_day';TM['highlight_day']=false;}
         if(TM['highlight_element']){document.getElementById(TM['highlight_element']).className='task_info';TM['highlight_element']=false;}
         TM['highlight_day']=TM['current_page']=='projects'?'prj'+project['idproject']:false;
