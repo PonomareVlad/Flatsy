@@ -106,6 +106,24 @@ function handler(response) {
                 }
             }
         }
+        if(response['set_task']){
+            if(response['set_task']!=false){
+                if(response['set_task']['param']=='finished'){
+                    if(response['set_task']['value']==1) {
+                        get('fhd' + response['set_task']['id']).innerHTML='<img src="templates/default/images/done.png">';
+                    }else{
+                        get('fhd' + response['set_task']['id']).innerHTML='<img src="templates/default/images/n_done.png">';
+                    }
+
+                }
+                task=false;
+                for(t in DB['TASK']){ // Поиск запрошенной задачи в БД
+                    if(DB['TASK'][t]['id']==response['set_task']['id']){
+                        task=DB['TASK'][t][response['set_task']['param']]=response['set_task']['value'];
+                    }
+                }
+            }
+        }
     }else{
         if(TM['UID']){
             DB=false;
@@ -392,7 +410,15 @@ function send_task(){
 }
 
 function task_end(id){
-    io({"action":"set_task","param":"finished","value":"1","id":id});
+    task=false;
+    for(t in DB['TASK']){ // Поиск запрошенной задачи в БД
+        if(DB['TASK'][t]['id']==id){
+            task=DB['TASK'][t];
+            break;
+        }
+    }
+    value=task['finished']==1?0:1;
+    io({"action":"set_task","param":"finished","value":value,"id":id});
 }
 
 function projects_upd(){
@@ -542,6 +568,11 @@ function gen_list(){
                 if(TM['highlight_element']==task['id']){
                     TASK[time][num]+=' task_active';highlight=true;}
                 TASK[time][num]+='" onclick="view('+task['id']+',\'task\')"><div>';
+                if(task['finished']==1){
+                    TASK[time][num]+='<div id="fhd'+task['id']+'" class="galka" onclick="task_end('+task['id']+')"><img src="templates/default/images/done.png"></div>';
+                }else{
+                    TASK[time][num]+='<div id="fhd'+task['id']+'" class="galka" onclick="task_end('+task['id']+')"><img src="templates/default/images/n_done.png"></div>';
+                }
                 TASK[time][num]+='</div><div class="task_text">'+task['name']+'</div></div>';
                 // BUILD SORT BY TIME
             }
@@ -597,7 +628,13 @@ function gen_list(){
                 source+='<div class="task_day" id="prj'+project['idproject']+'"><div style="cursor: pointer;" onclick="view('+project['idproject']+',\'project\')" class="task_name">'+project['nameproject']+'</div>';
                 for(j in project['tasks']){
                     task=project['tasks'][j];
-                    source+='<div id="'+task['id']+'" class="task_info" onclick="view('+task['id']+',\'task\')"><div></div><div class="task_text">'+task['name']+'</div></div>';
+                    source+='<div id="'+task['id']+'" class="task_info" onclick="view('+task['id']+',\'task\')"><div>';
+                    if(task['finished']==1){
+                        source+='<div id="fhd'+task['id']+'" class="galka" onclick="task_end('+task['id']+')"><img src="templates/default/images/done.png"></div>';
+                    }else{
+                        source+='<div id="fhd'+task['id']+'" class="galka" onclick="task_end('+task['id']+')"><img src="templates/default/images/n_done.png"></div>';
+                    }
+                    source+='</div><div class="task_text">'+task['name']+'</div></div>';
                 }
                 source+='</div>';
             }

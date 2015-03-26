@@ -95,7 +95,7 @@ class TM extends DB
         if($query['param']=='finished'){
             $set=mysqli_query($MYSQL_CONNECTION,'UPDATE task SET finished = '.$query['value'].' WHERE task.id = '.$query['id']);
             if($set==1){
-                return $query['id'];
+                return ["id"=>$query['id'],"param"=>$query['param'],"value"=>$query['value']];
             }else{
                 return false;
             }
