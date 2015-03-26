@@ -49,6 +49,12 @@ function io(array,callback){
     Ajax('GET','/ajax.php?query='+query+'&rand='+new Date().getTime(),callback?callback:handler);
 }
 
+function get(objID) {
+    if (document.getElementById) {return document.getElementById(objID);}
+    else if (document.all) {return document.all[objID];}
+    else if (document.layers) {return document.layers[objID];}
+}
+
 function logout(){
     document.getElementById('main').className='blur';
     io({"action":"logout"});
@@ -176,15 +182,50 @@ function reg_send(response) {
             }
         }
     } else {
+        if(!TM['tmp_reg_email']){
+            document.getElementById('status').innerHTML = 'Адреса e-mail не совпадают';
+            return;
+        }
+        if(!TM['tmp_reg_password']){
+            document.getElementById('status').innerHTML = 'Пароли не совпадают';
+            return;
+        }
+        if(!TM['tmp_reg_password']||!TM['tmp_reg_email']){
+            document.getElementById('status').innerHTML = 'Необходимо заполнить все поля';
+            return;
+        }
         send = {
             "action": "reg",
             "lastname": document.getElementById('lastname').value,
             "firstname": document.getElementById('firstname').value,
             "patronymic": document.getElementById('patronymic').value,
-            "password": document.getElementById('password').value,
-            "email": document.getElementById('email').value
+            "password": TM['tmp_reg_password'],
+            "email": TM['tmp_reg_email']
         };
         TM['tmp_reg_login']=document.getElementById('email').value;
+        TM['tmp_reg_email']=false;
+        TM['tmp_reg_password']=false;
         io(send,reg_send);
     }
 };
+
+function reg_check(mode){
+    if(mode=='password'){
+        p1=get('password').value;
+        p2=get('repeat_password').value;
+        if(p1==p2){
+            TM['tmp_reg_password']=p1;
+        }else{
+            TM['tmp_reg_password']=false;
+        }
+    }
+    if(mode=='email'){
+        e1=get('email').value;
+        e2=get('repeat_email').value;
+        if(e1==e2){
+            TM['tmp_reg_email']=e1;
+        }else{
+            TM['tmp_reg_email']=false;
+        }
+    }
+}

@@ -44,13 +44,13 @@ PAGE['reg']=[];
 PAGE['reg']['title']='Регистрация';
 PAGE['reg']['source']='<div class="regbody wrapperautreg" id="wrapper"><div class="formreg">' +
 '<span class="Au1">Регистрация</span><form name="reg"><div class="auth">' +
+'<input class="Au2" id="email" type="email" name="email" placeholder="E-mail"></div><div class="auth">' +
+'<input class="Au2" id="repeat_email" onkeyup="reg_check(\'email\')" type="email" name="repeat_email" placeholder="Повторите e-mail"></div><div class="auth">' +
 '<input id="lastname" class="Au2" type="text" name="lastname" placeholder="Фамилия"></div><div class="auth">' +
 '<input class="Au2" id="firstname" type="text" name="firstname" placeholder="Имя"></div><div class="auth">' +
 '<input class="Au2" id="patronymic" type="text" name="patronymic" placeholder="Отчество"></div><div class="auth">' +
 '<input class="Au2" id="password" type="password" name="password" placeholder="Пароль"></div><div class="auth">' +
-'<input class="Au2" id="repeat_password" type="password" name="repeat_password" placeholder="Повторите пароль"></div>' +
-'<div class="auth"><input class="Au2" id="email" type="email" name="email" placeholder="E-mail"></div><div class="auth">' +
-'<input class="Au2" id="repeat_email" type="email" name="repeat_email" placeholder="Повторите e-mail"></div><div class="auth">' +
-'<div onclick="reg_send()" class="authregbtn">Хочу зарегистрироваться</div>' +
+'<input class="Au2" id="repeat_password" onkeyup="reg_check(\'password\')" type="password" name="repeat_password" placeholder="Повторите пароль"></div>' +
+'<div class="auth"><div onclick="reg_send()" class="authregbtn">Хочу зарегистрироваться</div>' +
 '<div onclick="page(\'auth\');" class="authregbtn">Авторизация</div></div>' +
 '</form><div id="status"></div></div></div>';
