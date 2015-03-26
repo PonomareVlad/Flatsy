@@ -25,7 +25,7 @@ function handler(response) {
                             datestring=new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
                             source+='<div class="comment">' +
                             '<img src="'+comment['usercom_photo']+'"><div class="info_text">' +
-                            '<a href="#" onclick=\'view('+comment['usercom']+',"user")\'><div class="name">'+comment['usercom_name']+'</div></a>' +
+                            '<a href="javascript:void(0)" onclick=\'view('+comment['usercom']+',"user")\'><div class="name">'+comment['usercom_name']+'</div></a>' +
                             '<div class="date">'+(now==datestring?('сегодня в '+timecom[0]+':'+timecom[1]):datacom[0]+' '+MONTH[parseInt(datacom[1])])+'</div>' +
                             '<p class="text">'+comment['comment']+'</p></div></div>';
                             if(TM['empty_comments']){
@@ -45,8 +45,12 @@ function handler(response) {
             TM['update_db']=false;
             if(TM['wait_load']){
                 TM['wait_load']=false;
-                page('tasks',true);
-                document.getElementById('main').className='noblur';
+                //alert('load page..');
+                TM['current_page']=(TM['current_page']=='auth'||TM['current_page']=='reg')?'tasks':TM['current_page'];
+                //TM['current_page']=PAGE[TM['current_page']]?TM['current_page']:'tasks';
+                document.getElementById('main').className='blur';
+                page(TM['current_page']==false?'tasks':TM['current_page'],true);
+                //alert('loaded');
             }
             // BUILD REFRESH VIEW
             //gen_list();
@@ -67,7 +71,7 @@ function handler(response) {
                 datestring=new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
                 source+='<div class="comment">' +
                 '<img src="'+comment['usercom_photo']+'"><div class="info_text">' +
-                '<a href="#" onclick=\'view('+comment['usercom']+',"user")\'><div class="name">'+comment['usercom_name']+'</div></a>' +
+                '<a href="javascript:void(0)" onclick=\'view('+comment['usercom']+',"user")\'><div class="name">'+comment['usercom_name']+'</div></a>' +
                 '<div class="date">'+(now==datestring?('сегодня в '+timecom[0]+':'+timecom[1]):datacom[0]+' '+MONTH[parseInt(datacom[1])])+'</div>' +
                 '<p class="text">'+comment['comment']+'</p></div></div>';
                 if(TM['empty_comments']){
@@ -109,7 +113,7 @@ function handler(response) {
             TM['projects_mode']='all';
             TM['update_db']=false;
             TM['apic_loaded']=false;
-            document.getElementById('main').className='noblur';
+            //document.getElementById('main').className='noblur';
         }
     }
 }
@@ -135,7 +139,7 @@ function handler(response) {
             }
         }
         empty=false;
-        source += '<a href="#" onclick="task_show('+i+',\'PAST\');"><div class="task_info">' + TASK['PAST'][i]['name'] + '</div></a>';
+        source += '<a href="javascript:void(0)" onclick="task_show('+i+',\'PAST\');"><div class="task_info">' + TASK['PAST'][i]['name'] + '</div></a>';
     }
     if(empty==true){source+='<div class="task_info">(нет элементов)</div>'};
     empty=true;
@@ -155,7 +159,7 @@ function handler(response) {
             }
         }
         empty=false;
-        source += '<a href="#" onclick="task_show('+i+',\'TODAY\');"><div class="task_info">' + TASK['TODAY'][i]['name'] + '</div></a>';
+        source += '<a href="javascript:void(0)" onclick="task_show('+i+',\'TODAY\');"><div class="task_info">' + TASK['TODAY'][i]['name'] + '</div></a>';
     }
     if(empty==true){source+='<div class="task_info">(нет элементов)</div>'};
     empty=true;
@@ -190,7 +194,7 @@ function handler(response) {
             }
             ;
             dates_num[cur] = day;
-            dates[cur] += '<a href="#" onclick="task_show('+i+',\'CURRENT\','+d+');"><div class="task_info">' + TASK['CURRENT'][d][i]['name'] + '</div></a>';
+            dates[cur] += '<a href="javascript:void(0)" onclick="task_show('+i+',\'CURRENT\','+d+');"><div class="task_info">' + TASK['CURRENT'][d][i]['name'] + '</div></a>';
         }
     }
     for (d in TASK['FUTURE']) {
@@ -221,7 +225,7 @@ function handler(response) {
             }
             ;
             dates_num[cur] = day;
-            dates[cur] += '<a href="#" onclick="task_show('+i+',\'FUTURE\','+d+');"><div class="task_info">' + TASK['FUTURE'][d][i]['name'] + '</div></a>';
+            dates[cur] += '<a href="javascript:void(0)" onclick="task_show('+i+',\'FUTURE\','+d+');"><div class="task_info">' + TASK['FUTURE'][d][i]['name'] + '</div></a>';
         }
     }
     for (f in dates) {
@@ -343,7 +347,7 @@ function show_add_task() {
     //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
     '<p><div class="create" onclick="send_task();">Создать</div>' +
     //' * Отображаются, на данный момент,только те поля, которые, функционально, имеют возможность обрабатываться системой!' +
-    '<a href="#">Прикрепить</a></p></div>';
+    '<a href="javascript:void(0)">Прикрепить</a></p></div>';
     document.getElementById('view').innerHTML = source;
     loadSearch();
     calendar_init();
@@ -383,9 +387,9 @@ function projects_upd(){
             Show_it=false;
             postload_show=i;
         }
-        source+='<a href="#" onclick="project_show('+i+');"><div class="task_day" id="'+PROJECT[i]['idproject']+'"><div class="task_name">'+PROJECT[i]['nameproject']+'</div></a>';
+        source+='<a href="javascript:void(0)" onclick="project_show('+i+');"><div class="task_day" id="'+PROJECT[i]['idproject']+'"><div class="task_name">'+PROJECT[i]['nameproject']+'</div></a>';
         for(j in PROJECT[i]['tasks']){
-            source += '<a href="#" onclick="task_show('+j+',\'PROJECT\','+i+');"><div class="task_info">' + PROJECT[i]['tasks'][j]['name'] + '</div></a>';
+            source += '<a href="javascript:void(0)" onclick="task_show('+j+',\'PROJECT\','+i+');"><div class="task_info">' + PROJECT[i]['tasks'][j]['name'] + '</div></a>';
         }
         source+='</div>';
     }
@@ -572,6 +576,17 @@ function gen_list(){
         if(!DB['PROJECT']){
             TM['update_db']=true;
         }else{
+            source='';
+            for(i in DB['PROJECT']){
+                project=DB['PROJECT'][i];
+                source+='<div class="task_day" id="prj'+project['idproject']+'"><div style="cursor: pointer;" onclick="view('+project['idproject']+',\'project\')" class="task_name">'+project['nameproject']+'</div>';
+                for(j in project['tasks']){
+                    task=project['tasks'][j];
+                    source+='<div id="'+task['id']+'" class="task_info" onclick="view('+task['id']+',\'task\')"><div></div><div class="task_text">'+task['name']+'</div></div>';
+                }
+                source+='</div>';
+            }
+            document.getElementById('projects').innerHTML=source;
         }
     }
 }
@@ -594,32 +609,88 @@ function view(id,type){
         date_finish=date_finish[0].split('-');
         time=new Date(date_finish[0], date_finish[1]-1, date_finish[2]).getTime();
         time=time<now?'overdue':time;
-        TM['highlight_day']=time;
+        TM['highlight_day']=TM['current_page']=='tasks'?time:'prj'+task['idproject'];
         TM['highlight_element']=task['id'];
         document.getElementById(TM['highlight_day']).className='task_day active_day';
         document.getElementById(TM['highlight_element']).className='task_info task_active';
-        source+='<h4 class="task_title">'+task['name']+'</h4>';
+        source+='<div class="task_title"><h4>'+task['name']+'<img src="templates/default/images/b_pan_hover.png" id="edit_pen"></h4></div>';
         source+='<p class="task_description">'+task['description']+'</p>';
         source+='<div class="info_task">';
         if(task['idproject']!=0){
             source+='<div class="task_table"><div>Проект</div>' +
-            '<a href="#" onclick=\'view('+task['idproject']+',"project")\'>'+task['projectname']+'</a></div>';
+            '<a href="javascript:void(0)" onclick=\'TM["tmp_task_id"]='+task['id']+';view('+task['idproject']+',"project")\'>'+task['projectname']+'</a></div>';
         }
         source+='<div class="task_table"><div>Инициатор</div>' +
-        '<a href="#" onclick=\'view('+task['initiator']+',"user")\'>'+task['initiator_name']+'</a></div>';
+        '<a href="javascript:void(0)" onclick=\'view('+task['initiator']+',"user")\'>'+task['initiator_name']+'</a></div>';
         source+='<div class="task_table"><div>Исполнитель</div>' +
-        '<a href="#" onclick=\'view('+task['executor']+',"user")\'>'+task['executor_name']+'</a>' +
+        '<a href="javascript:void(0)" onclick=\'view('+task['executor']+',"user")\'>'+task['executor_name']+'</a>' +
         '</div>';
         source+='<div class="files"><div>Прикрепленные файлы</div>' +
         'IS DEVELOPING...'+//'<a href="#user2">Doc1.doc</a>, <a href="#user2">Doc1.doc</a>, <a href="#user2">Doc1.doc</a>' +
         '</div>';
         source+='<h4 class="comments_title">Обсуждение</h4><div style="height: 0px" class="comments" id="comments">'+PART['loader']+
         '</div><textarea id="new_comm" placeholder="Ваш комментарий..."></textarea><p>' +
-        '<div class="create" onclick="add_comment()">Отправить</div><a href="#">Прикрепить</a></p></div>';
+        '<div class="create" onclick="add_comment()">Отправить</div><a href="javascript:void(0)">Прикрепить</a></p></div>';
         document.getElementById('view').innerHTML=source;
         document.getElementById('spinner').style.position='relative';
         document.getElementById('overlay').style.marginTop='0px';
         init_comments(task['id'],type);
+        sizing();
+    }
+    if(type=='project'){
+        var project=false;
+        for(p in DB['PROJECT']){ // Поиск запрошенного проекта в БД
+            if(DB['PROJECT'][p]['idproject']==id){
+                project=DB['PROJECT'][p];
+                break;
+            }
+        }
+        if(!DB['PROJECT'][id]['percent']){
+        DB['PROJECT'][id]['time_finish'] = new Date(new Date(project['date_finish'].replace(' ', 'T')).getTime()+TM['time_offset']).getTime();
+        DB['PROJECT'][id]['time_start'] = new Date(new Date(project['date_start'].replace(' ', 'T')).getTime()+TM['time_offset']).getTime();
+        now = TM['now'] - DB['PROJECT'][id]['time_start'];
+        difference = (DB['PROJECT'][id]['time_finish'] - DB['PROJECT'][id]['time_start']) / 100;
+        DB['PROJECT'][id]['percent'] = now / difference;
+        DB['PROJECT'][id]['percent_view']=DB['PROJECT'][id]['percent'];
+        DB['PROJECT'][id]['percent_view']=DB['PROJECT'][id]['percent_view'].toString();
+        DB['PROJECT'][id]['percent_view'] = DB['PROJECT'][id]['percent_view'].split('.');
+        DB['PROJECT'][id]['percent_view'] = DB['PROJECT'][id]['percent_view'][0];
+        if (DB['PROJECT'][id]['percent'] >= 100){DB['PROJECT'][id]['percent'] = 100;DB['PROJECT'][id]['percent_view'] = 'Завершено';}else{DB['PROJECT'][id]['percent_view']+='%';}}
+        if(TM['highlight_day']){document.getElementById(TM['highlight_day']).className='task_day';TM['highlight_day']=false;}
+        if(TM['highlight_element']){document.getElementById(TM['highlight_element']).className='task_info';TM['highlight_element']=false;}
+        TM['highlight_day']=TM['current_page']=='projects'?'prj'+project['idproject']:false;
+        TM['highlight_element']=TM['tmp_task_id']?TM['tmp_task_id']:false;
+        TM['tmp_task_id']=false;
+        if(TM['highlight_day']!=false){document.getElementById(TM['highlight_day']).className='task_day active_day';}
+        if(TM['highlight_element']!=false){document.getElementById(TM['highlight_element']).className='task_info task_active';}
+        date = new Date(new Date(new Date(project['date_start'].replace(' ', 'T')).getTime()+TM['time_offset']).getTime());
+        day = (date.getDate() < 10 ? '0' : '') + date.getDate();month = TM['months'][date.getMonth()];
+        date_start='с '+day+' '+month+' '+date.getFullYear();
+        date = new Date(new Date(new Date(project['date_finish'].replace(' ', 'T')).getTime()+TM['time_offset']).getTime());
+        day = (date.getDate() < 10 ? '0' : '') + date.getDate();month = TM['months'][date.getMonth()];
+        date_finish='по '+day+' '+month+' '+date.getFullYear();
+        source+='<div class="project_title"><h4>'+project['nameproject'];
+        source+='<img src="templates/default/images/b_pan_hover.png" id="edit_pen"></h4></div>';
+        source+='<p class="project_description">'+project['description']+'</p><div class="project_time">';
+        source+='<div class="date_start">'+date_start+'</div><div class="date_end">'+date_finish+
+        '</div><div class="project_time_all">';
+        source+='<div class="countpercent">'+project['percent_view']+'</div><div class="project_rime_cur" style="width: '+project['percent']+'%"></div></div></div>';
+        source+='<div class="task_table"><div>Инициатор</div><a href="#user2">Иванов Иван</a></div>';
+        source+='<div class="task_table"><div>Исполнители</div>';
+        // BUILD EXECUTORS
+        source+='</div>';
+        if(project['files']) {
+            source += '<div class="files"><div>Прикрепленные файлы</div>';
+            // BUILD FILES
+            source += '</div>';
+        }
+        source+='<h4 class="comments_title">Обсуждение</h4><div style="height: 0px" class="comments" id="comments">'+PART['loader']+
+        '</div><textarea id="new_comm" placeholder="Ваш комментарий..."></textarea><p>' +
+        '<div class="create" onclick="add_comment()">Отправить</div><a href="javascript:void(0)">Прикрепить</a></p></div>';
+        document.getElementById('view').innerHTML=source;
+        document.getElementById('spinner').style.position='relative';
+        document.getElementById('overlay').style.marginTop='0px';
+        init_comments(project['idproject'],type);
         sizing();
     }
 }

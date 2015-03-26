@@ -87,8 +87,6 @@ class User extends DB{
 
     public static function registration($array)
     {
-        global $MYSQL_CONNECTION;
-
         if (isset($array['lastname']) && isset($array['firstname']) && isset($array['patronymic']) && isset($array['password']) && isset($array['email'])) {
 
             $lastname = Checkdata($array['lastname'], true);
@@ -100,7 +98,7 @@ class User extends DB{
             if ($lastname == '' || $firstname == '' || $password == '' || $patronymic == '' || $email == '') {
                 return 'Bad data';
             }
-            $testlogin = mysqli_query($MYSQL_CONNECTION,'SELECT id FROM users WHERE mail="' . $email . '"'); // Запрос на поиск указанного логина(почты) среди зарегестрированных пользователей
+            $testlogin = DB::select('users',['id'],'mail="'.$email.'"'); // Запрос на поиск указанного логина(почты) среди зарегестрированных пользователей
             $testlogin = mysqli_fetch_assoc($testlogin);
             if (isset($testlogin['id'])) {
                 return 'Login exists';
@@ -110,7 +108,7 @@ class User extends DB{
             $reg_date = date("y-m-d G:i:s");//date("y-m-d G:i:s");//getdate("y-m-d G:i:s"); date("y-m-d G:i:s");
             $last_act = $reg_date;
 
-            $query = mysqli_query($MYSQL_CONNECTION,'INSERT INTO users (mail,password,firstname,lastname,patronymic,last_act,reg_date,photo) VALUES("' . $email .
+            $query = DB::inserti('users','(mail,password,firstname,lastname,patronymic,last_act,reg_date,photo) VALUES("' . $email .
                 '","' . $password .
                 '","' . $firstname .
                 '","' . $lastname .

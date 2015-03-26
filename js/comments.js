@@ -23,7 +23,7 @@ function gen_comments(response){
             datestring=new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
             source+='<div class="comment">' +
             '<img src="'+comm[i]['usercom_photo']+'"><div class="info_text">' +
-            '<a href="#" onclick=\'view('+comm[i]['usercom']+',"user")\'><div class="name">'+comm[i]['usercom_name']+'</div></a>' +
+            '<a href="javascript:void(0)" onclick=\'view('+comm[i]['usercom']+',"user")\'><div class="name">'+comm[i]['usercom_name']+'</div></a>' +
             '<div class="date">'+(now==datestring?('сегодня в '+timecom[0]+':'+timecom[1]):datacom[0]+' '+MONTH[parseInt(datacom[1])])+'</div>' +
             '<p class="text">'+comm[i]['comment']+'</p></div></div>';
         }

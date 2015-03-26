@@ -4,6 +4,9 @@ TM['tasks_mode']='all';
 TM['projects_mode']='all';
 TM['update_db']=false;
 TM['apic_loaded']=false;
+TM['time_offset']=3600000*5;
+TM['months']=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+TM['now'] = new Date(new Date().getTime()+TM['time_offset']).getTime();
 if(typeof SERVER !='undefined') {
     TM['UID'] = SERVER['ID'];
     TM['USER_NAME'] = SERVER['NAME'];
@@ -39,12 +42,14 @@ function sizing() {
 
 function init() {
     if (TM['UID']) {
+        TM['current_page']=(TM['current_page']=='auth'||TM['current_page']=='reg')?'tasks':TM['current_page'];
+        TM['current_page']=PAGE[TM['current_page']]?TM['current_page']:'tasks';
         if(TM['update_db']==true){
             TM['wait_load']=true;
             document.getElementById('main').className="blur";
             io({'action':'load_db'});
         }else{
-            page(TM['current_page']!=false?TM['current_page']:'tasks',true);
+            page(TM['current_page']==false?'tasks':TM['current_page'],true);
         }
     }else{
         page('auth',false);

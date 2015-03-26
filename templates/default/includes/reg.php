@@ -39,9 +39,9 @@
     <link href="/<?=DIR_TMPL?>styles/style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body onload="init();" class="wrapperautreg">
+<body onload="init();" >
 <div class="wrapper">
-    <div class="regbody">
+    <div class="regbody wrapperautreg" id="wrapper">
         <div class="formreg">
             <span class="Au1">Регистрация</span>
             <form name="reg">

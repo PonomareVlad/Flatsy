@@ -63,10 +63,10 @@ function set_vmode(mode){
 function page(name,headgen){
     if(typeof PAGE[name]!='undefined') {
         if ((TM['current_page'] != name) || headgen) {
-            if (name == 'auth') {
+            if (name == 'auth'||name == 'reg') {
                 document.getElementById('header').innerHTML = '';
             } else {
-                if ((TM['current_page'] == 'auth') || headgen) {
+                if ((TM['current_page'] == 'auth'||TM['current_page'] == 'reg') || headgen) {
                     document.getElementById('header').innerHTML = PART['header'];
                     document.getElementById('user_name').innerHTML = TM['USER_NAME'];
                     document.getElementById('user_pic').src = TM['USER_PIC'];
@@ -78,6 +78,7 @@ function page(name,headgen){
             TM['CID']=false;
             TM['empty_comments']=false;
             document.title = PAGE[name]['title'] + ' | EasyTM';
+            history.pushState(null,null,name);
             document.getElementById('page').innerHTML = PAGE[name]['source'];
             TM['current_page'] = name;
             if (document.getElementById('currentv')) {
@@ -98,6 +99,9 @@ function page(name,headgen){
                     TM['AUID'] = setInterval('main()', 1000);
                 }
             }
+            //setTimeout(document.getElementById('main').className='noblur',2000);
+            document.getElementById('main').className='noblur';
+            //alert(name);
         }
         sizing();
     }
@@ -149,3 +153,38 @@ function load_enter_pic(response){
         }
     }
 }
+
+function reg_send(response) {
+    if (response) {
+        response = JSON.parse(response);
+        if (response['reg']) {
+            if (response['reg'] == true) {
+                document.getElementById('status').innerHTML = 'Вы успешно зарегистрированы!';
+                page('auth');
+                document.getElementById('email').value=TM['tmp_reg_login'];
+                document.getElementById('pass').focus();
+                TM['tmp_reg_login']=false;
+            }else if(response['reg']=='Login exists') {
+                document.getElementById('status').innerHTML = 'Почтовый адрес уже зарегистрирован';
+            }else if(response['reg']=='Bad data'){
+                document.getElementById('status').innerHTML = 'Вы ввели некорректные данные';
+            }else if(response['reg']=='Empty data'){
+                document.getElementById('status').innerHTML = 'Необходимо заполнить все поля';
+            }else{
+                document.getElementById('status').innerHTML = 'Ошибка БД: ' +
+                ''+response['reg'];
+            }
+        }
+    } else {
+        send = {
+            "action": "reg",
+            "lastname": document.getElementById('lastname').value,
+            "firstname": document.getElementById('firstname').value,
+            "patronymic": document.getElementById('patronymic').value,
+            "password": document.getElementById('password').value,
+            "email": document.getElementById('email').value
+        };
+        TM['tmp_reg_login']=document.getElementById('email').value;
+        io(send,reg_send);
+    }
+};

@@ -384,12 +384,19 @@ header{
     background: #efefef;
     padding: 10px 0 10px 30px;
     cursor: default;
+    transition-duration: 200ms;
+}
+
+.task_name:hover{
+    background: #acacac;
+    transition-duration: 200ms;
 }
 
 .active_day .task_name{
     background: #FF9C00;
     color: #fff;
     font-weight: bold;
+    transition-duration: 200ms;
 }
 
 .task_info{
