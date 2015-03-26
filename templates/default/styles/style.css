@@ -641,11 +641,13 @@ h4{
 .group_table{
     display: table;
     width: auto;
-    margin: 20px;
+    margin: 5px 0 0 20px;
     text-align: center;
+
 }
-.group_tr{
-    display: table-row;
+.group_tr {
+    border-bottom: 1px solid #EFEFEF;
+    padding: 5px 0;
 }
 .group_tr > div{
     display: table-row;
@@ -660,7 +662,21 @@ h4{
 .account a{
     line-height: 37px;
 }
-
+.account img{
+    float: left;
+}
 .job_pos {
     width: 120px;
+}
+.scroll div{
+    width:  200px;
+}
+.crest{
+    position: relative;
+    width: 40px;
+    cursor: pointer;
+}
+.crest img{
+    position: absolute;
+    top: 10px;
 }
