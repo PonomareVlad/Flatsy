@@ -51,5 +51,6 @@ PAGE['reg']['source']='<div class="regbody wrapperautreg" id="wrapper"><div clas
 '<input class="Au2" id="repeat_password" type="password" name="repeat_password" placeholder="Повторите пароль"></div>' +
 '<div class="auth"><input class="Au2" id="email" type="email" name="email" placeholder="E-mail"></div><div class="auth">' +
 '<input class="Au2" id="repeat_email" type="email" name="repeat_email" placeholder="Повторите e-mail"></div><div class="auth">' +
-'<div onclick="reg_send()" class="authregbtn">Хочу зарегистрироваться</div></div>' +
+'<div onclick="reg_send()" class="authregbtn">Хочу зарегистрироваться</div>' +
+'<div onclick="page(\'auth\');" class="authregbtn">Авторизация</div></div>' +
 '</form><div id="status"></div></div></div>';

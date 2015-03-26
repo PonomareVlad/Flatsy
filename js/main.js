@@ -38,6 +38,9 @@ function sizing() {
     if(TM['current_page']=='auth'){
         document.getElementById('wrapper').style.height = window.innerHeight-240+'px'
     }
+    if(TM['current_page']=='reg'){
+        document.getElementById('wrapper').style.height = window.innerHeight-100+'px'
+    }
 }
 
 function init() {

@@ -15,7 +15,8 @@
 .regbody {	 /*Стиль страницы для формы регистрации */
     font-family: Tahoma,Geneva,sans-serif;
     text-align: center;
-    padding: calc(100% - 1270px) 20px;
+    /*padding: calc(100% - 1270px) 20px;*/
+    padding: 50px 20px;
     font-size:18px;
 }
 .authregbtn{
@@ -77,7 +78,7 @@
     background-size:100% 100%;
 }
 .formreg{
-    height: 450px;
+    height: 500px;
 }
 
 .avatar img{
