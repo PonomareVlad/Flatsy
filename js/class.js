@@ -99,7 +99,7 @@ function page(name,headgen){
             if (document.getElementById('load_pic')) {
                 document.getElementById('load_pic').style = "display:none";
             }
-            if(name=='tasks'||name=='projects'){
+            if(name=='tasks'||name=='projects'||name=='groups'){
                 gen_list();
                 if(!TM['AUID']) {
                     TM['AUID'] = setInterval('main()', 1000);

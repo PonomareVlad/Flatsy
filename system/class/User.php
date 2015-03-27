@@ -187,8 +187,10 @@ class User extends DB{
         $group = mysqli_fetch_assoc($group);
         $group['users'] = [];
         $users = DB::select('useringroup', ['*'], 'idgroup=' . $group['idgroup']);
+        $group['count_users']=0;
         while ($user = mysqli_fetch_assoc($users)) {
             if ($user['statususer'] > 2) {
+                $group['count_users']+=1;
                 if ($user['iduser'] == USER_ID) {
                     if($firstwave==true){
                         $group['lvl']=$user['userlvl'];

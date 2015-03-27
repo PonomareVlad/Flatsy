@@ -33,55 +33,6 @@ class TM extends DB
             return 'EMPTY DATA';
         }
     }
-    /*public static function show_task($query,$separated=true){
-        global $MYSQL_CONNECTION;
-        $res = mysqli_query($MYSQL_CONNECTION,'SELECT * FROM task WHERE initiator="' . USER_ID . '" OR executor="' . USER_ID . '"');
-        $TODAY = [];
-        $FUTURE = [];
-        $PAST = [];
-        $CURRENT = [];
-        $now = strtotime(date('y-m-d G:i:s'))+14400; //Time zone offset (Ekaterinburg,Russia)
-        $now_day=strtotime(date("y-m-d",$now));
-        while ($task = mysqli_fetch_assoc($res)) {
-            $task['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id="' . $task['initiator'] . '"')));
-            $task['executor_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id="' . $task['executor'] . '"')));
-            if($separated==true) {
-                $cur_end = strtotime($task['date_finish']);
-                $cur_start = strtotime($task['date_start']);
-                //echo '['.$now.']<br/>['.$cur_end.']<br>';
-                if ($now < $cur_start) {
-                    // Если еще не началась
-                    $FUTURE[$cur_start][] = $task;
-                } else {
-                    // Если уже началась
-                    if ($now > $cur_end) {
-                        //echo '<br>'.$now.'<br>'.$cur_end.'<br>';
-                        // Просрочена
-                        $PAST[] = $task;
-                    } else {
-                        // Не истекла
-                        //echo($now . '<br>' . $cur_end . '<br>');
-                        if ($now_day == strtotime(date("y-m-d", $cur_end))) {
-                            // Сегодня
-                            $TODAY[] = $task;
-                        } else {
-                            $CURRENT[$cur_end][] = $task;
-                        }
-                    }
-                }
-            }else{
-                $TODAY[]=$task;
-            }
-        }
-        if($separated!=true){
-            return $TODAY;
-        }
-        if (isset($cur_start)) {
-            return array('FUTURE' => $FUTURE, 'CURRENT'=>$CURRENT, 'TODAY' => $TODAY, 'PAST' => $PAST);
-        }else{
-            return false;
-        }
-    }*/
     public static function get_task($id){
         $arr=DB::select('task',['*'],'id='.$id);
         $task=mysqli_fetch_assoc($arr);
