@@ -148,11 +148,19 @@ header{
 }
 
 
-.user_menu{
+.user_menu, .notify{
     color: #929292;
     float: right;
     padding-right: 40px;
     position: relative;
+}
+.notify{
+    cursor: pointer;
+    background:  #D0D0D0;
+    z-index: 999;
+}
+.notify ul{
+    z-index: 333;
 }
 
 .user_menu .avatar img {
@@ -186,7 +194,7 @@ header{
     transition-duration: 180ms;
 
 }
-.user_menu ul {
+.user_menu ul, .notify ul {
     background: #D0D0D0;
     list-style: none;
     margin: 0;
@@ -198,19 +206,19 @@ header{
     z-index: 2;
 }
 
-.user_menu:hover ul{
+.user_menu:hover ul, .notify:hover ul{
     top: 67px;
     transition-duration: 300ms;
 }
 
-.user_menu li{
+.user_menu li, .notify li{
     font-weight: normal;
     line-height: 14px;
     padding: 10px;
     transition-duration: 300ms;
     cursor: pointer;
 }
-.user_menu li:hover{
+.user_menu li:hover, .notify li:hover{
     color: #ffffff;
     background: #c2c2c2;
     transition-duration: 300ms;
@@ -712,6 +720,7 @@ h4{
     float: left;
     text-align: center;
     width: 400px;
+    margin-top: 80px;
 }
 #photo_lk img{
     margin: 0 auto;
