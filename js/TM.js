@@ -123,11 +123,11 @@ function handler(response) {
                     }
 
                 }
-                for(t in DB['TASK']){ // Поиск запрошенной задачи в БД
+                for(t in DB['TASK']){
                     if(DB['TASK'][t]['id']==response['set_task']['id']){
                         DB['TASK'][t][response['set_task']['param']]=response['set_task']['value'];
                         if(DB['TASK'][t]['idproject']!=0){
-                            for(p in DB['PROJECT']){ // Поиск запрошенного проекта в БД
+                            for(p in DB['PROJECT']){
                                 if(DB['PROJECT'][p]['idproject']==DB['TASK'][t]['idproject']){
                                     for(i in DB['PROJECT'][p]['tasks']){
                                         if(DB['PROJECT'][p]['tasks'][i]['id']==DB['TASK'][t]['id']){
@@ -139,6 +139,13 @@ function handler(response) {
                         }
                     }
                 }
+            }
+        }
+        if(response['add_group']) {
+            if (response['add_group'] != false) {
+                DB['GROUP'][DB['GROUP'].length]=response['add_group'];
+                gen_list();
+                view(response['add_group']['idgroup'],'group');
             }
         }
     }else{
@@ -197,6 +204,43 @@ function show_add_task() {
     return false;
 }
 
+function edit_task(id){
+    task=false;
+    for(t in DB['TASK']){ // Поиск запрошенной задачи в БД
+        if(DB['TASK'][t]['id']==id){
+            task=DB['TASK'][t];
+            break;
+        }
+    }
+    source = '<div class="task_add"><div class="title">' +
+    '<h4>Редактирование задачи</h4></div><p>' +
+    '<label for="name">Постановка задачи</label><input type="text" name="task_title" value="'+task['name']+'" id="name"></p>' +
+    '<p><label for="description">Описание</label>' +
+    '<textarea type="text" name="task_description" id="description">'+task['description']+'</textarea></p>' +
+    '<p><label for="date_finish">Дата завершения:</label>' +
+    '<input value="'+task['date_finish']+'" onfocus="this.select();lcs(this);position_calen();" onclick="event.cancelBubble=true;this.select();lcs(this);position_calen()" style="width: 5em;" type="text" name="date_final" id="date_finish">' +
+    ' Часы: <input type="number" min="0" max="23" value="12" style="width: 3em;" id="hours">' +
+    ' Минуты: <input type="number" min="0" max="59" value="00" style="width: 3em;" id="minuts">' +
+    '<span id="minical"></span></p>' +
+    '<p><label for="project_id">Проект</label>' +
+    '<input type="text" class="livesearch_prj" value="'+task['projectname']+'" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его">' +
+    '<div class="search_advice_wrapper" id="search_advice_wrapper_prj"></div></p>' +
+    '<p><label for="executor">Отвественный</label>' +
+    '<input type="text" class="livesearch_exe" value="'+task['executor_name']+'" placeholder="Начните набирать имя пользователя" name="main_user" autocomplete="off" id="executor">' +
+    '<div class="search_advice_wrapper" id="search_advice_wrapper_exe"></div></p>' +
+        //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
+        //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
+    '<p><div class="create" onclick="send_edit_task();">Изменить</div>' +
+        //' * Отображаются, на данный момент,только те поля, которые, функционально, имеют возможность обрабатываться системой!' +
+    //'<a href="javascript:void(0)">Прикрепить</a>' +
+    '</p></div>';
+    document.getElementById('view').innerHTML = source;
+    loadSearch('#executor','#search_advice_wrapper_exe','get_users');
+    loadSearch('#idproject','#search_advice_wrapper_prj','get_projects');
+    calendar_init();
+    return false;
+}
+
 function send_task(){
 
     name=document.getElementById('name').value;
@@ -247,34 +291,42 @@ function show_add_project() {
         //'<input type="text" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его"></p>' +
     '<p><label for="executor">Отвественный</label>' +
     '<input size="33" type="text" class="livesearch" placeholder="Начните набирать имя пользователя" name="main_user" value="" autocomplete="off" id="executor">' +
-    '<div id="search_advice_wrapper"></div></p>' +
+    '<div class="search_advice_wrapper" id="prj_wrapp"></div></p>' +
         //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
         //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
-    '<p><div class="create" onclick="new_project();">Создать</div><a href="#">Прикрепить</a></div></p>';
+    '<p><div class="create" onclick="new_project();">Создать</div><a href="javascript:void(0)">Прикрепить</a></div></p>';
     //' * Отображаются, на данный момент,только те поля, которые, функционально, имеют возможность обрабатываться системой!</p>';
     document.getElementById('view').innerHTML = source;
-    loadSearch();
+    loadSearch('#executor','#prj_wrapp','get_users');
     calendar_init();
     return false;
 }
 
-function new_project(){
-    name=document.getElementById('name').value;
-    description=document.getElementById('description').value;
-    hours=document.getElementById('hours').value;
-    minuts=document.getElementById('minuts').value;
-    date_finish=document.getElementById('date_finish').value;
-    date_finish=date_finish.split('.');
-    date_finish=date_finish[2]+'-'+date_finish[1]+'-'+date_finish[0]+' '+(hours<10?'0':'')+hours+':'+(minuts<10?'0':'')+minuts;
+function new_project() {
+    name = document.getElementById('name').value;
+    description = document.getElementById('description').value;
+    executor = LSEARCH['get_users']['selected_id'];
+    hours = document.getElementById('hours').value;
+    minuts = document.getElementById('minuts').value;
+    date_finish = document.getElementById('date_finish').value;
+    date_finish = date_finish.split('.');
+    date_finish = date_finish[2] + '-' + date_finish[1] + '-' + date_finish[0] + ' ' + (hours < 10 ? '0' : '') + hours + ':' + (minuts < 10 ? '0' : '') + minuts;
+    io({
+        "action": "add_project",
+        "name": name,
+        "description": description,
+        "date_finish": date_finish,
+        "executor": executor
+    });
 
-    if(executor!=false) {
-        io({
-            "action": "add_project",
-            "name": name,
-            "description": description,
-            "date_finish": date_finish
-        });
-    }
+}
+
+function new_group(){
+    name=document.getElementById('name').value;
+    io({
+        "action": "add_group",
+        "name": name
+    });
 }
 
 function project_show(id) {
@@ -439,16 +491,46 @@ function gen_list(){
         source='';
         for(g in DB['GROUP']){
             group=DB['GROUP'][g];
-            source+='<div class="group"><div class="group_name">'+group['namegroup']+'</div>' +
+            source+='<div class="group"><div onclick="view('+group['idgroup']+',\'group\')" class="group_name">'+group['namegroup']+'</div>' +
             '<div class="group_count">Участники ('+group['count_users']+')</div><div class="pod_group">';
             for(i in group['subgroup']){
-                source+='<div class="group"><div class="group_name">'+group['subgroup'][i]['namegroup']+'</div>' +
+                source+='<div class="group"><div onclick="view('+group['subgroup'][i]['idgroup']+',\'group\')" class="group_name">'+group['subgroup'][i]['namegroup']+'</div>' +
                 '<div class="group_count">Участники ('+group['subgroup'][i]['count_users']+')</div><div class="pod_group"></div></div>';
             }
             source+='</div></div>'
         }
         document.getElementById('groups').innerHTML=source;
     }
+}
+
+function groups_query(){
+    source='<div class="title"><h4>Запросы</h4></div><div class="item_title">Приглашения в группу (0)</div>';
+
+    source+='<br><div class="item_title">История</div>';
+
+    get('view').innerHTML=source;
+}
+
+function show_add_group(){
+    source = '<div class="task_add"><div class="title"><h4>Организация новой группы</h4></div><p>' +
+    '<label for="name">Название</label><input type="text" name="task_title" id="name"></p>' +
+    //'<p><label for="description">Описание</label>' +
+    //'<textarea type="text" name="task_description" id="description"></textarea></p>' +
+    //'<p><label for="date_finish">Дата завершения:</label>' +
+    //'<input onfocus="this.select();lcs(this);position_calen();" onclick="event.cancelBubble=true;this.select();lcs(this);position_calen()" style="width: 5em;" type="text" name="date_final" id="date_finish">' +
+    //' Часы: <input type="number" min="0" value="12" max="23" style="width: 3em;" id="hours">' +
+    //' Минуты: <input type="number" min="0" value="00" max="59" style="width: 3em;" id="minuts">' +
+    //'<span id="minical"></span></p>' +
+    //'<p><label for="project_id">Проект</label>' +
+    //'<input type="text" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его"></p>' +
+    //'<p><label for="executor">Отвественный</label>' +
+    //'<input size="33" type="text" class="livesearch" placeholder="Начните набирать имя пользователя" name="main_user" value="" autocomplete="off" id="executor">' +
+    //'<div id="search_advice_wrapper"></div></p>' +
+    //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
+    //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
+    '<p><div class="create" onclick="new_group();">Создать</div></div></p>';
+    document.getElementById('view').innerHTML = source;
+    return false;
 }
 
 function view(id,type){
@@ -473,7 +555,7 @@ function view(id,type){
         TM['highlight_element']=task['id'];
         document.getElementById(TM['highlight_day']).className='task_day active_day';
         document.getElementById(TM['highlight_element']).className='task_info task_active';
-        source+='<div class="task_title"><h4>'+task['name']+'<img src="templates/default/images/b_pan_hover.png" id="edit_pen"></h4></div>';
+        source+='<div class="task_title"><h4>'+task['name']+'<img onclick="edit_task('+task['id']+');" src="templates/default/images/b_pan_hover.png" id="edit_pen"></h4></div>';
         source+='<p class="task_description">'+task['description']+'</p>';
         source+='<div class="info_task">';
         if(task['idproject']!=0){
@@ -538,9 +620,20 @@ function view(id,type){
         source+='<div class="date_start">'+date_start+'</div><div class="date_end">'+date_finish+
         '</div><div class="project_time_all">';
         source+='<div class="countpercent">'+project['percent_view']+'</div><div class="project_rime_cur" style="width: '+project['percent']+'%"></div></div></div>';
-        source+='<div class="task_table"><div>Инициатор</div><a href="#user2">Иванов Иван</a></div>';
+        source+='<div class="task_table"><div>Инициатор</div><a href="javascript:void(0)" onclick="view('+project['initiator']+',\'user\');">'+project['initiator_name']+'</a></div>';
         source+='<div class="task_table"><div>Исполнители</div>';
         // BUILD EXECUTORS
+        user=false;
+        for(u in project['users']){
+            user=project['users'][u];
+            if(u!=0){
+                source+=', ';
+            }
+            source+='<a href="javascript:void(0)" onclick="view('+user['id']+',\'user\');">'+user['lastname']+' '+user['firstname']+'</a>';
+        }
+        if(!user){
+            source+='не назначены';
+        }
         source+='</div>';
         if(project['files']) {
             source += '<div class="files"><div>Прикрепленные файлы</div>';
@@ -555,5 +648,42 @@ function view(id,type){
         document.getElementById('overlay').style.marginTop='0px';
         init_comments(project['idproject'],type);
         sizing();
+    }
+    if(type=='group'){
+        source='';
+        for(g in DB['GROUP']){
+            if(DB['GROUP'][g]['idgroup']==id){
+                group=DB['GROUP'][g];
+                break;
+            }else{
+                for(gr in DB['GROUP'][g]['subgroup']){
+                    if(DB['GROUP'][g]['subgroup'][gr]['idgroup']==id){
+                        group=DB['GROUP'][g]['subgroup'][gr];
+                        break;
+                    }
+                }
+            }
+        }
+        source+='<div class="title"><h4>Запросы</h4></div><div class="item_title">Участники ('+group['count_users']+')</div>' +
+        '<div class="group_table"><div class="group_tr"><div class="names"><div class="account">Аккаунт</div>' +
+        '<div class="job_pos">Должность</div><div class="scroll"><div>Добавление/удаление пользователей</div>' +
+        '<div>Запуск/удаление задач</div></div><div class="status">Статус</div></div></div>';
+        for(u in group['users']){
+            user=group['users'][u];
+            source+='<div class="group_tr"><div><div class="account">' +
+            '<a href="javascript:void(0)" onclick="page('+user['id']+',\'user\')">' +
+            '<img src="'+user['photo']+'">'+user['lastname']+' '+user['firstname']+'</a></div>';
+            job=user['lvl']==5?'Администратор':(user['lvl']==3?'Модератор':'Пользователь');
+            source+='<div class="job_pos">'+job+'</div><div class="scroll">';
+            source+='<div><img src="templates/default/images/'+(user['lvl']>4?'done.png':'n_done.png')+'"></div>';
+            source+='<div><img src="templates/default/images/'+(user['lvl']>2?'done.png':'n_done.png')+'"></div>';
+            source+='</div><div class="status">Участвует</div>';
+            if(group['creator']==TM['UID']){
+                source+='<div class="crest" onclick="del_user_group('+user['id']+','+group['idgroup']+');"><img src="templates/default/images/close.png"></div>';
+            }
+            source+='</div></div>';
+        }
+        source+='</div><div class="item_title">Подгруппы ('+(group['subgroup'].length)+')</div>';
+        get('view').innerHTML=source;
     }
 }

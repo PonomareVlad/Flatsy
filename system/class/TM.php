@@ -143,11 +143,29 @@ class TM extends DB
             if($add==1){
                 $chck=mysqli_query($MYSQL_CONNECTION,'SELECT * FROM project WHERE initiator="'.USER_ID.'" AND date_start="'.$now.'"');
                 $chck=mysqli_fetch_assoc($chck);
+                DB::inserti('visprojectuser','(iduser,idproject) VALUES ('.USER_ID.','.$chck['idproject'].')');
                 return $chck;
             }
 
         }else{
             return 'EMPTY DATA';
+        }
+    }
+    public static function add_group($name){
+
+        $name=Checkdata($name);
+        $checkname = mysqli_fetch_assoc(DB::select('groups',['namegroup'],'namegroup="'.$name.'"'));
+        if (isset($checkname['namegroup'])) {
+            return false;
+        }
+        $add=DB::inserti('groups','(namegroup,creator,owner) VALUES ("'.$name.'",'.USER_ID.','.USER_ID.')');
+        if($add==1){
+            $group=mysqli_fetch_assoc(DB::select('groups',['*'],'namegroup="'.$name.'"'));
+            $group['subgroup']=[];
+            $group['users']=[];
+            $group['count_users']=1;
+            DB::inserti('useringroup','(iduser,idgroup,userlvl,statususer) VALUES ('.+USER_ID.','.$group['idgroup'].',5,3)');
+            return $group;
         }
     }
     public static function get_tasks(){
@@ -207,6 +225,11 @@ class TM extends DB
             //$num=count($project);
             $proj['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['firstname', 'lastname'], 'id=' . $proj['initiator'])));
             $proj['tasks'] = [];
+            $users=DB::select('visprojectuser',['*'],'idproject='.$proj['idproject']);
+            $proj['users']=[];
+            while($userlink=mysqli_fetch_assoc($users)){
+                $proj['users'][]=User::get_user($userlink['iduser']);
+            }
             $tasks = DB::select('task', ['*'], 'idproject=' . $proj['idproject']);
             while ($taska = mysqli_fetch_assoc($tasks)) {
                 $num = count($proj['tasks']);

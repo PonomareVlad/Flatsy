@@ -190,18 +190,17 @@ class User extends DB{
         $group['count_users']=0;
         while ($user = mysqli_fetch_assoc($users)) {
             if ($user['statususer'] > 2) {
-                $group['count_users']+=1;
+                $group['count_users'] += 1;
                 if ($user['iduser'] == USER_ID) {
-                    if($firstwave==true){
-                        $group['lvl']=$user['userlvl'];
-                    }else{
+                    if ($firstwave == true) {
+                        $group['lvl'] = $user['userlvl'];
+                    } else {
                         return false;
                     }
-                } else {
-                    $us = User::get_user($user['iduser']);
-                    $us['lvl'] = $user['userlvl'];
-                    $group['users'][] = $us;
                 }
+                $us = User::get_user($user['iduser']);
+                $us['lvl'] = $user['userlvl'];
+                $group['users'][] = $us;
             }
         }
         $group['subgroup'] = [];

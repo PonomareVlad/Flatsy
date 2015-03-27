@@ -69,6 +69,7 @@ function set_vmode(mode){
 function page(name,headgen){
     if(typeof PAGE[name]!='undefined') {
         if ((TM['current_page'] != name) || headgen) {
+            document.getElementById('main').className='blur';
             if (name == 'auth'||name == 'reg') {
                 document.getElementById('header').innerHTML = '';
             } else {

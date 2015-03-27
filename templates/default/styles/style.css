@@ -83,6 +83,7 @@
 
 .avatar img{
     border-radius: 99px;
+    width: 37px;
 }
 .comment img{
     border-radius: 99px;
@@ -104,7 +105,7 @@ html, body{
     clear: both;
 }
 .blur{
-    transition: all 0.5s ease;
+    transition: all 0.3s ease;
     -webkit-filter: blur(5px);
     -moz-filter: blur(5px);
     -o-filter: blur(5px);
@@ -112,7 +113,7 @@ html, body{
     filter: blur(5px);
 }
 .noblur{
-    transition: all 0.5s ease;
+    transition: all 0.3s ease;
     -webkit-filter: blur(0px);
     -moz-filter: blur(0px);
     -o-filter: blur(0px);
@@ -158,6 +159,7 @@ header{
 .user_menu .avatar img {
     border-radius: 99px;
     margin: 10px 10px -10px 0;
+    width: 37px;
 
 }
 .user_menu div{
@@ -599,6 +601,7 @@ header{
 }
 .photo img{
     border-radius: 99px;
+    width: 37px;
 }
 .project textarea,.task textarea{
 
@@ -690,13 +693,15 @@ h4{
 
 }
 .account{
-    width: 150px;
+    width: 250px;
 }
 .account a{
     line-height: 37px;
 }
 .account img{
     float: left;
+    border-radius: 99px;
+    width: 37px;
 }
 .job_pos {
     width: 120px;
@@ -737,6 +742,7 @@ h4{
     float: left;
     text-align: center;
     width: 400px;
+    margin-top: 80px;
 }
 #photo_lk img{
     margin: 0 auto;
