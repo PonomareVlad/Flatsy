@@ -5,8 +5,15 @@ PART['header']='<header><ul class="menu"><li><a href="javascript:void(0)" onclic
 '<a href="javascript:void(0)" onclick="page(\'tasks\');">Задачи</a></li><li><a href="javascript:void(0)" onclick="page(\'projects\');">Проекты</a></li><li>' +
 '<a href="javascript:void(0)" onclick="page(\'groups\');">Группы</a></li></ul><div class="user_menu">' +
 '<div class="avatar"><img id="user_pic" src="/templates/default/images/avatar.png"></div><div><span id="user_name">USER_NAME</span></div>' +
-'<div class="arrow"></div><ul><li><a>Мои данные</a></li><li><a>Настройки</a></li><li onclick="logout();"><a>Выход</a>' +
+'<div class="arrow"></div><ul><li><a>Мои данные</a></li><li onclick="page(\'lk\',true);"><a>Настройки</a></li><li onclick="logout();"><a>Выход</a>' +
 '</li></ul></div></header><div class="arrow-top"></div><div class="calendar"><div id="calendar"></div></div>';
+
+PART['header_slim']='<header><ul class="menu"><li><a href="javascript:void(0)" onclick="page(\'tasks\',true);">Главная</a></li><li>' +
+'<a href="javascript:void(0)" onclick="page(\'tasks\',true);">Задачи</a></li><li><a href="javascript:void(0)" onclick="page(\'projects\',true);">Проекты</a></li><li>' +
+'<a href="javascript:void(0)" onclick="page(\'groups\',true);">Группы</a></li></ul><div class="user_menu">' +
+'<div class="avatar"><img id="user_pic" src="/templates/default/images/avatar.png"></div><div><span id="user_name">USER_NAME</span></div>' +
+'<div class="arrow"></div><ul><li><a>Мои данные</a></li><li onclick="page(\'lk\',true);"><a>Настройки</a></li><li onclick="logout();"><a>Выход</a>' +
+'</li></ul></div></header><div class="arrow-top"></div>';
 
 PART['loader']='<div id="overlay" class="overlay"><div id="spinner" class="spinner center"><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div></div></div>'
 
@@ -20,6 +27,21 @@ PAGE['tasks']['source']='<div class="left_bar"><div class="action_bar"><a href="
 '<li id="all" onclick="set_vmode(\'all\');">Все задачи</li></ul></li></ul></div><div style="clear: both"></div></div>' +
 '<div id="tasks"></div></div><div class="center"><div class="task" id="view"></div></div>';
 
+PAGE['projects']=[];
+PAGE['projects']['title']='Проекты';
+PAGE['projects']['source']='<div class="left_bar"><div class="action_bar"><a href="javascript:void(0)" onclick="show_add_project();">' +
+'<div class="add_task"><div class="plus"><div id="p1"></div><div id="p2"></div><div id="p3"></div>' +
+'<div id="p4"></div></div>Создать проект</div></a>' +
+'<div class="select"></div><div style="clear: both"></div></div><div id="projects"></div></div>' +
+'<div class="center"><div class="task" id="view"></div></div>';
+
+PAGE['groups']=[];
+PAGE['groups']['title']='Группы';
+PAGE['groups']['source']='<div class="left_bar groupflag"><div class="action_bar"><div onclick="show_add_group();" class="add_group">' +
+'<div class="plus"><div id="p1"></div><div id="p2"></div><div id="p3"></div><div id="p4"></div></div>Добавить группу</div>' +
+'<div onclick="show_group_requests();"><img src="templates/default/images/zaprosy.png"></div></div>' +
+'<div class="group_list" id="groups"></div></div><div class="center group_center" id="view"></div>';
+
 PAGE['auth']=[];
 PAGE['auth']['title']='Авторизация';
 PAGE['auth']['source']='<div style="display:none" id="load_pic"></div>' +
@@ -31,14 +53,6 @@ PAGE['auth']['source']='<div style="display:none" id="load_pic"></div>' +
 '</div><div class="auth" id="In">' +
 '<a href="javascript:void(0)" onclick=\'auth_send();\' class="button box-shadow-outset"><div class="authregbtn">Вход</div></a></div></form>' +
 '<a href="javascript:void(0)" onclick="page(\'reg\');"><div class="authregbtn" >Регистрация</div></a></div></div>';
-
-PAGE['projects']=[];
-PAGE['projects']['title']='Проекты';
-PAGE['projects']['source']='<div class="left_bar"><div class="action_bar"><a href="javascript:void(0)" onclick="show_add_project();">' +
-'<div class="add_task"><div class="plus"><div id="p1"></div><div id="p2"></div><div id="p3"></div>' +
-'<div id="p4"></div></div>Создать проект</div></a>' +
-'<div class="select"></div><div style="clear: both"></div></div><div id="projects"></div></div>' +
-'<div class="center"><div class="task" id="view"></div></div>';
 
 PAGE['reg']=[];
 PAGE['reg']['title']='Регистрация';
@@ -54,3 +68,20 @@ PAGE['reg']['source']='<div class="regbody wrapperautreg" id="wrapper"><div clas
 '<div class="auth"><div onclick="reg_send()" class="authregbtn">Хочу зарегистрироваться</div>' +
 '<div onclick="page(\'auth\');" class="authregbtn">Авторизация</div></div>' +
 '</form><div id="status"></div></div></div>';
+
+PAGE['lk']=[];
+PAGE['lk']['title']='Настройки';
+PAGE['lk']['source']='<div id="lk"><div id="types"><div id="profile_settings" class="active_set">Настройки профиля</div>' +
+'<div id="group_manage">Управление группами</div><div id="interface_set">Настройки интерфейса</div></div>' +
+'<div id="info_lk"><div id="photo_lk"><img src="templates/default/images/avatar.png" width="200"><br><a>Изменить фото</a></div>' +
+'<div id="user_info"><p><label for="last_name">Фамилия</label><input type="text" id="last_name" placeholder="Фамилия"></p>' +
+'<p><label for="first_name">Имя</label><input type="text" id="first_name" placeholder="Имя"></p><p>' +
+'<label for="otchestvo">Отчество</label><input type="text" id="otchestvo" placeholder="Отчество"></p><p>' +
+'<label for="job_pos">Должность</label><input type="text" id="job_pos" placeholder="Должность"></p><p>' +
+'<label for="group">Группа</label><input type="text" id="group" placeholder="Группа"></p><p>' +
+'<label for="phone">Телефон</label><input type="text" id="phone" placeholder="Телефон"></p>' +
+'<div class="create">Сохранить</div></div><div id="pass_info"><p><label for="cur_pass">Текущий пароль</label>' +
+'<input type="text" id="cur_pass" placeholder="Текущий пароль"></p><p><label for="new_pass">Новый пароль</label>' +
+'<input type="text" id="new_pass" placeholder="Новый пароль"></p><p><label for="rep_pass">Повтор пароля</label>' +
+'<input type="text" id="rep_pass" placeholder="Повтор пароля"></p><div class="create">Сохранить</div></div></div></div>';
+

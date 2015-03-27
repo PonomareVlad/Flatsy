@@ -169,4 +169,48 @@ class User extends DB{
         }
     }
 
+    public static function get_groups(){
+        $groups = [];
+        $arr = DB::select('useringroup', ['*'], 'iduser=' . USER_ID);
+        while ($link = mysqli_fetch_assoc($arr)) {
+            if ($link['statususer'] > 2) {
+                $group = User::get_group($link['idgroup'],true);
+                $group['lvl'] = $link['userlvl'];
+                $groups[] = $group;
+            }
+        }
+        return $groups;
+    }
+
+    public static function get_group($idg,$firstwave=false){
+        $group = DB::select('groups', ['*'], 'idgroup=' . $idg);
+        $group = mysqli_fetch_assoc($group);
+        $group['users'] = [];
+        $users = DB::select('useringroup', ['*'], 'idgroup=' . $group['idgroup']);
+        while ($user = mysqli_fetch_assoc($users)) {
+            if ($user['statususer'] > 2) {
+                if ($user['iduser'] == USER_ID) {
+                    if($firstwave==true){
+                        $group['lvl']=$user['userlvl'];
+                    }else{
+                        return false;
+                    }
+                } else {
+                    $us = User::get_user($user['iduser']);
+                    $us['lvl'] = $user['userlvl'];
+                    $group['users'][] = $us;
+                }
+            }
+        }
+        $group['subgroup'] = [];
+        $subgr = DB::select('visgroups', ['*'], 'id=' . $group['idgroup']);
+        while ($subgrouplink = mysqli_fetch_assoc($subgr)) {
+            $subgroup = User::get_group($subgrouplink['visidgroup']);
+            if ($subgroup != false) {
+                $group['subgroup'][] = $subgroup;
+            }
+        }
+        return $group;
+    }
+
 }

@@ -73,7 +73,7 @@ function page(name,headgen){
                 document.getElementById('header').innerHTML = '';
             } else {
                 if ((TM['current_page'] == 'auth'||TM['current_page'] == 'reg') || headgen) {
-                    document.getElementById('header').innerHTML = PART['header'];
+                    document.getElementById('header').innerHTML=name=='lk'?PART['header_slim']:PART['header'];
                     document.getElementById('user_name').innerHTML = TM['USER_NAME'];
                     document.getElementById('user_pic').src = TM['USER_PIC'];
                 }
@@ -93,7 +93,7 @@ function page(name,headgen){
             if (document.getElementById('email')) {
                 document.getElementById('email').focus();
             }
-            if (document.getElementById('calendar')) {
+            if (document.getElementById('calendar')&&page!='lk') {
                 init_cal();
             }
             if (document.getElementById('load_pic')) {

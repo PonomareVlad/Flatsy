@@ -652,6 +652,18 @@ function gen_list(){
             document.getElementById('projects').innerHTML=source;
         }
     }
+    if(TM['current_page']=='groups'){
+        //alert('load');
+        source=''
+        for(g in DB['GROUP']){
+            group=DB['GROUP'][g];
+            source+='<div class="group"><div class="group_name">'+group['namegroup']+'</div>' +
+            '<div class="group_count">Участники ('+(group['users'].length+1)+')</div><div class="pod_group">';
+
+            source+='</div></div>'
+        }
+        document.getElementById('groups').innerHTML=source;
+    }
 }
 
 function view(id,type){
