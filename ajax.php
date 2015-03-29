@@ -51,6 +51,7 @@ if(defined('USER_ID')) { // Статус авторизации
             $DB=[];
             $DB['TASK']=TM::get_tasks();
             $DB['PROJECT']=TM::get_projects();
+            $DB['GROUP']=User::get_groups();
             $RESPONSE['DB']=$DB;
         }
         if ($QUERY['action'] == 'logout') { // Выход из системы
@@ -83,6 +84,9 @@ if(defined('USER_ID')) { // Статус авторизации
         }
         if ($QUERY['action'] == 'add_project') {
             $RESPONSE['add_project'] = TM::add_project($QUERY);
+        }
+        if ($QUERY['action'] == 'add_group') {
+            $RESPONSE['add_group'] = TM::add_group($QUERY['name']);
         }
         if ($QUERY['action'] == 'get_user') {
             $RESPONSE['get_user'] = User::get_user($QUERY);

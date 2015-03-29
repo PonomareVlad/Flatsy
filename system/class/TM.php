@@ -11,7 +11,7 @@ class TM extends DB
             $description=Checkdata($query['description']);
             $executor=Checkdata($query['executor']);
             $date_finish=$query['date_finish'].':00';
-            $idproject='0';
+            $idproject=$query['project']?$query['project']:'0';
             $parentask='0';
 
             if($name==''||$description==''||$executor==''||$date_finish==''){
@@ -33,55 +33,6 @@ class TM extends DB
             return 'EMPTY DATA';
         }
     }
-    /*public static function show_task($query,$separated=true){
-        global $MYSQL_CONNECTION;
-        $res = mysqli_query($MYSQL_CONNECTION,'SELECT * FROM task WHERE initiator="' . USER_ID . '" OR executor="' . USER_ID . '"');
-        $TODAY = [];
-        $FUTURE = [];
-        $PAST = [];
-        $CURRENT = [];
-        $now = strtotime(date('y-m-d G:i:s'))+14400; //Time zone offset (Ekaterinburg,Russia)
-        $now_day=strtotime(date("y-m-d",$now));
-        while ($task = mysqli_fetch_assoc($res)) {
-            $task['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id="' . $task['initiator'] . '"')));
-            $task['executor_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id="' . $task['executor'] . '"')));
-            if($separated==true) {
-                $cur_end = strtotime($task['date_finish']);
-                $cur_start = strtotime($task['date_start']);
-                //echo '['.$now.']<br/>['.$cur_end.']<br>';
-                if ($now < $cur_start) {
-                    // Если еще не началась
-                    $FUTURE[$cur_start][] = $task;
-                } else {
-                    // Если уже началась
-                    if ($now > $cur_end) {
-                        //echo '<br>'.$now.'<br>'.$cur_end.'<br>';
-                        // Просрочена
-                        $PAST[] = $task;
-                    } else {
-                        // Не истекла
-                        //echo($now . '<br>' . $cur_end . '<br>');
-                        if ($now_day == strtotime(date("y-m-d", $cur_end))) {
-                            // Сегодня
-                            $TODAY[] = $task;
-                        } else {
-                            $CURRENT[$cur_end][] = $task;
-                        }
-                    }
-                }
-            }else{
-                $TODAY[]=$task;
-            }
-        }
-        if($separated!=true){
-            return $TODAY;
-        }
-        if (isset($cur_start)) {
-            return array('FUTURE' => $FUTURE, 'CURRENT'=>$CURRENT, 'TODAY' => $TODAY, 'PAST' => $PAST);
-        }else{
-            return false;
-        }
-    }*/
     public static function get_task($id){
         $arr=DB::select('task',['*'],'id='.$id);
         $task=mysqli_fetch_assoc($arr);
@@ -95,7 +46,7 @@ class TM extends DB
         if($query['param']=='finished'){
             $set=mysqli_query($MYSQL_CONNECTION,'UPDATE task SET finished = '.$query['value'].' WHERE task.id = '.$query['id']);
             if($set==1){
-                return $query['id'];
+                return ["id"=>$query['id'],"param"=>$query['param'],"value"=>$query['value']];
             }else{
                 return false;
             }
@@ -190,13 +141,31 @@ class TM extends DB
             $add=mysqli_query($MYSQL_CONNECTION,'INSERT INTO project (nameproject,description,initiator,date_start,date_finish,fact_finish,parentproject) VALUES("'.$name.'","'.$description.'","'.USER_ID.'","'.$now.'","'.$date_finish.'","'.$date_finish.'","'.$parentproject.'")');
 
             if($add==1){
-                $chck=mysqli_query($MYSQL_CONNECTION,'SELECT idproject FROM project WHERE initiator="'.USER_ID.'" AND date_start="'.$now.'"');
+                $chck=mysqli_query($MYSQL_CONNECTION,'SELECT * FROM project WHERE initiator="'.USER_ID.'" AND date_start="'.$now.'"');
                 $chck=mysqli_fetch_assoc($chck);
-                return $chck['idproject'];
+                DB::inserti('visprojectuser','(iduser,idproject) VALUES ('.USER_ID.','.$chck['idproject'].')');
+                return $chck;
             }
 
         }else{
             return 'EMPTY DATA';
+        }
+    }
+    public static function add_group($name){
+
+        $name=Checkdata($name);
+        $checkname = mysqli_fetch_assoc(DB::select('groups',['namegroup'],'namegroup="'.$name.'"'));
+        if (isset($checkname['namegroup'])) {
+            return false;
+        }
+        $add=DB::inserti('groups','(namegroup,creator,owner) VALUES ("'.$name.'",'.USER_ID.','.USER_ID.')');
+        if($add==1){
+            $group=mysqli_fetch_assoc(DB::select('groups',['*'],'namegroup="'.$name.'"'));
+            $group['subgroup']=[];
+            $group['users']=[];
+            $group['count_users']=1;
+            DB::inserti('useringroup','(iduser,idgroup,userlvl,statususer) VALUES ('.+USER_ID.','.$group['idgroup'].',5,3)');
+            return $group;
         }
     }
     public static function get_tasks(){
@@ -249,35 +218,45 @@ class TM extends DB
     }
     public static function get_projects()
     {
+        $is=[];
         $project = [];
         $res = DB::select('project', ['*'], 'initiator="' . USER_ID . '"');
         while ($proj = mysqli_fetch_assoc($res)) {
             //$num=count($project);
-            $project[$proj['idproject']] = $proj;
-            $project[$proj['idproject']]['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['firstname', 'lastname'], 'id=' . $proj['initiator'])));
-            $project[$proj['idproject']]['tasks'] = [];
+            $proj['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['firstname', 'lastname'], 'id=' . $proj['initiator'])));
+            $proj['tasks'] = [];
+            $users=DB::select('visprojectuser',['*'],'idproject='.$proj['idproject']);
+            $proj['users']=[];
+            while($userlink=mysqli_fetch_assoc($users)){
+                $proj['users'][]=User::get_user($userlink['iduser']);
+            }
             $tasks = DB::select('task', ['*'], 'idproject=' . $proj['idproject']);
             while ($taska = mysqli_fetch_assoc($tasks)) {
-                $num = count($project[$proj['idproject']]['tasks']);
-                $project[$proj['idproject']]['tasks'][$num] = $taska;
-                $project[$proj['idproject']]['tasks'][$num]['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['firstname', 'lastname'], 'id="' . $taska['initiator'] . '"')));
-                $project[$proj['idproject']]['tasks'][$num]['executor_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['firstname', 'lastname'], 'id="' . $taska['executor'] . '"')));
+                $num = count($proj['tasks']);
+                $proj['tasks'][$num] = $taska;
+                $proj['tasks'][$num]['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['firstname', 'lastname'], 'id="' . $taska['initiator'] . '"')));
+                $proj['tasks'][$num]['executor_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['firstname', 'lastname'], 'id="' . $taska['executor'] . '"')));
             }
+            $is[$proj['idproject']]=true;
+            $project[]=$proj;
         }
         $task = TM::get_tasks();
         for ($i = 0; $i < count($task); $i++) {
             if ($task[$i]['idproject'] != 0) {
                 $res = DB::select('project', ['*'], 'idproject="' . $task[$i]['idproject'] . '"');
                 $proj = mysqli_fetch_assoc($res);
-                $project[$proj['idproject']] = $proj;
-                $project[$proj['idproject']]['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['firstname', 'lastname'], 'id="' . $proj['initiator'] . '"')));
-                $project[$proj['idproject']]['tasks'] = [];
-                $tasks = DB::select('task', ['*'], 'idproject=' . $proj['idproject']);
-                while ($taska = mysqli_fetch_assoc($tasks)) {
-                    $num = count($project[$proj['idproject']]['tasks']);
-                    $project[$proj['idproject']]['tasks'][$num] = $taska;
-                    $project[$proj['idproject']]['tasks'][$num]['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['firstname', 'lastname'], 'id="' . $taska['initiator'] . '"')));
-                    $project[$proj['idproject']]['tasks'][$num]['executor_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['firstname', 'lastname'], 'id="' . $taska['executor'] . '"')));
+                if(!isset($is[$proj['idproject']])) {
+                    $proj['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['firstname', 'lastname'], 'id="' . $proj['initiator'] . '"')));
+                    $proj['tasks'] = [];
+                    $tasks = DB::select('task', ['*'], 'idproject=' . $proj['idproject']);
+                    while ($taska = mysqli_fetch_assoc($tasks)) {
+                        $num = count($proj['tasks']);
+                        $proj['tasks'][$num] = $taska;
+                        $proj['tasks'][$num]['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['firstname', 'lastname'], 'id="' . $taska['initiator'] . '"')));
+                        $proj['tasks'][$num]['executor_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['firstname', 'lastname'], 'id="' . $taska['executor'] . '"')));
+                    }
+                    $is[$proj['idproject']]=true;
+                    $project[] = $proj;
                 }
             }
         }

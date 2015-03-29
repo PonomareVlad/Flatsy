@@ -20,6 +20,7 @@ if(!DB){
 
 function main(){
     io({"action":"check"});
+    TM['now'] = new Date(new Date().getTime()+TM['time_offset']).getTime();
 }
 
 function sizing() {
@@ -30,6 +31,8 @@ function sizing() {
         document.getElementById('tasks').style.height = window.innerHeight - document.getElementById('tasks').offsetTop + 'px';
     } else if (TM['current_page'] == 'projects') {
         document.getElementById('projects').style.height = window.innerHeight - document.getElementById('projects').offsetTop + 'px';
+    } else if (TM['current_page'] == 'groups') {
+        document.getElementById('groups').style.height = window.innerHeight - document.getElementById('groups').offsetTop + 'px';
     }
     if (document.getElementById('comments')) {
         // CORRECT HEIGHT
