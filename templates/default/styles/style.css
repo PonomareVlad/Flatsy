@@ -737,10 +737,10 @@ h4{
     top: 10px;
 }
 #lk{
-    margin: 20px;
+    margin: 0;
 }
 #types{
-    background: #D0D0D0;
+    border-bottom: 3px solid #D0D0D0;
     height: 50px;
     line-height: 50px;
     margin-bottom: 5px;
@@ -750,26 +750,30 @@ h4{
     margin: 0 20px;
     cursor: pointer;
 }
+#types div img{
+    vertical-align: middle;
+}
 .active_set{
     font-weight: bold;
 }
 #info_lk{
-    background: #D0D0D0;
     padding-bottom: 20px;
 }
 #photo_lk{
     float: left;
     text-align: center;
     width: 400px;
-    margin-top: 80px;
+    margin-top: 110px;
 }
 #photo_lk img{
-    margin: 0 auto;
+    vertical-align: middle;
+
 }
 #user_info, #pass_info{
-    margin-left: 400px;
-    padding: 10px;
+
+    padding-top: 10px;
     position: relative;
+    width: 500px;
 }
 #user_info label, #pass_info label{
     float: left;
@@ -780,5 +784,21 @@ h4{
 }
 #user_info .create, #pass_info .create {
     position: absolute;
-    left: 343px;
+    left: 335px;
+}
+#center_lk{
+    float: left;
+}
+.groups{
+    margin-left: 900px;
+    padding-top: 25px;
+}
+.groups div{
+    border: 2px solid #d0d0d0;
+    padding: 5px 10px;
+    width: 200px;
+    margin-bottom: -1px;
+    font-weight: bold;
+    color: #8F8F8F;
+    cursor: pointer;
 }
