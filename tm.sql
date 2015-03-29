@@ -25,6 +25,18 @@ CREATE TABLE IF NOT EXISTS `auth` (
   `hash` varchar(32) NOT NULL COMMENT 'Хэш юзера'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Структура таблицы `authkey`
+--
+
+CREATE TABLE IF NOT EXISTS `authkey` (
+`idkey` int(10) NOT NULL COMMENT 'ID',
+  `key` varchar(19) NOT NULL COMMENT 'Ключ',
+  `iduser` int(10) NOT NULL COMMENT 'Кем активирован',
+  `whoinvite` varchar(30) NOT NULL COMMENT 'Кому был выдан',
+  `datatime` datetime NOT NULL COMMENT 'Дата активации'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Ключи активации';
+
 -- --------------------------------------------------------
 
 --
@@ -143,6 +155,7 @@ CREATE TABLE IF NOT EXISTS `task` (
 CREATE TABLE IF NOT EXISTS `useringroup` (
   `iduser` int(10) NOT NULL COMMENT 'ID юзера',
   `idgroup` int(10) NOT NULL COMMENT 'ID группы',
+  `statususer` int(10) NOT NULL COMMENT 'Статус юзера',
   `userlvl` int(10) NOT NULL COMMENT 'Уровень юзера'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -218,6 +231,12 @@ CREATE TABLE IF NOT EXISTS `vistaskuser` (
 ALTER TABLE `auth`
  ADD PRIMARY KEY (`hash`);
 
+--
+-- Индексы таблицы `authkey`
+--
+ALTER TABLE `authkey`
+ ADD PRIMARY KEY (`idkey`);
+ 
 --
 -- Индексы таблицы `comments`
 --
@@ -300,6 +319,12 @@ ALTER TABLE `vistaskuser`
 --
 -- AUTO_INCREMENT для сохранённых таблиц
 --
+
+--
+-- AUTO_INCREMENT для таблицы `authkey`
+--
+ALTER TABLE `authkey`
+MODIFY `idkey` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ID';
 
 --
 -- AUTO_INCREMENT для таблицы `comments`
