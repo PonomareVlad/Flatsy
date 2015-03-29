@@ -189,7 +189,7 @@ function show_add_task() {
     '<p><label for="project_id">Проект</label>' +
     '<input type="text" class="livesearch_prj" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его">' +
     '<div class="search_advice_wrapper" id="search_advice_wrapper_prj"></div></p>' +
-    '<p><label for="executor">Отвественный</label>' +
+    '<p><label for="executor">Ответственный</label>' +
     '<input type="text" class="livesearch_exe" placeholder="Начните набирать имя пользователя" name="main_user" value="" autocomplete="off" id="executor">' +
     '<div class="search_advice_wrapper" id="search_advice_wrapper_exe"></div></p>' +
     //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
@@ -225,7 +225,7 @@ function edit_task(id){
     '<p><label for="project_id">Проект</label>' +
     '<input type="text" class="livesearch_prj" value="'+task['projectname']+'" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его">' +
     '<div class="search_advice_wrapper" id="search_advice_wrapper_prj"></div></p>' +
-    '<p><label for="executor">Отвественный</label>' +
+    '<p><label for="executor">Ответственный</label>' +
     '<input type="text" class="livesearch_exe" value="'+task['executor_name']+'" placeholder="Начните набирать имя пользователя" name="main_user" autocomplete="off" id="executor">' +
     '<div class="search_advice_wrapper" id="search_advice_wrapper_exe"></div></p>' +
         //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
@@ -289,9 +289,10 @@ function show_add_project() {
     '<span id="minical"></span></p>' +
         //'<p><label for="project_id">Проект</label>' +
         //'<input type="text" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его"></p>' +
-    '<p><label for="executor">Отвественный</label>' +
+    '<p><label for="executor">Участники</label>' +
     '<input size="33" type="text" class="livesearch" placeholder="Начните набирать имя пользователя" name="main_user" value="" autocomplete="off" id="executor">' +
     '<div class="search_advice_wrapper" id="prj_wrapp"></div></p>' +
+    '<p><label for="coexecutor">Участники</label>' +
         //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
         //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
     '<p><div class="create" onclick="new_project();">Создать</div><a href="javascript:void(0)">Прикрепить</a></div></p>';
@@ -555,7 +556,7 @@ function view(id,type){
         TM['highlight_element']=task['id'];
         document.getElementById(TM['highlight_day']).className='task_day active_day';
         document.getElementById(TM['highlight_element']).className='task_info task_active';
-        source+='<div class="task_title"><h4>'+task['name']+'<img onclick="edit_task('+task['id']+');" src="templates/default/images/b_pan_hover.png" id="edit_pen"></h4></div>';
+        source+='<div class="task_title"><h4>'+task['name']+'<img onclick="edit_task('+task['id']+');" src="templates/default/images/b_pan_hover.png" id="edit_pen"><img onclick="edit_task('+task['id']+');" src="templates/default/images/trash.png" id="trash"></h4></div>';
         source+='<p class="task_description">'+task['description']+'</p>';
         source+='<div class="info_task">';
         if(task['idproject']!=0){
@@ -615,13 +616,13 @@ function view(id,type){
         day = (date.getDate() < 10 ? '0' : '') + date.getDate();month = TM['months'][date.getMonth()];
         date_finish='по '+day+' '+month+' '+date.getFullYear();
         source+='<div class="project_title"><h4>'+project['nameproject'];
-        source+='<img src="templates/default/images/b_pan_hover.png" id="edit_pen"></h4></div>';
+        source+='<img src="templates/default/images/b_pan_hover.png" id="edit_pen"><img src="templates/default/images/trash.png" id="trash"></h4></div>';
         source+='<p class="project_description">'+project['description']+'</p><div class="project_time">';
         source+='<div class="date_start">'+date_start+'</div><div class="date_end">'+date_finish+
         '</div><div class="project_time_all">';
         source+='<div class="countpercent">'+project['percent_view']+'</div><div class="project_rime_cur" style="width: '+project['percent']+'%"></div></div></div>';
         source+='<div class="task_table"><div>Инициатор</div><a href="javascript:void(0)" onclick="view('+project['initiator']+',\'user\');">'+project['initiator_name']+'</a></div>';
-        source+='<div class="task_table"><div>Исполнители</div>';
+        source+='<div class="task_table"><div>Участники</div>';
         // BUILD EXECUTORS
         user=false;
         for(u in project['users']){

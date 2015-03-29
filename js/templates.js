@@ -73,13 +73,17 @@ PAGE['lk']=[];
 PAGE['lk']['title']='Настройки';
 PAGE['lk']['source']='<div id="lk"><div id="types"><div id="profile_settings" class="active_set">Настройки профиля</div>' +
 '<div id="group_manage">Управление группами</div><div id="interface_set">Настройки интерфейса</div></div>' +
-'<div id="info_lk"><div id="photo_lk"><img src="templates/default/images/avatar.png" width="200"><br><a>Изменить фото</a></div>' +
+'<div id="info_lk"><div id="photo_lk"><img src="templates/default/images/avatar_300.png" width="200"><br><a>Изменить фото</a></div>' +
 '<div id="user_info"><p><label for="last_name">Фамилия</label><input type="text" id="last_name" placeholder="Фамилия"></p>' +
 '<p><label for="first_name">Имя</label><input type="text" id="first_name" placeholder="Имя"></p><p>' +
 '<label for="otchestvo">Отчество</label><input type="text" id="otchestvo" placeholder="Отчество"></p><p>' +
 '<label for="job_pos">Должность</label><input type="text" id="job_pos" placeholder="Должность"></p><p>' +
 '<label for="group">Группа</label><input type="text" id="group" placeholder="Группа"></p><p>' +
-'<label for="phone">Телефон</label><input type="text" id="phone" placeholder="Телефон"></p>' +
+'<label for="phone">Телефон</label><input type="text" id="phone" placeholder="Телефон"></p><p>' +
+'<label for="E-mail">E-mail</label><input type="text" id="E-mail" placeholder="E-mail"></p><p>' +
+'<label for="organization">Организация</label><input type="text" id="organization" placeholder="Организация"></p><p>' +
+'<label for="organization_group">Подразделение</label><input type="text" id="organization_group" placeholder="Подразделение"></p><p>' +
+'<label for="group_list">Список групп</label><input type="text" id="group_list" placeholder="Список групп"></p>' +
 '<div class="create">Сохранить</div></div><div id="pass_info"><p><label for="cur_pass">Текущий пароль</label>' +
 '<input type="text" id="cur_pass" placeholder="Текущий пароль"></p><p><label for="new_pass">Новый пароль</label>' +
 '<input type="text" id="new_pass" placeholder="Новый пароль"></p><p><label for="rep_pass">Повтор пароля</label>' +

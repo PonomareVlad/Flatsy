@@ -270,7 +270,9 @@ header{
     background: #fff;
     border-right: 3px solid #D0D0D0;
     float: left;
+    position: relative;
     width: 500px;
+    z-index: 3;
 }
 .left_bar a{
     text-decoration: none;
@@ -443,6 +445,7 @@ header{
 .center{
     margin-left: 500px;
     padding: 0 10px;
+
 }
 .center .title h4{
     background: #FF9C00;
@@ -467,8 +470,11 @@ header{
     padding: 5px 15px;
 }
 
-.task_add input,.task_add textarea{
+.task_add input{
     width: 70%;
+}
+.task_add textarea{
+    width: 70% !important;
 }
 .task_add input:focus,.task_add textarea:focus{
     outline: 4px solid #FF9C00;
@@ -482,17 +488,15 @@ header{
     margin-left: 85px;
 }
 .search_advice_wrapper{
-    left: 200px;
-    margin-top: -15px;
-    display:none;
-    width: 250px;
-    background-color: rgb(220,220,220);
-    color: rgb(50,50,50);
-    -moz-opacity: 0.95;
+    background-color: rgb(220, 220, 220);
+    color: rgb(50, 50, 50);
+    display: none;
+    left: 198px;
+    margin-top: -12px;
     opacity: 0.95;
-    filter:alpha(opacity=95);
-    z-index:999;
     position: absolute;
+    width: 250px;
+    z-index: 999;
 }
 .search_advice_wrapper .advice_variant{
     cursor: pointer;
@@ -625,10 +629,14 @@ h4{
 }
 #edit_pen{
     margin: 0 10px;
+    cursor: pointer;
 }
 
 #page{
     margin: 0;
+}
+#groups .group{
+    cursor: pointer;
 }
 .groupflag{
     width: 300px !important;
@@ -637,6 +645,9 @@ h4{
 .groupflag .action_bar{
     height: 80px;
     width: 200px !important;
+}
+.groupflag .action_bar div{
+    cursor: pointer;
 }
 .add_group{
     color: #929292;
@@ -660,7 +671,6 @@ h4{
 
 .group_center{
     margin-left: 300px;
-    padding: 0;
 }
 .group_center .item_title{
     background: #EFEFEF;
@@ -677,10 +687,10 @@ h4{
 .group_center .solution a{
     margin-left: 10px;
 }
-.group_center .title h4{
-    margin: 0 ;
-}
 
+.group_list{
+    overflow-y: scroll;
+}
 
 .group_table{
     display: table;
@@ -738,6 +748,7 @@ h4{
 #types div{
     float: left;
     margin: 0 20px;
+    cursor: pointer;
 }
 .active_set{
     font-weight: bold;
