@@ -172,6 +172,10 @@ CREATE TABLE IF NOT EXISTS `users` (
   `patronymic` varchar(20) NOT NULL COMMENT 'Отчество',
   `password` varchar(32) NOT NULL,
   `mail` varchar(50) NOT NULL,
+  `post` varchar(50) NOT NULL COMMENT 'Должность',
+  `organization` varchar(50) NOT NULL COMMENT 'Организация',
+  `unit` varchar(50) NOT NULL COMMENT 'Подразделение',
+  `phone` varchar(17) NOT NULL COMMENT 'Телефон',
   `last_act` datetime NOT NULL,
   `reg_date` datetime NOT NULL,
   `photo` varchar(100) NOT NULL
