@@ -79,39 +79,3 @@ document.onkeyup = function (e) {
     }
     return false;
 }
-
-var ball = document.getElementById('ball3');
-
-ball.onmousedown = function(e) {
-    var self = this;
-    e = fixEvent(e);
-
-    var coords = getCoords(this);
-    var shiftX = e.pageX - coords.left;
-    var shiftY = e.pageY - coords.top;
-
-    this.style.position = 'absolute';
-    document.body.appendChild(this);
-    moveAt(e);
-
-    this.style.zIndex = 1000; // над другими элементами
-
-    function moveAt(e) {
-        self.style.left = e.pageX - shiftX + 'px';
-        self.style.top = e.pageY - shiftY+ 'px';
-    }
-
-    document.onmousemove = function(e) {
-        e = fixEvent(e);
-        moveAt(e);
-    };
-
-    this.onmouseup = function() {
-        document.onmousemove = self.onmouseup = null;
-    };
-
-}
-
-ball.ondragstart = function() {
-    return false;
-};

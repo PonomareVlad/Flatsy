@@ -28,7 +28,7 @@ function init_cal(){
     month=["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"]; // название месяца, вместо цифр 0-11
     days=['вс','пн','вт','ср','чт','пт','сб'];
     array=[];
-    cal_view='<ul>';
+    cal_view='<ul id="calend">';
     for(var  i = 1; i <= D1last; i++) {
         tmp=array.length;
         array[tmp]=[i,days[new Date(D1.getFullYear(),D1.getMonth(),i).getDay()],month[D1.getMonth()]];
