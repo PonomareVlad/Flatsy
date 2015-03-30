@@ -76,6 +76,12 @@
     background-clip:border-box;
     background: url("../images/form.png");
     background-size:100% 100%;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+
 }
 .formreg{
     height: 500px;
@@ -751,6 +757,7 @@ h4{
     cursor: pointer;
 }
 #types div img{
+    margin-right: 5px;
     vertical-align: middle;
 }
 .active_set{
