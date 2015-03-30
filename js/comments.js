@@ -38,3 +38,9 @@ function add_comment(){
     document.getElementById('new_comm').value='';
     io({"action":"add_comment","id":TM['CID'],"type":TM['comments_loaded'],"text":text});
 }
+
+function reset_comments(){
+    TM['comments_loaded']=false;
+    TM['CID']=false;
+    TM['empty_comments']=false;
+}

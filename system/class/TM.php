@@ -52,6 +52,34 @@ class TM extends DB
             }
         }
     }
+    public static function edit_task($query)
+    {
+        $name = Checkdata($query['name']);
+        $description = Checkdata($query['description']);
+        $executor = Checkdata($query['executor']);
+        $date_finish = $query['date_finish'] . ':00';
+        $idproject = $query['project'] ? $query['project'] : '0';
+        $parentask = '0';
+        $fields=["name"=>$name,"description"=>$description,"executor"=>$executor,"date_finish"=>$date_finish,"idproject"=>$idproject];
+        $set = DB::update('task',$fields, 'task.id = ' . $query['id']);
+        if ($set == 1) {
+            return TM::get_task($query['id']);
+        } else {
+            return false;
+        }
+
+    }
+    public static function del_task($id){
+        $task=TM::get_task($id);
+        if($task['initiator']==USER_ID){
+            $set=DB::delete('task','task.id = '.$task['id']);
+            if($set==1){
+                return $task['id'];
+            }else{
+                return false;
+            }
+        }
+    }
     public static function get_comm($query){
         global $MYSQL_CONNECTION;
         if(isset($query['id'])){

@@ -28,11 +28,11 @@ function sizing() {
         document.getElementById('view').style.height = window.innerHeight - document.getElementById('view').offsetTop + 'px';
     }
     if (TM['current_page'] == 'tasks') {
-        document.getElementById('tasks').style.height = window.innerHeight - document.getElementById('tasks').offsetTop + 'px';
+        document.getElementById('tasks').style.height = window.innerHeight - document.getElementById('tasks').offsetTop-160 + 'px';
     } else if (TM['current_page'] == 'projects') {
-        document.getElementById('projects').style.height = window.innerHeight - document.getElementById('projects').offsetTop + 'px';
+        document.getElementById('projects').style.height = window.innerHeight - document.getElementById('projects').offsetTop-160 + 'px';
     } else if (TM['current_page'] == 'groups') {
-        document.getElementById('groups').style.height = window.innerHeight - document.getElementById('groups').offsetTop + 'px';
+        document.getElementById('groups').style.height = window.innerHeight - document.getElementById('groups').offsetTop-160 + 'px';
     }
     if (document.getElementById('comments')) {
         // CORRECT HEIGHT
@@ -79,3 +79,39 @@ document.onkeyup = function (e) {
     }
     return false;
 }
+
+var ball = document.getElementById('ball3');
+
+ball.onmousedown = function(e) {
+    var self = this;
+    e = fixEvent(e);
+
+    var coords = getCoords(this);
+    var shiftX = e.pageX - coords.left;
+    var shiftY = e.pageY - coords.top;
+
+    this.style.position = 'absolute';
+    document.body.appendChild(this);
+    moveAt(e);
+
+    this.style.zIndex = 1000; // над другими элементами
+
+    function moveAt(e) {
+        self.style.left = e.pageX - shiftX + 'px';
+        self.style.top = e.pageY - shiftY+ 'px';
+    }
+
+    document.onmousemove = function(e) {
+        e = fixEvent(e);
+        moveAt(e);
+    };
+
+    this.onmouseup = function() {
+        document.onmousemove = self.onmouseup = null;
+    };
+
+}
+
+ball.ondragstart = function() {
+    return false;
+};

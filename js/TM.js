@@ -141,6 +141,91 @@ function handler(response) {
                 }
             }
         }
+        if(response['edit_task']){
+            if(response['edit_task']!=false){
+                for(t in DB['TASK']){
+                    if(DB['TASK'][t]['id']==response['edit_task']['id']){
+                        if(DB['TASK'][t]['idproject']!=response['edit_task']['idproject']) {
+                            //alert(DB['TASK'][t]['idproject']+'>>'+response['edit_task']['idproject'])
+                            if (response['edit_task']['idproject'] != 0) {
+                                for (p in DB['PROJECT']) {
+                                    if (DB['PROJECT'][p]['idproject'] == DB['TASK'][t]['idproject']) {
+                                        for (i in DB['PROJECT'][p]['tasks']) {
+                                            if (DB['PROJECT'][p]['tasks'][i]['id'] == DB['TASK'][t]['id']) {
+                                                DB['PROJECT'][p]['tasks'].splice(i, 1);
+                                                //alert('Deleted from '+DB['PROJECT'][p]['nameproject']);
+                                            }
+                                        }
+                                    }
+                                    if(DB['PROJECT'][p]['idproject'] == response['edit_task']['idproject']){
+                                        DB['PROJECT'][p]['tasks'][DB['PROJECT'][p]['tasks'].length]=response['edit_task'];
+                                        //alert('Inserted into '+DB['PROJECT'][p]['nameproject']);
+                                    }
+                                }
+                            }else{
+                                for (p in DB['PROJECT']) {
+                                    if (DB['PROJECT'][p]['idproject'] == DB['TASK'][t]['idproject']) {
+                                        for (i in DB['PROJECT'][p]['tasks']) {
+                                            if (DB['PROJECT'][p]['tasks'][i]['id'] == DB['TASK'][t]['id']) {
+                                                DB['PROJECT'][p]['tasks'].splice(i, 1);
+                                                //alert('Deleted from '+DB['PROJECT'][p]['nameproject']);
+                                            }
+                                        }
+                                    }
+                                }
+                                page('tasks');
+                            }
+                        }else {
+                            if (DB['TASK'][t]['idproject'] != 0) {
+                                for (p in DB['PROJECT']) {
+                                    if (DB['PROJECT'][p]['idproject'] == response['edit_task']['idproject']) {
+                                        for (i in DB['PROJECT'][p]['tasks']) {
+                                            if (DB['PROJECT'][p]['tasks'][i]['id'] == response['edit_task']['id']) {
+                                                DB['PROJECT'][p]['tasks'][i] = response['edit_task'];
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        DB['TASK'][t]=response['edit_task'];
+                        if(TM['CID']==response['edit_task']['id']){
+                            gen_list();
+                            TM['highlight_day']=false;
+                            TM['highlight_element']=false;
+                            view(response['edit_task']['id'],'task');
+                        }
+                    }
+                }
+            }
+        }
+        if(response['del_task']){
+            if(response['del_task']!=false){
+                for(t in DB['TASK']){
+                    if(DB['TASK'][t]['id']==response['del_task']){
+                        if(DB['TASK'][t]['idproject']!=0){
+                            for(p in DB['PROJECT']){
+                                if(DB['PROJECT'][p]['idproject']==DB['TASK'][t]['idproject']){
+                                    for(i in DB['PROJECT'][p]['tasks']){
+                                        if(DB['PROJECT'][p]['tasks'][i]['id']==DB['TASK'][t]['id']){
+                                            DB['PROJECT'][p]['tasks'].splice(i,1);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        DB['TASK'].splice(t,1);
+                        if(TM['CID']==response['del_task']){
+                            reset_comments();
+                            get('view').innerHTML='';
+                            TM['highlight_day']=false;
+                            TM['highlight_element']=false;
+                        }
+                    }
+                }
+                gen_list();
+            }
+        }
         if(response['add_group']) {
             if (response['add_group'] != false) {
                 DB['GROUP'][DB['GROUP'].length]=response['add_group'];
@@ -212,18 +297,24 @@ function edit_task(id){
             break;
         }
     }
+    task['date']=task['date_finish'].split(' ');
+    task['time']=task['date'][1].split(':');
+    task['hour']=task['time'][0];
+    task['minuts']=task['time'][1];
+    task['date']=task['date'][0].split('-');
+    task['date']=task['date'][2]+'.'+task['date'][1]+'.'+task['date'][0];
     source = '<div class="task_add"><div class="title">' +
     '<h4>Редактирование задачи</h4></div><p>' +
     '<label for="name">Постановка задачи</label><input type="text" name="task_title" value="'+task['name']+'" id="name"></p>' +
     '<p><label for="description">Описание</label>' +
     '<textarea type="text" name="task_description" id="description">'+task['description']+'</textarea></p>' +
     '<p><label for="date_finish">Дата завершения:</label>' +
-    '<input value="'+task['date_finish']+'" onfocus="this.select();lcs(this);position_calen();" onclick="event.cancelBubble=true;this.select();lcs(this);position_calen()" style="width: 5em;" type="text" name="date_final" id="date_finish">' +
-    ' Часы: <input type="number" min="0" max="23" value="12" style="width: 3em;" id="hours">' +
-    ' Минуты: <input type="number" min="0" max="59" value="00" style="width: 3em;" id="minuts">' +
+    '<input value="'+task['date']+'" onfocus="this.select();lcs(this);position_calen();" onclick="event.cancelBubble=true;this.select();lcs(this);position_calen()" style="width: 5em;" type="text" name="date_final" id="date_finish">' +
+    ' Часы: <input type="number" min="0" max="23" value="'+task['hour']+'" style="width: 3em;" id="hours">' +
+    ' Минуты: <input type="number" min="0" max="59" value="'+task['minuts']+'" style="width: 3em;" id="minuts">' +
     '<span id="minical"></span></p>' +
     '<p><label for="project_id">Проект</label>' +
-    '<input type="text" class="livesearch_prj" value="'+task['projectname']+'" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его">' +
+    '<input type="text" class="livesearch_prj" value="'+(task['projectname']||'')+'" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его">' +
     '<div class="search_advice_wrapper" id="search_advice_wrapper_prj"></div></p>' +
     '<p><label for="executor">Ответственный</label>' +
     '<input type="text" class="livesearch_exe" value="'+task['executor_name']+'" placeholder="Начните набирать имя пользователя" name="main_user" autocomplete="off" id="executor">' +
@@ -235,6 +326,9 @@ function edit_task(id){
     //'<a href="javascript:void(0)">Прикрепить</a>' +
     '</p></div>';
     document.getElementById('view').innerHTML = source;
+    TM['tmp_edit_id']=task['id'];
+    TM['tmp_edit_idproject']=task['idproject']||'0';
+    TM['tmp_edit_executor']=task['executor'];
     loadSearch('#executor','#search_advice_wrapper_exe','get_users');
     loadSearch('#idproject','#search_advice_wrapper_prj','get_projects');
     calendar_init();
@@ -265,6 +359,35 @@ function send_task(){
     }
 }
 
+function send_edit_task(){
+
+    id=TM['tmp_edit_id'];
+    name=document.getElementById('name').value;
+    description=document.getElementById('description').value;
+    executor=LSEARCH['get_users']['selected_id']||TM['tmp_edit_executor'];//selected_id;
+    project=get('idproject').value==''?'0':(LSEARCH['get_projects']['selected_id']||TM['tmp_edit_idproject']);
+    hours=document.getElementById('hours').value;
+    minuts=document.getElementById('minuts').value;
+    date_finish=document.getElementById('date_finish').value;
+    date_finish=date_finish.split('.');
+    date_finish=date_finish[2]+'-'+date_finish[1]+'-'+date_finish[0]+' '+(hours<10?'0':'')+hours+':'+(minuts<10?'0':'')+minuts;
+
+    TM['tmp_edit_executor']=false;
+    TM['tmp_edit_idproject']=false;
+
+    if(executor!=false) {
+        io({
+            "action": "edit_task",
+            "id":id,
+            "name": name,
+            "description": description,
+            "executor": executor,
+            "date_finish": date_finish,
+            "project":project
+        });
+    }
+}
+
 function task_end(id){
     task=false;
     for(t in DB['TASK']){ // Поиск запрошенной задачи в БД
@@ -275,6 +398,17 @@ function task_end(id){
     }
     value=task['finished']==1?0:1;
     io({"action":"set_task","param":"finished","value":value,"id":id});
+}
+
+function task_del(id){
+    task=false;
+    for(t in DB['TASK']){ // Поиск запрошенной задачи в БД
+        if(DB['TASK'][t]['id']==id){
+            task=DB['TASK'][t];
+            break;
+        }
+    }
+    io({"action":"del_task","id":id});
 }
 
 function show_add_project() {
@@ -556,7 +690,12 @@ function view(id,type){
         TM['highlight_element']=task['id'];
         document.getElementById(TM['highlight_day']).className='task_day active_day';
         document.getElementById(TM['highlight_element']).className='task_info task_active';
-        source+='<div class="task_title"><h4>'+task['name']+'<img onclick="edit_task('+task['id']+');" src="templates/default/images/b_pan_hover.png" id="edit_pen"><img onclick="edit_task('+task['id']+');" src="templates/default/images/trash.png" id="trash"></h4></div>';
+        source+='<div class="task_title"><h4>'+task['name']
+        if(task['initiator']==TM['UID']) {
+            source += '<img onclick="edit_task(' + task['id'] + ');" src="templates/default/images/b_pan_hover.png" id="edit_pen">' +
+            '<img onclick="task_del(' + task['id'] + ');" src="templates/default/images/trash.png" id="trash">'
+        }
+        source+='</h4></div>';
         source+='<p class="task_description">'+task['description']+'</p>';
         source+='<div class="info_task">';
         if(task['idproject']!=0){

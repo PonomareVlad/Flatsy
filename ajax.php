@@ -68,6 +68,12 @@ if(defined('USER_ID')) { // Статус авторизации
             $setask = TM::set_task($QUERY);
             $RESPONSE['set_task'] = $setask;
         }
+        if ($QUERY['action'] == 'del_task') { // Удаление задачи
+            $RESPONSE['del_task'] = TM::del_task($QUERY['id']);
+        }
+        if ($QUERY['action'] == 'edit_task') { // Изменение задачи
+            $RESPONSE['edit_task'] = TM::edit_task($QUERY);
+        }
         if ($QUERY['action'] == 'get_comments') {
             $comm = TM::get_comments($QUERY['id'],$QUERY['type']);
             $RESPONSE['comments'] = $comm;
