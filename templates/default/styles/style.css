@@ -260,6 +260,12 @@ header{
     padding: 0 14px;
     cursor: default;
 }
+.calendar_task{
+    background: #EEEEEE;
+}
+.calendar_active{
+    background: #FD9B01;
+}
 .calendar li .month{
 
 }
