@@ -74,6 +74,12 @@ if(defined('USER_ID')) { // Статус авторизации
         if ($QUERY['action'] == 'edit_task') { // Изменение задачи
             $RESPONSE['edit_task'] = TM::edit_task($QUERY);
         }
+        if ($QUERY['action'] == 'del_project') { // Удаление проекта
+            $RESPONSE['del_project'] = TM::del_project($QUERY['id']);
+        }
+        if ($QUERY['action'] == 'edit_project') { // Изменение проекта
+            $RESPONSE['edit_project'] = TM::edit_project($QUERY);
+        }
         if ($QUERY['action'] == 'get_comments') {
             $comm = TM::get_comments($QUERY['id'],$QUERY['type']);
             $RESPONSE['comments'] = $comm;

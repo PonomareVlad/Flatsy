@@ -48,10 +48,24 @@ function handler(response) {
                 //alert('load page..');
                 TM['current_page']=(TM['current_page']=='auth'||TM['current_page']=='reg')?'tasks':TM['current_page'];
                 //TM['current_page']=PAGE[TM['current_page']]?TM['current_page']:'tasks';
-                document.getElementById('main').className='blur';
+                //document.getElementById('main').className='blur';
                 page(TM['current_page']==false?'tasks':TM['current_page'],true);
                 //alert('loaded');
             }
+            if(TM['tmp_rebuild_lists']) {
+                TM['highlight_day']=false;
+                TM['highlight_element']=false;
+                gen_list();
+                TM['tmp_rebuild_lists'] = false;
+            }
+            if(TM['tmp_view_upd']){
+                TM['highlight_day']=false;
+                TM['highlight_element']=false;
+                gen_list();
+                view(TM['view_id'],TM['view_type']);
+                TM['tmp_view_upd']=false;
+            }
+            document.getElementById('main').className='noblur';
             // BUILD REFRESH VIEW
             //gen_list();
         }
@@ -226,6 +240,22 @@ function handler(response) {
                 gen_list();
             }
         }
+        if(response['del_project']) {
+            if (response['del_project'] != false) {
+                document.getElementById('main').className='blur';
+                get('view').innerHTML='';
+                TM['tmp_rebuild_lists']=true;
+                io({'action':'load_db'});
+            }
+        }
+        if(response['edit_project']) {
+            if (response['edit_project'] != false) {
+                document.getElementById('main').className='blur';
+                //TM['tmp_rebuild_lists']=true
+                TM['tmp_view_upd']=true;
+                io({'action':'load_db'});
+            }
+        }
         if(response['add_group']) {
             if (response['add_group'] != false) {
                 DB['GROUP'][DB['GROUP'].length]=response['add_group'];
@@ -335,6 +365,53 @@ function edit_task(id){
     return false;
 }
 
+function edit_project(id) {
+    project=false;
+    for(p in DB['PROJECT']){ // Поиск запрошенной задачи в БД
+        if(DB['PROJECT'][p]['idproject']==id){
+            project=DB['PROJECT'][p];
+            break;
+        }
+    }
+    if(!project){alert('BAD ID: '+id)};
+    project['date']=project['date_finish'].split(' ');
+    project['time']=project['date'][1].split(':');
+    project['hour']=project['time'][0];
+    project['minuts']=project['time'][1];
+    project['date']=project['date'][0].split('-');
+    project['date']=project['date'][2]+'.'+project['date'][1]+'.'+project['date'][0];
+    source = '<div class="task_add"><div class="title">' +
+    '<h4>Редактирование проекта</h4></div><p>' +
+    '<label for="name">Название</label><input type="text" name="task_title" value="'+project['nameproject']+'" id="name"></p>' +
+    '<p><label for="description">Описание</label>' +
+    '<textarea type="text" name="task_description" id="description">'+project['description']+'</textarea></p>' +
+    '<p><label for="date_finish">Дата завершения:</label>' +
+    '<input value="'+project['date']+'" onfocus="this.select();lcs(this);position_calen();" onclick="event.cancelBubble=true;this.select();lcs(this);position_calen()" style="width: 5em;" type="text" name="date_final" id="date_finish">' +
+    ' Часы: <input type="number" min="0" max="23" value="'+project['hour']+'" style="width: 3em;" id="hours">' +
+    ' Минуты: <input type="number" min="0" max="59" value="'+project['minuts']+'" style="width: 3em;" id="minuts">' +
+    '<span id="minical"></span></p>' +
+    //'<p><label for="project_id">Проект</label>' +
+    //'<input type="text" class="livesearch_prj" value="'+(project['projectname']||'')+'" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его">' +
+    //'<div class="search_advice_wrapper" id="search_advice_wrapper_prj"></div></p>' +
+    //'<p><label for="executor">Ответственный</label>' +
+    //'<input type="text" class="livesearch_exe" value="'+project['executor_name']+'" placeholder="Начните набирать имя пользователя" name="main_user" autocomplete="off" id="executor">' +
+    //'<div class="search_advice_wrapper" id="search_advice_wrapper_exe"></div></p>' +
+        //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
+        //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
+    '<p><div class="create" onclick="send_edit_proj();">Изменить</div>' +
+        //' * Отображаются, на данный момент,только те поля, которые, функционально, имеют возможность обрабатываться системой!' +
+        //'<a href="javascript:void(0)">Прикрепить</a>' +
+    '</p></div>';
+    document.getElementById('view').innerHTML = source;
+    TM['tmp_edit_id']=project['idproject'];
+    //TM['tmp_edit_idproject']=project['idproject']||'0';
+    //TM['tmp_edit_executor']=project['executor'];
+    //loadSearch('#executor','#search_advice_wrapper_exe','get_users');
+    //loadSearch('#idproject','#search_advice_wrapper_prj','get_projects');
+    calendar_init();
+    return false;
+}
+
 function send_task(){
 
     name=document.getElementById('name').value;
@@ -388,6 +465,35 @@ function send_edit_task(){
     }
 }
 
+function send_edit_proj(){
+
+    id=TM['tmp_edit_id'];
+    name=document.getElementById('name').value;
+    description=document.getElementById('description').value;
+    //executor=LSEARCH['get_users']['selected_id']||TM['tmp_edit_executor'];//selected_id;
+    //project=get('idproject').value==''?'0':(LSEARCH['get_projects']['selected_id']||TM['tmp_edit_idproject']);
+    hours=document.getElementById('hours').value;
+    minuts=document.getElementById('minuts').value;
+    date_finish=document.getElementById('date_finish').value;
+    date_finish=date_finish.split('.');
+    date_finish=date_finish[2]+'-'+date_finish[1]+'-'+date_finish[0]+' '+(hours<10?'0':'')+hours+':'+(minuts<10?'0':'')+minuts;
+
+    //TM['tmp_edit_executor']=false;
+    //TM['tmp_edit_idproject']=false;
+
+    //if(executor!=false) {
+        io({
+            "action": "edit_project",
+            "id":id,
+            "name": name,
+            "description": description,
+            //"executor": executor,
+            "date_finish": date_finish
+            //"project":project
+        });
+    //}
+}
+
 function task_end(id){
     task=false;
     for(t in DB['TASK']){ // Поиск запрошенной задачи в БД
@@ -401,14 +507,25 @@ function task_end(id){
 }
 
 function task_del(id){
-    task=false;
+    /*task=false;
     for(t in DB['TASK']){ // Поиск запрошенной задачи в БД
         if(DB['TASK'][t]['id']==id){
             task=DB['TASK'][t];
             break;
         }
-    }
+    }*/
     io({"action":"del_task","id":id});
+}
+
+function proj_del(id){
+    /*project=false;
+    for(t in DB['PROJECT']){ // Поиск запрошенной задачи в БД
+        if(DB['PROJECT'][t]['id']==id){
+            project=DB['PROJECT'][t];
+            break;
+        }
+    }*/
+    io({"action":"del_project","id":id});
 }
 
 function show_add_project() {
@@ -678,6 +795,8 @@ function view(id,type){
                 break;
             }
         }
+        TM['view_type']=type;
+        TM['view_id']=id;
         date=new Date();
         now = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
         if(TM['highlight_day']){document.getElementById(TM['highlight_day']).className='task_day';TM['highlight_day']=false;}
@@ -721,6 +840,7 @@ function view(id,type){
     }
     if(type=='project'){
         var project=false;
+        ID=id;
         for(p in DB['PROJECT']){ // Поиск запрошенного проекта в БД
             if(DB['PROJECT'][p]['idproject']==id){
                 project=DB['PROJECT'][p];
@@ -728,6 +848,8 @@ function view(id,type){
                 break;
             }
         }
+        TM['view_type']=type;
+        TM['view_id']=ID;
         //alert(DB['PROJECT'][id]['percent']);
         //if(!DB['PROJECT'][id]['percent']){
         DB['PROJECT'][id]['time_finish'] = new Date(new Date(project['date_finish'].replace(' ', 'T')).getTime()+TM['time_offset']).getTime();
@@ -755,8 +877,11 @@ function view(id,type){
         day = (date.getDate() < 10 ? '0' : '') + date.getDate();month = TM['months'][date.getMonth()];
         date_finish='по '+day+' '+month+' '+date.getFullYear();
         source+='<div class="project_title"><h4>'+project['nameproject'];
-        source+='<img src="templates/default/images/b_pan_hover.png" id="edit_pen"><img src="templates/default/images/trash.png" id="trash"></h4></div>';
-        source+='<p class="project_description">'+project['description']+'</p><div class="project_time">';
+        if(project['initiator']==TM['UID']) {
+            source += '<img onclick="edit_project(' + project['idproject'] + ');" src="templates/default/images/b_pan_hover.png" id="edit_pen">' +
+            '<img onclick="proj_del(' + project['idproject'] + ');" src="templates/default/images/trash.png" id="trash">';
+        }
+        source+='</h4></div><p class="project_description">'+project['description']+'</p><div class="project_time">';
         source+='<div class="date_start">'+date_start+'</div><div class="date_end">'+date_finish+
         '</div><div class="project_time_all">';
         source+='<div class="countpercent">'+project['percent_view']+'</div><div class="project_rime_cur" style="width: '+project['percent']+'%"></div></div></div>';
@@ -804,6 +929,8 @@ function view(id,type){
                 }
             }
         }
+        TM['view_type']=type;
+        TM['view_id']=id;
         source+='<div class="title"><h4>Запросы</h4></div><div class="item_title">Участники ('+group['count_users']+')</div>' +
         '<div class="group_table"><div class="group_tr"><div class="names"><div class="account">Аккаунт</div>' +
         '<div class="job_pos">Должность</div><div class="scroll"><div>Добавление/удаление пользователей</div>' +
