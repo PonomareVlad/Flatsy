@@ -543,7 +543,6 @@ function show_add_project() {
     '<p><label for="executor">Участники</label>' +
     '<input size="33" type="text" class="livesearch" placeholder="Начните набирать имя пользователя" name="main_user" value="" autocomplete="off" id="executor">' +
     '<div class="search_advice_wrapper" id="prj_wrapp"></div></p>' +
-    '<p><label for="coexecutor">Участники</label>' +
         //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
         //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
     '<p><div class="create" onclick="new_project();">Создать</div><a href="javascript:void(0)">Прикрепить</a></div></p>';
