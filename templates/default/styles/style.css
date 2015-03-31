@@ -240,6 +240,23 @@ header{
     border-bottom: 3px solid #D0D0D0;
     height: 90px;
     overflow: hidden;
+    padding: 0 38px;
+}
+#prev{
+    background: url("../images/prev.png");
+    position: absolute;
+    height: 70px;
+    width: 38px;
+    top: 75px;
+    left: 0;
+}
+#next{
+    background: url("../images/next.png");
+    position: absolute;
+    height: 70px;
+    width: 38px;
+    top: 75px;
+    right: 0;
 }
 
 #calendar{
