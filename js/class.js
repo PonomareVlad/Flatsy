@@ -183,6 +183,20 @@ function reg_send(response) {
             }
         }
     } else {
+        p1=get('password').value;
+        p2=get('repeat_password').value;
+        if(p1==p2){
+            TM['tmp_reg_password']=p1;
+        }else{
+            TM['tmp_reg_password']=false;
+        }
+        e1=get('email').value;
+        e2=get('repeat_email').value;
+        if(e1==e2) {
+            TM['tmp_reg_email'] = e1;
+        }else {
+            TM['tmp_reg_email'] = false;
+        }
         if(!TM['tmp_reg_email']){
             document.getElementById('status').innerHTML = 'Адреса e-mail не совпадают';
             return;
