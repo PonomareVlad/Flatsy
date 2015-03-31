@@ -155,19 +155,22 @@ header{
 }
 
 
-.user_menu, .notify{
+.user_menu, .notifications{
     color: #929292;
     float: right;
     padding-right: 40px;
     position: relative;
 }
-.notify{
+.notifications{
     cursor: pointer;
     background:  #D0D0D0;
     z-index: 999;
 }
-.notify ul{
+.notifications ul{
     z-index: 333;
+}
+.notifications a{
+
 }
 
 .user_menu .avatar img {
@@ -176,12 +179,21 @@ header{
     width: 37px;
 
 }
-.user_menu div{
+.user_menu div, .notifications div{
     float: left;
     background:  #D0D0D0;
     position: relative;
     z-index: 100;
     cursor: default;
+}
+.notifications li{
+    position: relative;
+}
+.notifications img{
+    cursor: default;
+    position: absolute;
+    right: 5px;
+    top: 5px;
 }
 .arrow{
     border: 10px solid transparent;
@@ -202,7 +214,7 @@ header{
     transition-duration: 180ms;
 
 }
-.user_menu ul, .notify ul {
+.user_menu ul, .notifications ul {
     background: #D0D0D0;
     list-style: none;
     margin: 0;
@@ -214,19 +226,19 @@ header{
     z-index: 2;
 }
 
-.user_menu:hover ul, .notify:hover ul{
+.user_menu:hover ul, .notifications:hover ul{
     top: 67px;
     transition-duration: 300ms;
 }
 
-.user_menu li, .notify li{
+.user_menu li, .notifications li{
     font-weight: normal;
     line-height: 14px;
     padding: 10px;
     transition-duration: 300ms;
     cursor: pointer;
 }
-.user_menu li:hover, .notify li:hover{
+.user_menu li:hover, .notifications li:hover{
     color: #ffffff;
     background: #c2c2c2;
     transition-duration: 300ms;
@@ -255,7 +267,7 @@ header{
     position: absolute;
     height: 70px;
     width: 38px;
-    top: 75px;
+    top: px;
     right: 0;
 }
 
