@@ -810,8 +810,7 @@ function view(id,type){
         document.getElementById(TM['highlight_element']).className='task_info task_active';
         source+='<div class="task_title"><h4>'+task['name']
         if(task['initiator']==TM['UID']) {
-            source += '<img onclick="edit_task(' + task['id'] + ');" src="templates/default/images/b_pan_hover.png" id="edit_pen">' +
-            '<img onclick="task_del(' + task['id'] + ');" src="templates/default/images/trash.png" id="trash">'
+            source += '<img onclick="task_del(' + task['id'] + ');" src="templates/default/images/trash.png" id="trash"><img onclick="edit_task(' + task['id'] + ');" src="templates/default/images/b_pan_hover.png" id="edit_pen">';
         }
         source+='</h4></div>';
         source+='<p class="task_description">'+task['description']+'</p>';
@@ -877,8 +876,8 @@ function view(id,type){
         date_finish='по '+day+' '+month+' '+date.getFullYear();
         source+='<div class="project_title"><h4>'+project['nameproject'];
         if(project['initiator']==TM['UID']) {
-            source += '<img onclick="edit_project(' + project['idproject'] + ');" src="templates/default/images/b_pan_hover.png" id="edit_pen">' +
-            '<img onclick="proj_del(' + project['idproject'] + ');" src="templates/default/images/trash.png" id="trash">';
+            source += '<img onclick="proj_del(' + project['idproject'] + ');" src="templates/default/images/trash.png" id="trash">' +
+            '<img onclick="edit_project(' + project['idproject'] + ');" src="templates/default/images/b_pan_hover.png" id="edit_pen">';
         }
         source+='</h4></div><p class="project_description">'+project['description']+'</p><div class="project_time">';
         source+='<div class="date_start">'+date_start+'</div><div class="date_end">'+date_finish+
