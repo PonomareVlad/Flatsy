@@ -77,6 +77,9 @@ if(defined('USER_ID')) { // Статус авторизации
         if ($QUERY['action'] == 'del_project') { // Удаление проекта
             $RESPONSE['del_project'] = TM::del_project($QUERY['id']);
         }
+        if ($QUERY['action'] == 'del_user') { // Удаление проекта
+            $RESPONSE['del_user'] = TM::del_user($QUERY['id'],$QUERY['group']);
+        }
         if ($QUERY['action'] == 'edit_project') { // Изменение проекта
             $RESPONSE['edit_project'] = TM::edit_project($QUERY);
         }

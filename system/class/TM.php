@@ -332,6 +332,15 @@ class TM extends DB
 
         return $project;
     }
+    public static function del_user($id,$idgroup){
+        //DB::inserti('useringroup','(iduser,idgroup,userlvl,statususer) VALUES ('.+USER_ID.','.$group['idgroup'].',5,3)');
+        $del=DB::delete('useringroup','iduser='.$id.' AND idgroup='.$idgroup);
+        if($del==1){
+            return $id;
+        }else{
+            return false;
+        }
+    }
     public static function create_notify($type,$id)
     {
         $notify=false;

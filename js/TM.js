@@ -279,6 +279,24 @@ function handler(response) {
                 view(response['add_group']['idgroup'],'group');
             }
         }
+        if(response['del_user']) {
+            if (response['del_user'] != false) {
+                for (g in DB['GROUP']) {
+                    if (DB['GROUP'][g]['idgroup'] == TM['view_id']) {
+                        group = DB['GROUP'][g];
+                        break;
+                    }
+                }
+                for(u in group['users']){
+                    if(group['users'][u]['id']==response['del_user']){
+                        DB['GROUP'][g]['users'].splice(u,1);
+                    }
+                }
+                if (TM['view_type'] == 'group') {
+                    view(TM['view_id'],'group');
+                }
+            }
+        }
     }else{
         if(TM['UID']){
             DB=false;
@@ -761,6 +779,10 @@ function show_add_group(){
     return false;
 }
 
+function del_user_group(user,group){
+    io({"action":"del_user","id":user,"group":group});
+}
+
 function view(id,type){
     source='';
     if(type=='task'){
@@ -922,7 +944,7 @@ function view(id,type){
             source+='</div><div class="status">Участвует</div>';
             if(group['creator']==TM['UID']){
                 source+='<div class="crest" onclick="del_user_group('+user['id']+','+group['idgroup']+');"><img src="templates/default/images/close.png"></div>';
-            }
+            }//else{alert(group['creator']+' '+TM['UID']);}
             source+='</div></div>';
         }
         source+='</div><div class="item_title">Подгруппы ('+(group['subgroup'].length)+')</div>';
