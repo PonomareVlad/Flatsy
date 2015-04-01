@@ -72,6 +72,19 @@ CREATE TABLE IF NOT EXISTS `files` (
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `invite`
+--
+
+CREATE TABLE IF NOT EXISTS `invite` (
+`id` int(10) NOT NULL COMMENT 'Счетчик',
+  `creator` int(10) NOT NULL COMMENT 'Инициатор запроса',
+  `iduser` int(10) NOT NULL COMMENT 'Кого приглашают',
+  `hash` varchar(64) NOT NULL,
+  `type` varchar(64) NOT NULL,
+  `status` int(10) NOT NULL COMMENT 'Статус',
+  `date` datetime NOT NULL COMMENT 'Дата приглашения'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Инвайт в группу';
+--
 -- Структура таблицы `invitegroup`
 --
 
@@ -261,6 +274,12 @@ ALTER TABLE `groups`
  ADD PRIMARY KEY (`idgroup`);
 
  --
+-- Индексы таблицы `invite`
+--
+ALTER TABLE `invite`
+ ADD PRIMARY KEY (`id`);
+ 
+ --
 -- Индексы таблицы `invitegroup`
 --
 ALTER TABLE `invitegroup`
@@ -347,6 +366,12 @@ MODIFY `idfile` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ID файла';
 --
 ALTER TABLE `groups`
 MODIFY `idgroup` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Номер группы';
+
+--
+-- AUTO_INCREMENT для таблицы `invite`
+--
+ALTER TABLE `invite`
+MODIFY `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Счетчик';
 --
 -- AUTO_INCREMENT для таблицы `invitegroup`
 --
