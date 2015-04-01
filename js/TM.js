@@ -4,8 +4,21 @@ function handler(response) {
         if(response['check']){
             if(response['NEW']){
                 if(response['NEW']['TASK']){
-                    for(i in response['NEW']['TASK']){
+                    for(i in response['NEW']['TASK']) {
                         // BUILD UPD DB
+                        task = response['NEW']['TASK'][i];
+                        DB['TASK'][DB['TASK'].length] = task;
+                        if (task['idproject'] != 0) {
+                            for (p in DB['PROJECT']) {
+                                if (DB['PROJECT'][p]['idproject'] == task['idproject']) {
+                                    DB['PROJECT'][p]['tasks'][DB['PROJECT'][p]['tasks'].length] = task;
+                                }
+                            }
+                        }
+                        if (TM['current_page'] == 'tasks') {
+                            gen_list();
+                        }
+                        //view(task['id'], 'task');
                     }
                 }
                 if(response['NEW']['COMMENT']){
@@ -17,6 +30,7 @@ function handler(response) {
                         comment=response['NEW']['COMMENT'][i];
                         // BUILD UPD DB
                         if(comment['idobject']==TM['CID']&&comment['type']==TM['comments_loaded']) {
+                            source='';
                             datacom=comment['datacom'].split(' ');
                             datestring=datacom[0]+'T'+datacom[1];
                             date= new Date(new Date(datestring).getTime()+offset);
@@ -32,7 +46,9 @@ function handler(response) {
                                 document.getElementById('comments').innerHTML='';
                                 TM['empty_comments']=false;
                             }
+                            //alert(source);
                             document.getElementById('comments').innerHTML += source;
+                            document.getElementById('comments').scrollTop=9999;
                         }else{
                             //alert('New comment for '+comment['type']+' '+comment['idobject']);
                         }
@@ -579,45 +595,6 @@ function new_group(){
         "name": name
     });
 }
-
-function project_show(id) {
-    proji = PROJECT[id];
-    //if (proji['finished'] != 1) {
-        now = new Date().getTime();
-        trgtf = new Date(proji['date_finish'].replace(' ', 'T')).getTime();
-        trgts = new Date(proji['date_start'].replace(' ', 'T')).getTime();
-        now = now - trgts;
-        prc = (trgtf - trgts) / 100;
-        trgt = now / prc;
-        trgtp = trgt + '';
-        trgtp = trgtp.split('.');
-        trgtp = trgtp[0];
-        //alert(now+' '+prc+' '+trgt);
-        if (trgt >= 100) {
-            trgt = 100;
-            trgtp = 'Завершено';
-        }
-    //} else {
-    //    trgt = 100;
-    //}
-    source = '<div class="project"><div class="project_title"><h4>' + proji['nameproject'] + '</h4>' +
-    '</div><div class="project_description">' + proji['description'] + '</div><div class="project_time">' +
-    '<div class="date_start">' + proji['date_start'] + '</div><div class="date_end">' + proji['date_finish'] + '</div>' +
-    '<div class="project_time_all"><div class="project_rime_cur" style="text-align: right;padding-right: 5px;color: #282828;width: ' + trgt + '%;">' + trgtp + '</div></div></div>' +
-    '<div class="iniciator"><div>Инициатор:</div>' + proji['initiator_name'] + '</div>';
-    //source += '<div class="uchastniki"><div>Исполнитель:</div>' + proji['executor_name'] + '</div>';
-    source += '<div class="files">Прикрепленных файлов нет</div>';
-    /*if (proji['finished'] != 1) {
-        source += '<input type="button" style="width: 10em;" onclick="task_end(' + proji['id'] + ')" value="Завершить"/>';
-    }*/
-    source += '<div class="comments_title">Обсуждение:</div>';
-    source += '<div class="comments" id="comments"></div>' +
-    '<textarea id="new_comm" placeholder="Ваш комментарий"></textarea>';
-    document.getElementById('view').innerHTML = source;
-    //init_comments(proji['id']);
-    sizing();
-    return false;
-} // DELETE THIS
 
 function gen_list(){
     MONTH=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];

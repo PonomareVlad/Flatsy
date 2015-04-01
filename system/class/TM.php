@@ -26,6 +26,7 @@ class TM extends DB
                 $chck['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$chck['initiator'])));
                 $chck['executor_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$chck['executor'])));
                 $chck['projectname'] = @mysqli_fetch_assoc(DB::select('project',['nameproject'],'idproject='.$chck['idproject']))['nameproject'];
+                TM::create_notify('new_task',$chck['id']);
                 return $chck;
             }
 
@@ -260,6 +261,7 @@ class TM extends DB
                 $comment=mysqli_fetch_assoc(DB::select('comments',['*'],'idobject='.$id.' AND type="'.$type.'" AND datacom="'.$now.'"'));
                 $comment['usercom_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['firstname', 'lastname'], 'id=' . $comment['usercom'])));
                 $comment['usercom_photo'] = User::get_user($comment['usercom'])['photo'];
+                TM::create_notify('new_comment',$comment['id']);
                 return $comment;
             }else{
                 return false;
@@ -329,5 +331,28 @@ class TM extends DB
         }
 
         return $project;
+    }
+    public static function create_notify($type,$id)
+    {
+        $notify=false;
+        if ($type == 'new_comment') {
+            $notify=[];
+            $comment = mysqli_fetch_assoc(DB::select('comments', ['*'], 'id='.$id));
+            if($comment['type']=='task') {
+                $object = mysqli_fetch_assoc(DB::select('task', ['*'], 'id='.$comment['idobject']));
+                if(USER_ID!=$object['executor']){$notify[]=$object['executor'];}
+                if(USER_ID!=$object['initiator']){$notify[]=$object['initiator'];}
+            }
+        }
+        if($type=='new_task'){
+            $notify=[];
+            $task= mysqli_fetch_assoc(DB::select('task',['*'],'id='.$id));
+            if(USER_ID!=$task['executor']){$notify[]=$task['executor'];}
+        }
+        if(is_array($notify)){
+            for($i=0;$i<count($notify);$i++){
+                DB::insert('notifications',['iduser'=>$notify[$i],'type'=>$type,'value'=>$id]);
+            }
+        }
     }
 }
