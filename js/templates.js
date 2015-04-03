@@ -11,7 +11,7 @@ PART['header']='<header><ul class="menu"><li><a href="javascript:void(0)" onclic
 '<a>Уведомле 3<img src="templates/default/images/cancel_hover.png"></a></li></ul>' +
 '</div></header><div class="arrow-top"></div><div class="calendar"><div id="prev"></div><div id="calendar"></div><div id="next"></div></div>';
 
-PART['header_slim']='<header><ul class="menu"><li><a href="javascript:void(0)" onclick="page(\'tasks\',true);">Главная</a></li><li>' +
+/*PART['header_slim']='<header><ul class="menu"><li><a href="javascript:void(0)" onclick="page(\'tasks\',true);">Главная</a></li><li>' +
 '<a href="javascript:void(0)" onclick="page(\'tasks\',true);">Задачи</a></li><li><a href="javascript:void(0)" onclick="page(\'projects\',true);">Проекты</a></li><li>' +
 '<a href="javascript:void(0)" onclick="page(\'groups\',true);">Группы</a></li></ul><div class="user_menu">' +
 '<div class="avatar"><img id="user_pic" src="/templates/default/images/avatar.png"></div><div><span id="user_name">USER_NAME</span></div>' +
@@ -19,7 +19,7 @@ PART['header_slim']='<header><ul class="menu"><li><a href="javascript:void(0)" o
 '</li></ul></div><div class="notifications"><div>Уведомления(2)</div><ul><li><a>Уведомлениие 1<img src="templates/default/images/cancel_hover.png"></a> ' +
 '</li><li><a>Уведомлениие 2<img src="templates/default/images/cancel_hover.png"></a></li><li>' +
 '<a>Уведомле 3<img src="templates/default/images/cancel_hover.png"></a></li></ul>' +
-'</div></header><div class="arrow-top"></div>';
+'</div></header><div class="arrow-top"></div>';*/
 
 PART['loader']='<div id="overlay" class="overlay"><div id="spinner" class="spinner center"><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div></div></div>'
 
@@ -43,7 +43,7 @@ PAGE['projects']['source']='<div class="left_bar"><div class="action_bar"><a hre
 
 PAGE['groups']=[];
 PAGE['groups']['title']='Группы';
-PAGE['groups']['source']='<div class="left_bar groupflag"><div class="action_bar"><div onclick="show_add_group();" class="add_group">' +
+PAGE['groups']['source']='<div class="left_bar groupflag"><div class="action_bar"><div id="add_line" onclick="show_add_group();" class="add_group">' +
 '<div class="plus"><div id="p1"></div><div id="p2"></div><div id="p3"></div><div id="p4"></div></div>Добавить группу</div>' +
 '<div onclick="groups_query();"><img src="templates/default/images/zaprosy.png"></div></div>' +
 '<div class="group_list" id="groups"></div></div><div class="center group_center" id="view"></div>';
@@ -71,7 +71,7 @@ PAGE['reg']['source']='<div class="regbody wrapperautreg" id="wrapper"><div clas
 '<input class="Au2" id="patronymic" type="text" name="patronymic" placeholder="Отчество"></div><div class="auth">' +
 '<input class="Au2" id="password" type="password" name="password" placeholder="Пароль"></div><div class="auth">' +
 '<input class="Au2" id="repeat_password" onkeyup="reg_check(\'password\')" type="password" name="repeat_password" placeholder="Повторите пароль"></div>' +
-'<div class="auth"><input class="Au2" id="code" type="text" name="code" placeholder="Код"></div>' +
+'<div class="auth"><input class="Au2" id="code" type="text" name="code" placeholder="Инвайт-код"></div>' +
 '<div class="auth"><div onclick="reg_send()" class="authregbtn">Зарегистрироваться</div>' +
 '<div onclick="page(\'auth\');" class="authregbtn">Вернуться к авторизации</div></div>' +
 '</form><div id="status"></div></div></div>';
