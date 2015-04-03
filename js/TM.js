@@ -758,24 +758,12 @@ function groups_query(){
 }
 
 function show_add_group(){
-    source = '<div class="task_add"><div class="title"><h4>Организация новой группы</h4></div><p>' +
-    '<label for="name">Название</label><input type="text" name="task_title" id="name"></p>' +
-    //'<p><label for="description">Описание</label>' +
-    //'<textarea type="text" name="task_description" id="description"></textarea></p>' +
-    //'<p><label for="date_finish">Дата завершения:</label>' +
-    //'<input onfocus="this.select();lcs(this);position_calen();" onclick="event.cancelBubble=true;this.select();lcs(this);position_calen()" style="width: 5em;" type="text" name="date_final" id="date_finish">' +
-    //' Часы: <input type="number" min="0" value="12" max="23" style="width: 3em;" id="hours">' +
-    //' Минуты: <input type="number" min="0" value="00" max="59" style="width: 3em;" id="minuts">' +
-    //'<span id="minical"></span></p>' +
-    //'<p><label for="project_id">Проект</label>' +
-    //'<input type="text" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его"></p>' +
-    //'<p><label for="executor">Отвественный</label>' +
-    //'<input size="33" type="text" class="livesearch" placeholder="Начните набирать имя пользователя" name="main_user" value="" autocomplete="off" id="executor">' +
-    //'<div id="search_advice_wrapper"></div></p>' +
-    //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
-    //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
-    '<p><div class="create" onclick="new_group();">Создать</div></div></p>';
-    document.getElementById('view').innerHTML = source;
+    //source = '<div class="task_add"><div class="title"><h4>Организация новой группы</h4></div><p>' +
+    //'<label for="name">Название</label><input type="text" name="task_title" id="name"></p>' +
+    //'<p><div class="create" onclick="new_group();">Создать</div></div></p>';
+    //document.getElementById('view').innerHTML = source;
+    get('add_line').innerHTML='<input type="text" id="name"/><div class="create" onclick="new_group();">Создать</div>';
+    //get('add_line').innerHTML='<div class="plus"><div id="p1"></div><div id="p2"></div><div id="p3"></div><div id="p4"></div></div>Добавить группу</div>';
     return false;
 }
 
