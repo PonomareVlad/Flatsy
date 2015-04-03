@@ -177,6 +177,8 @@ function reg_send(response) {
                 document.getElementById('status').innerHTML = 'Вы ввели некорректные данные';
             }else if(response['reg']=='Empty data'){
                 document.getElementById('status').innerHTML = 'Необходимо заполнить все поля';
+            }else if(response['reg']=='Bad key'){
+                document.getElementById('status').innerHTML = 'Недействительный код';
             }else{
                 document.getElementById('status').innerHTML = 'Ошибка БД: ' +
                 ''+response['reg'];
@@ -197,16 +199,25 @@ function reg_send(response) {
         }else {
             TM['tmp_reg_email'] = false;
         }
-        if(!TM['tmp_reg_email']){
-            document.getElementById('status').innerHTML = 'Адреса e-mail не совпадают';
+        if((get('email').value=='')&&(get('password').value=='')){
+            get('status').innerHTML='Необходимо заполнить все поля';
             return;
+        }else{
+            if(!TM['tmp_reg_email']){
+                document.getElementById('status').innerHTML = 'Адреса e-mail не совпадают';
+                return;
+            }
+            if(!TM['tmp_reg_password']){
+                document.getElementById('status').innerHTML = 'Пароли не совпадают';
+                return;
+            }
+            if(!TM['tmp_reg_password']||!TM['tmp_reg_email']){
+                document.getElementById('status').innerHTML = 'Необходимо заполнить все поля';
+                return;
+            }
         }
-        if(!TM['tmp_reg_password']){
-            document.getElementById('status').innerHTML = 'Пароли не совпадают';
-            return;
-        }
-        if(!TM['tmp_reg_password']||!TM['tmp_reg_email']){
-            document.getElementById('status').innerHTML = 'Необходимо заполнить все поля';
+        if(get('code').value==''){
+            get('status').innerHTML='Для подтверждения полномочий тестирующего, необходим инвайт-код';
             return;
         }
         send = {
@@ -215,7 +226,8 @@ function reg_send(response) {
             "firstname": document.getElementById('firstname').value,
             "patronymic": document.getElementById('patronymic').value,
             "password": TM['tmp_reg_password'],
-            "email": TM['tmp_reg_email']
+            "email": TM['tmp_reg_email'],
+            "invite": get('code').value
         };
         TM['tmp_reg_login']=document.getElementById('email').value;
         TM['tmp_reg_email']=false;

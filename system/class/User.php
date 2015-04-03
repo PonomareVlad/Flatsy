@@ -87,18 +87,29 @@ class User extends DB{
 
     public static function registration($array)
     {
-        if (isset($array['lastname']) && isset($array['firstname']) && isset($array['patronymic']) && isset($array['password']) && isset($array['email'])) {
+        if (isset($array['lastname']) && isset($array['firstname']) && isset($array['patronymic']) && isset($array['password']) && isset($array['email']) && isset($array['invite'])) {
 
             $lastname = Checkdata($array['lastname'], true);
             $firstname = Checkdata($array['firstname'], true);
             $patronymic = Checkdata($array['patronymic'], true);
             $password = Checkdata($array['password'], true);
             $email = Checkdata($array['email'], true);
+            $invite = Checkdata($array['invite'], true);
 
-            if ($lastname == '' || $firstname == '' || $password == '' || $patronymic == '' || $email == '') {
+            if ($lastname == '' || $firstname == '' || $password == '' || $patronymic == '' || $email == '' || $invite == '') {
                 return 'Bad data';
             }
-            $testlogin = DB::select('users',['id'],'mail="'.$email.'"'); // Запрос на поиск указанного логина(почты) среди зарегестрированных пользователей
+            $inv = mysqli_fetch_assoc(DB::select('invite', ['*'], 'hash="' . $invite . '"'));
+            if (is_array($inv)) {
+                if ($inv['type'] == 'reg' && $inv['status'] == 0) {
+                    // OK
+                } else {
+                    return 'Bad key';
+                }
+            } else {
+                return 'Bad key';
+            }
+            $testlogin = DB::select('users', ['id'], 'mail="' . $email . '"'); // Запрос на поиск указанного логина(почты) среди зарегестрированных пользователей
             $testlogin = mysqli_fetch_assoc($testlogin);
             if (isset($testlogin['id'])) {
                 return 'Login exists';
@@ -108,7 +119,7 @@ class User extends DB{
             $reg_date = date("y-m-d G:i:s");//date("y-m-d G:i:s");//getdate("y-m-d G:i:s"); date("y-m-d G:i:s");
             $last_act = $reg_date;
 
-            $query = DB::inserti('users','(mail,password,firstname,lastname,patronymic,last_act,reg_date,photo) VALUES("' . $email .
+            $query = DB::inserti('users', '(mail,password,firstname,lastname,patronymic,last_act,reg_date,photo) VALUES("' . $email .
                 '","' . $password .
                 '","' . $firstname .
                 '","' . $lastname .
@@ -118,13 +129,15 @@ class User extends DB{
                 '","")');
 
             if ($query) {
-                /*$USERN = mysqli_fetch_array(mysqli_query($MYSQL_CONNECTION,'SELECT * FROM users WHERE mail="' . $email . '"'));
-                $CFG_INIT = mysqli_query($MYSQL_CONNECTION,"CREATE TABLE IF NOT EXISTS users.id" . $USERN['id'] . "_config (
+                $USERN = mysqli_fetch_assoc(DB::select('users',['*'],'mail="'.$email.'"'));
+                /*$CFG_INIT = mysqli_query($MYSQL_CONNECTION,"CREATE TABLE IF NOT EXISTS users.id" . $USERN['id'] . "_config (
   key varchar(50) NOT NULL,
   value varchar(500) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Пользовательские настройки';");
                 if ($CFG_INIT == 1) {*/
-                    return true;
+                DB::update('invite',['status'=>1,'iduser'=>$USERN['id'],'date'=>$reg_date],'hash="'.$invite.'"');
+                // BUILD NOTIFICATION TO CREATOR
+                return true;
                 /*} else {
                     return $CFG_INIT;
                 }*/
