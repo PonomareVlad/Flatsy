@@ -57,7 +57,7 @@ PAGE['auth']['source']='<div style="display:none" id="load_pic"></div>' +
 '</div><div class="auth">' +
 '<input name="pass" id="pass" type="password" class="Au2" onfocus="load_enter_pic();" placeholder="Пароль">' +
 '</div><div class="auth" id="In">' +
-'<a href="javascript:void(0)" onclick=\'auth_send();\' class="button box-shadow-outset"><div class="authregbtn">Вход</div></a></div></form>' +
+'<a href="javascript:void(0)" onclick=\'auth_send();\' class="button box-shadow-outset"><div class="authregbtn">Войти</div></a></div></form>' +
 '<a href="javascript:void(0)" onclick="page(\'reg\');"><div class="authregbtn" >Регистрация</div></a></div></div>';
 
 PAGE['reg']=[];
@@ -72,8 +72,8 @@ PAGE['reg']['source']='<div class="regbody wrapperautreg" id="wrapper"><div clas
 '<input class="Au2" id="password" type="password" name="password" placeholder="Пароль"></div><div class="auth">' +
 '<input class="Au2" id="repeat_password" onkeyup="reg_check(\'password\')" type="password" name="repeat_password" placeholder="Повторите пароль"></div>' +
 '<div class="auth"><input class="Au2" id="code" type="text" name="code" placeholder="Код"></div>' +
-'<div class="auth"><div onclick="reg_send()" class="authregbtn">Хочу зарегистрироваться</div>' +
-'<div onclick="page(\'auth\');" class="authregbtn">Авторизация</div></div>' +
+'<div class="auth"><div onclick="reg_send()" class="authregbtn">Зарегистрироваться</div>' +
+'<div onclick="page(\'auth\');" class="authregbtn">Вернуться к авторизации</div></div>' +
 '</form><div id="status"></div></div></div>';
 
 PAGE['lk']=[];
