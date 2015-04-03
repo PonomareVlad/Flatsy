@@ -762,7 +762,10 @@ function show_add_group(){
     //'<label for="name">Название</label><input type="text" name="task_title" id="name"></p>' +
     //'<p><div class="create" onclick="new_group();">Создать</div></div></p>';
     //document.getElementById('view').innerHTML = source;
-    get('add_line').innerHTML='<input type="text" id="name"/><div class="create" onclick="new_group();">Создать</div>';
+    if(!TM['tmp_group_add_line']) {
+        get('add_line').innerHTML = '<input type="text" id="name"/><div class="create" onclick="new_group();">Создать</div>';
+        TM['tmp_group_add_line']=true;
+    }
     //get('add_line').innerHTML='<div class="plus"><div id="p1"></div><div id="p2"></div><div id="p3"></div><div id="p4"></div></div>Добавить группу</div>';
     return false;
 }
