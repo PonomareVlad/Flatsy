@@ -275,6 +275,8 @@ function handler(response) {
         if(response['add_group']) {
             if (response['add_group'] != false) {
                 DB['GROUP'][DB['GROUP'].length]=response['add_group'];
+                TM['tmp_group_add_line']=false;
+                get('add_line').innerHTML='<div class="plus"><div id="p1"></div><div id="p2"></div><div id="p3"></div><div id="p4"></div></div>Добавить группу</div>';
                 gen_list();
                 view(response['add_group']['idgroup'],'group');
             }
@@ -766,7 +768,7 @@ function show_add_group(){
         get('add_line').innerHTML = '<input type="text" id="name"/><div class="create" onclick="new_group();">Создать</div>';
         TM['tmp_group_add_line']=true;
     }
-    //get('add_line').innerHTML='<div class="plus"><div id="p1"></div><div id="p2"></div><div id="p3"></div><div id="p4"></div></div>Добавить группу</div>';
+    //
     return false;
 }
 
