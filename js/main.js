@@ -47,13 +47,20 @@ function sizing() {
     }
 }
 
-function init() {
+function init(arg) {
     TM['GET_PARAM']=urlParams;
     if (TM['UID']) {
         TM['current_page']=(TM['current_page']=='auth'||TM['current_page']=='reg')?'tasks':TM['current_page'];
         TM['current_page']=PAGE[TM['current_page']]?TM['current_page']:'tasks';
         if(TM['GET_PARAM']['hash']){
             if(TM['param_send']==true){
+                if(arg){
+                    arg=JSON.parse(arg);
+                    if(!arg['parse_hash']) {
+                        alert('Не удалось зарегистрировать ключ');
+                        //alert(arg);
+                    }
+                }
                 TM['wait_load']=true;
                 TM['GET_PARAM']['hash']=false;
                 io({'action':'load_db'});

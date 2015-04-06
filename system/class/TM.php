@@ -377,24 +377,26 @@ class TM extends DB
             }
         }
     }
-    public static function parse_hash($hash){
-        $hash=DB::select('invite',['*'],'hash="'.$hash.'"');
-        if($hash){
-            $hash=mysqli_fetch_assoc($hash);
-            if($hash['status']==0) {
+    public static function parse_hash($hash)
+    {
+        $hash = DB::select('invite', ['*'], 'hash="' . $hash . '"');
+        if ($hash) {
+            $hash = mysqli_fetch_assoc($hash);
+            if ($hash['status'] == 0) {
                 if ($hash['type'] == 'group') {
-                    $group=DB::select('groups',['*'],'idgroup='.$hash['value']);
-                    if($group){
-                        $group=mysqli_fetch_assoc($group);
-                        DB::inserti('useringroup','(iduser,idgroup,userlvl,statususer) VALUES ('.+USER_ID.','.$group['idgroup'].',1,3)');
-                        return true;
+                    $group = DB::select('groups', ['*'], 'idgroup=' . $hash['value']);
+                    if ($group) {
+                        $ingroup=mysqli_fetch_assoc(DB::select('useringroup', ['*'], 'iduser=' . USER_ID . ' AND idgroup=' . $hash['value']));
+                        if (!isset($ingroup['statususer'])) {
+                            $group = mysqli_fetch_assoc($group);
+                            DB::inserti('useringroup', '(iduser,idgroup,userlvl,statususer) VALUES (' . +USER_ID . ',' . $group['idgroup'] . ',1,3)');
+                            DB::update('invite', ['status' => 1,'iduser'=>USER_ID], 'hash="' . $hash['hash'] . '"');
+                            return true;
+                        }
                     }
                 }
-            }else{
-                return false;
             }
-        }else{
-            return false;
         }
+        return false;
     }
 }
