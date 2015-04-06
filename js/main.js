@@ -5,6 +5,7 @@ TM['projects_mode']='all';
 TM['update_db']=false;
 TM['apic_loaded']=false;
 TM['time_offset']=3600000*5;
+TM['param_send']=false;
 TM['months']=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
 TM['now'] = new Date(new Date().getTime()+TM['time_offset']).getTime();
 if(typeof SERVER !='undefined') {
@@ -47,9 +48,25 @@ function sizing() {
 }
 
 function init() {
+    TM['GET_PARAM']=urlParams;
     if (TM['UID']) {
         TM['current_page']=(TM['current_page']=='auth'||TM['current_page']=='reg')?'tasks':TM['current_page'];
         TM['current_page']=PAGE[TM['current_page']]?TM['current_page']:'tasks';
+        if(TM['GET_PARAM']['hash']){
+            if(TM['param_send']==true){
+                TM['wait_load']=true;
+                TM['GET_PARAM']['hash']=false;
+                io({'action':'load_db'});
+            }else {
+                document.getElementById('main').className = "blur";
+                if (TM['update_db'] == false) {
+                    page(TM['current_page'] == false ? 'tasks' : TM['current_page'], true);
+                }
+                TM['param_send']=true;
+                io({"action": "parse_hash", "hash": TM['GET_PARAM']['hash']}, init);
+            }
+            return;
+        }
         if(TM['update_db']==true){
             TM['wait_load']=true;
             document.getElementById('main').className="blur";

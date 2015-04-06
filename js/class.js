@@ -84,6 +84,7 @@ function page(name,headgen){
             TM['comments_loaded']=false;
             TM['CID']=false;
             TM['empty_comments']=false;
+            TM['tmp_group_add_line']=false;
             document.title = PAGE[name]['title'] + ' | EasyTM';
             history.pushState(null,null,name);
             document.getElementById('page').innerHTML = PAGE[name]['source'];
@@ -130,6 +131,7 @@ function auth_send(response) {
             document.getElementById('load_pic').innerHTML='<div class="avatar"><img src="'+TM['USER_PIC']+'"></div>'+PART['loader'];
             document.getElementById('wrapper').style="transition: all 0.3s ease;-webkit-filter: blur(5px); -moz-filter: blur(5px); -o-filter: blur(5px); -ms-filter: blur(5px); filter: blur(5px);";
             document.getElementById('load_pic').style="position: absolute;left: 48.7%;top: 34.6%;z-index:9999";
+            document.getElementById('wrapper').style.height = window.innerHeight-240+'px'
             //setTimeout("io({'action':'load_db'})",1000);
             io({'action':'load_db'});
         }
@@ -256,3 +258,16 @@ function reg_check(mode){
         }
     }
 }
+
+var urlParams;
+(window.onpopstate = function () {
+    var match,
+        pl     = /\+/g,  // Regex for replacing addition symbol with a space
+        search = /([^&=]+)=?([^&]*)/g,
+        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+        query  = window.location.search.substring(1);
+
+    urlParams = {};
+    while (match = search.exec(query))
+        urlParams[decode(match[1])] = decode(match[2]);
+})();

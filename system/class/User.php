@@ -227,4 +227,21 @@ class User extends DB{
         return $group;
     }
 
+    public static function gen_invite_group($idg)
+    {
+        $hash = genHash();
+        $date = date("y-m-d G:i:s");
+        if (DB::insert('invite', ["creator" => USER_ID, "iduser" => 0, "hash" => $hash, "type" => "group", "value" => $idg, "status" => 0, "date" => $date])) {
+            return $hash;
+        } else {
+            $hash = genHash();
+            $date = date("y-m-d G:i:s");
+            if (DB::insert('invite', ["creator" => USER_ID, "iduser" => 0, "hash" => $hash, "type" => "group", "value" => $idg, "status" => 0, "date" => $date])) {
+                return $hash;
+            } else {
+                return false;
+            }
+        }
+    }
+
 }

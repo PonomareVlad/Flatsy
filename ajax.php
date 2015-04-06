@@ -106,6 +106,12 @@ if(defined('USER_ID')) { // Статус авторизации
         if ($QUERY['action'] == 'get_user') {
             $RESPONSE['get_user'] = User::get_user($QUERY);
         }
+        if ($QUERY['action'] == 'gen_invite_group') {
+            $RESPONSE['gen_invite_group'] = User::gen_invite_group($QUERY['id']);
+        }
+        if ($QUERY['action'] == 'parse_hash') {
+            $RESPONSE['parse_hash'] = TM::parse_hash($QUERY['hash']);
+        }
     }
 }else {
     $RESPONSE['auth'] = false;

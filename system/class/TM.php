@@ -229,10 +229,23 @@ class TM extends DB
         $add=DB::inserti('groups','(namegroup,creator,owner) VALUES ("'.$name.'",'.USER_ID.','.USER_ID.')');
         if($add==1){
             $group=mysqli_fetch_assoc(DB::select('groups',['*'],'namegroup="'.$name.'"'));
+            DB::inserti('useringroup','(iduser,idgroup,userlvl,statususer) VALUES ('.+USER_ID.','.$group['idgroup'].',5,3)');
             $group['subgroup']=[];
             $group['users']=[];
-            $group['count_users']=1;
-            DB::inserti('useringroup','(iduser,idgroup,userlvl,statususer) VALUES ('.+USER_ID.','.$group['idgroup'].',5,3)');
+            //$group['count_users']=1;
+            $group['count_users']=0;
+            $users = DB::select('useringroup', ['*'], 'idgroup=' . $group['idgroup']);
+            while ($user = mysqli_fetch_assoc($users)) {
+                if ($user['statususer'] > 2) {
+                    $group['count_users'] += 1;
+                    if ($user['iduser'] == USER_ID) {
+                        $group['lvl'] = $user['userlvl'];
+                    }
+                    $us = User::get_user($user['iduser']);
+                    $us['lvl'] = $user['userlvl'];
+                    $group['users'][] = $us;
+                }
+            }
             return $group;
         }
     }
@@ -362,6 +375,26 @@ class TM extends DB
             for($i=0;$i<count($notify);$i++){
                 DB::insert('notifications',['iduser'=>$notify[$i],'type'=>$type,'value'=>$id]);
             }
+        }
+    }
+    public static function parse_hash($hash){
+        $hash=DB::select('invite',['*'],'hash="'.$hash.'"');
+        if($hash){
+            $hash=mysqli_fetch_assoc($hash);
+            if($hash['status']==0) {
+                if ($hash['type'] == 'group') {
+                    $group=DB::select('groups',['*'],'idgroup='.$hash['value']);
+                    if($group){
+                        $group=mysqli_fetch_assoc($group);
+                        DB::inserti('useringroup','(iduser,idgroup,userlvl,statususer) VALUES ('.+USER_ID.','.$group['idgroup'].',1,3)');
+                        return true;
+                    }
+                }
+            }else{
+                return false;
+            }
+        }else{
+            return false;
         }
     }
 }
