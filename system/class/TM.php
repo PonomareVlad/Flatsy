@@ -13,6 +13,7 @@ class TM extends DB
             $date_finish=$query['date_finish'].':00';
             $idproject=$query['project']?$query['project']:'0';
             $parentask='0';
+            $files=$query['files'];
 
             if($name==''||$description==''||$executor==''||$date_finish==''){
                 return 'EMPTY DATA';
@@ -27,6 +28,11 @@ class TM extends DB
                 $chck['executor_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$chck['executor'])));
                 $chck['projectname'] = @mysqli_fetch_assoc(DB::select('project',['nameproject'],'idproject='.$chck['idproject']))['nameproject'];
                 TM::create_notify('new_task',$chck['id']);
+                if($files!=false){
+                    for($i=0;$i<count($files);$i++){
+
+                    }
+                }
                 return $chck;
             }
 

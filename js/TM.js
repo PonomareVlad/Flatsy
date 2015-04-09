@@ -352,8 +352,9 @@ function show_add_task() {
     //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
     '<p><div class="create" onclick="send_task();">Создать</div>' +
     //' * Отображаются, на данный момент,только те поля, которые, функционально, имеют возможность обрабатываться системой!' +
-    '<a href="javascript:void(0)">Прикрепить</a></p></div>';
+    '<a href="javascript:void(0)" onclick="upload_show(\'new\',\'task\')";>Прикрепить</a></p></div><div id="ufiles"></div>';
     document.getElementById('view').innerHTML = source;
+    TM['ufiles']=[];
     loadSearch('#executor','#search_advice_wrapper_exe','get_users');
     loadSearch('#idproject','#search_advice_wrapper_prj','get_projects');
     calendar_init();
@@ -464,6 +465,14 @@ function send_task(){
     date_finish=document.getElementById('date_finish').value;
     date_finish=date_finish.split('.');
     date_finish=date_finish[2]+'-'+date_finish[1]+'-'+date_finish[0]+' '+(hours<10?'0':'')+hours+':'+(minuts<10?'0':'')+minuts;
+    if(TM['ufiles'].length==0){
+        files=false;
+    }else{
+        files={};
+        for(i in TM['ufiles']){
+            files[i]=TM['ufiles'][i];
+        }
+    }
 
     if(executor!=false) {
         io({
@@ -472,7 +481,8 @@ function send_task(){
             "description": description,
             "executor": executor,
             "date_finish": date_finish,
-            "project":project
+            "project":project,
+            "files":files
         });
     }
 }
@@ -785,6 +795,20 @@ function del_user_group(user,group){
     io({"action":"del_user","id":user,"group":group});
 }
 
+function upload_show(id,type){
+    if(!TM['upl_window']) {
+        TM['upl_window']=window.open('','upl_'+type+'_'+id,"width=420,height=230,menubar=no,location=no,resizable=no,scrollbars=yes,status=no");
+        TM['upl_window'].document.write('<!DOCTYPE html><html><head><meta charset="utf-8"></head>' +
+        '<body><div id="files"><form enctype="multipart/form-data" action="/upl.php" method="post"><p>' +
+        '<input type="hidden" name="type" value="'+type+'">' +
+        '<input type="hidden" name="id" value="'+id+'">' +
+        //'<input class="file" type="file" name="f1"></br>' +
+        //'<input class="file" type="file" name="f2"><br/>' +
+        '<input class="file" type="file" name="f"><br/><br/><input type="submit" value="Загрузить"></p></form> </div>' +
+        '</body></html>');
+    }
+}
+
 function view(id,type){
     source='';
     if(type=='task'){
@@ -956,5 +980,22 @@ function view(id,type){
         }
         source+='</div><div class="item_title">Подгруппы ('+(group['subgroup'].length)+')</div>';
         get('view').innerHTML=source;
+    }
+}
+
+function pick_file(idf,namef){
+    TM['upl_window'].window.close();
+    TM['upl_window']=false;
+    TM['ufiles'][TM['ufiles'].length]=idf;
+    get('ufiles').innerHTML+='<div id="file'+idf+'">'+namef+' <a href="javascript:void(0)" onclick="unpick_file('+idf+')">[X]</a></div>';
+}
+
+function unpick_file(idf){
+    for(i in TM['ufiles']){
+        if(TM['ufiles'][i]=idf){
+            get('file'+idf).parentNode.removeChild(get('file'+idf));
+            TM['ufiles'].splice(i,1);
+            break;
+        }
     }
 }
