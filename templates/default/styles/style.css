@@ -102,7 +102,7 @@
 html, body{
     font-family: Tahoma, Geneva, sans-serif;
     margin: 0;
-    min-width: 850px;
+    min-width: 1360px;
     padding: 0;
     position: relative;
     font-size: 15px;
@@ -715,6 +715,7 @@ h4{
 }
 .group_center .item_title{
     background: #EFEFEF;
+    margin: 0 -10px;
     padding: 10px 0 10px 30px;
 }
 .group_center .man{
@@ -850,4 +851,8 @@ h4{
 }
 #add_line .create{
     margin: 8px -35px 0 0;
+}
+
+#invite .plus div{
+    background: #EFEFEF;
 }
