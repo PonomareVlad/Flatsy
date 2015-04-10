@@ -85,7 +85,7 @@ function page(name,headgen){
             TM['CID']=false;
             TM['empty_comments']=false;
             TM['tmp_group_add_line']=false;
-            document.title = PAGE[name]['title'] + ' | EasyTM';
+            document.title = PAGE[name]['title'] + ' | Flatsy';
             history.pushState(null,null,name);
             document.getElementById('page').innerHTML = PAGE[name]['source'];
             TM['current_page'] = name;

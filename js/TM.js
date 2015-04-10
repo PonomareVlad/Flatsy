@@ -978,7 +978,7 @@ function view(id,type){
             }//else{alert(group['creator']+' '+TM['UID']);}
             source+='</div></div>';
         }
-        source+='</div><div class="item_title">Подгруппы ('+(group['subgroup'].length)+')</div>';
+        //source+='</div><div class="item_title">Подгруппы ('+(group['subgroup'].length)+')</div>';
         get('view').innerHTML=source;
     }
 }

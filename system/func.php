@@ -2,7 +2,7 @@
 
 function head(){ // Фунция генерации основных элементов тега HEAD
     //$title = $GLOBALS['title_page'] == "" ? "EasyTM" : $GLOBALS['title_page'] . ' | EasyTM'; // Устанавливаем заголовок
-    $title='EasyTM';
+    $title='Flatsy';
     $scripts='';
     if (defined('USER_ID')) { // Если пользователь авторизован
         $scripts.='<script>';

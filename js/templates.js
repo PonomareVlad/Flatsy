@@ -6,10 +6,11 @@ PART['header']='<header><ul class="menu"><li><a href="javascript:void(0)" onclic
 '<a href="javascript:void(0)" onclick="page(\'groups\');">Группы</a></li></ul><div class="user_menu">' +
 '<div class="avatar"><img id="user_pic" src="/templates/default/images/avatar.png"></div><div><span id="user_name">USER_NAME</span></div>' +
 '<div class="arrow"></div><ul><li><a>Мои данные</a></li><li onclick="page(\'lk\',true);"><a>Настройки</a></li><li onclick="logout();"><a>Выход</a>' +
-'</li></ul></div><div class="notifications"><div>Уведомления(2)</div><ul><li><a>Уведомлениие 1<img src="templates/default/images/cancel_hover.png"></a> ' +
-'</li><li><a>Уведомлениие 2<img src="templates/default/images/cancel_hover.png"></a></li><li>' +
-'<a>Уведомле 3<img src="templates/default/images/cancel_hover.png"></a></li></ul>' +
-'</div></header><div class="arrow-top"></div><div class="calendar"><div id="prev"></div><div id="calendar"></div><div id="next"></div></div>';
+'</li></ul></div>' +
+//'<div class="notifications"><div>Уведомления(2)</div><ul><li><a>Уведомлениие 1<img src="templates/default/images/cancel_hover.png"></a></li>' +
+//'<li><a>Уведомлениие 2<img src="templates/default/images/cancel_hover.png"></a></li>' +
+//'<li><a>Уведомле 3<img src="templates/default/images/cancel_hover.png"></a></li></ul></div>' +
+'</header><div class="arrow-top"></div><div class="calendar"><div id="prev"></div><div id="calendar"></div><div id="next"></div></div>';
 
 /*PART['header_slim']='<header><ul class="menu"><li><a href="javascript:void(0)" onclick="page(\'tasks\',true);">Главная</a></li><li>' +
 '<a href="javascript:void(0)" onclick="page(\'tasks\',true);">Задачи</a></li><li><a href="javascript:void(0)" onclick="page(\'projects\',true);">Проекты</a></li><li>' +
