@@ -112,6 +112,9 @@ if(defined('USER_ID')) { // Статус авторизации
         if ($QUERY['action'] == 'parse_hash') {
             $RESPONSE['parse_hash'] = TM::parse_hash($QUERY['hash']);
         }
+        if ($QUERY['action'] == 'del_file') {
+            $RESPONSE['del_file'] = FILE::del_file($QUERY['id']);
+        }
     }
 }else {
     $RESPONSE['auth'] = false;

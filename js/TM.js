@@ -392,8 +392,10 @@ function edit_task(id){
     '<input type="text" class="livesearch_exe" value="'+task['executor_name']+'" placeholder="Начните набирать имя пользователя" name="main_user" autocomplete="off" id="executor">' +
     '<div class="search_advice_wrapper" id="search_advice_wrapper_exe"></div></p>' +
         //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
-        //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
+    //'<p>Иван иванов, Иван иванов,Иван иванов</p>' +
     '<p><div class="create" onclick="send_edit_task();">Изменить</div>' +
+    '<p><a href="javascript:void(0)" onclick="upload_show('+task['id']+',\'task\')">Прикрепить</a></p>' +
+    '<div id="ufiles"></div>' +
         //' * Отображаются, на данный момент,только те поля, которые, функционально, имеют возможность обрабатываться системой!' +
     //'<a href="javascript:void(0)">Прикрепить</a>' +
     '</p></div>';
@@ -404,6 +406,7 @@ function edit_task(id){
     loadSearch('#executor','#search_advice_wrapper_exe','get_users');
     loadSearch('#idproject','#search_advice_wrapper_prj','get_projects');
     calendar_init();
+    TM['ufiles']=[];
     for(i in task['files']){
         pick_file(task['files'][i]['id'],task['files'][i]['name']);
     }
@@ -444,6 +447,7 @@ function edit_project(id) {
         //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
         //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
     '<p><div class="create" onclick="send_edit_proj();">Изменить</div>' +
+    '<p><a href="javascript:void(0)" onclick="upload_show('+project['idproject']+',\'project\')">Прикрепить</a></p><div id="ufiles"></div>' +
         //' * Отображаются, на данный момент,только те поля, которые, функционально, имеют возможность обрабатываться системой!' +
         //'<a href="javascript:void(0)">Прикрепить</a>' +
     '</p></div>';
@@ -454,6 +458,10 @@ function edit_project(id) {
     //loadSearch('#executor','#search_advice_wrapper_exe','get_users');
     //loadSearch('#idproject','#search_advice_wrapper_prj','get_projects');
     calendar_init();
+    TM['ufiles']=[];
+    for(i in project['files']){
+        pick_file(project['files'][i]['id'],project['files'][i]['name']);
+    }
     return false;
 }
 
@@ -834,58 +842,70 @@ function upload_show(id,type){
 
 function view(id,type){
     source='';
-    if(type=='task'){
-        task=false;
-        for(t in DB['TASK']){ // Поиск запрошенной задачи в БД
-            if(DB['TASK'][t]['id']==id){
-                task=DB['TASK'][t];
+    if(type=='task') {
+        task = false;
+        for (t in DB['TASK']) { // Поиск запрошенной задачи в БД
+            if (DB['TASK'][t]['id'] == id) {
+                task = DB['TASK'][t];
                 break;
             }
         }
-        TM['view_type']=type;
-        TM['view_id']=id;
-        if(TM['upl_window']!=false){TM['upl_window'].window.close();}
-        TM['upl_window']=false;
-        date=new Date();
+        TM['view_type'] = type;
+        TM['view_id'] = id;
+        if (TM['upl_window'] != false) {
+            TM['upl_window'].window.close();
+        }
+        TM['upl_window'] = false;
+        date = new Date();
         now = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
-        if(TM['highlight_day']){document.getElementById(TM['highlight_day']).className='task_day';TM['highlight_day']=false;}
-        if(TM['highlight_element']){document.getElementById(TM['highlight_element']).className='task_info';TM['highlight_element']=false;}
-        date_finish=task['date_finish'].split(' ');
-        date_finish=date_finish[0].split('-');
-        time=new Date(date_finish[0], date_finish[1]-1, date_finish[2]).getTime();
-        time=time<now?'overdue':time;
-        TM['highlight_day']=TM['current_page']=='tasks'?time:'prj'+task['idproject'];
-        TM['highlight_element']=task['id'];
-        document.getElementById(TM['highlight_day']).className='task_day active_day';
-        document.getElementById(TM['highlight_element']).className='task_info task_active';
-        source+='<div class="task_title"><h4>'+task['name']
-        if(task['initiator']==TM['UID']) {
+        if (TM['highlight_day']) {
+            document.getElementById(TM['highlight_day']).className = 'task_day';
+            TM['highlight_day'] = false;
+        }
+        if (TM['highlight_element']) {
+            document.getElementById(TM['highlight_element']).className = 'task_info';
+            TM['highlight_element'] = false;
+        }
+        date_finish = task['date_finish'].split(' ');
+        date_finish = date_finish[0].split('-');
+        time = new Date(date_finish[0], date_finish[1] - 1, date_finish[2]).getTime();
+        time = time < now ? 'overdue' : time;
+        TM['highlight_day'] = TM['current_page'] == 'tasks' ? time : 'prj' + task['idproject'];
+        TM['highlight_element'] = task['id'];
+        document.getElementById(TM['highlight_day']).className = 'task_day active_day';
+        document.getElementById(TM['highlight_element']).className = 'task_info task_active';
+        source += '<div class="task_title"><h4>' + task['name']
+        if (task['initiator'] == TM['UID']) {
             source += '<img onclick="task_del(' + task['id'] + ');" src="templates/default/images/trash.png" id="trash"><img onclick="edit_task(' + task['id'] + ');" src="templates/default/images/b_pan_hover.png" id="edit_pen">';
         }
-        source+='</h4></div>';
-        source+='<p class="task_description">'+task['description']+'</p>';
-        source+='<div class="info_task">';
-        if(task['idproject']!=0){
-            source+='<div class="task_table"><div>Проект</div>' +
-            '<a href="javascript:void(0)" onclick=\'TM["tmp_task_id"]='+task['id']+';view('+task['idproject']+',"project")\'>'+task['projectname']+'</a></div>';
+        source += '</h4></div>';
+        source += '<p class="task_description">' + task['description'] + '</p>';
+        source += '<div class="info_task">';
+        if (task['idproject'] != 0) {
+            source += '<div class="task_table"><div>Проект</div>' +
+            '<a href="javascript:void(0)" onclick=\'TM["tmp_task_id"]=' + task['id'] + ';view(' + task['idproject'] + ',"project")\'>' + task['projectname'] + '</a></div>';
         }
-        source+='<div class="task_table"><div>Инициатор</div>' +
-        '<a href="javascript:void(0)" onclick=\'view('+task['initiator']+',"user")\'>'+task['initiator_name']+'</a></div>';
-        source+='<div class="task_table"><div>Исполнитель</div>' +
-        '<a href="javascript:void(0)" onclick=\'view('+task['executor']+',"user")\'>'+task['executor_name']+'</a>' +
+        source += '<div class="task_table"><div>Инициатор</div>' +
+        '<a href="javascript:void(0)" onclick=\'view(' + task['initiator'] + ',"user")\'>' + task['initiator_name'] + '</a></div>';
+        source += '<div class="task_table"><div>Исполнитель</div>' +
+        '<a href="javascript:void(0)" onclick=\'view(' + task['executor'] + ',"user")\'>' + task['executor_name'] + '</a>' +
         '</div>';
-        source+='<div class="files"><div>Прикрепленные файлы</div>' +
-        'IS DEVELOPING...'+//'<a href="#user2">Doc1.doc</a>, <a href="#user2">Doc1.doc</a>, <a href="#user2">Doc1.doc</a>' +
-        '</div>';
-        source+='<h4 class="comments_title">Обсуждение</h4><div style="height: 0px" class="comments" id="comments">'+PART['loader']+
+        if (task['files'].length > 0) {
+            source += '<div class="files"><div>Прикрепленные файлы:</div>';
+            for(f in task['files']){
+                source+=(f==0?'':', ')+'<a href="/file.php?id='+task['files'][f]['id']+'">'+task['files'][f]['name']+'</a>';
+            }
+            source += '</div>';
+        }
+        source += '<h4 class="comments_title">Обсуждение</h4><div style="height: 0px" class="comments" id="comments">' + PART['loader'] +
         '</div><textarea id="new_comm" placeholder="Ваш комментарий..."></textarea><p>' +
         '<div class="create" onclick="add_comment()">Отправить</div><a href="javascript:void(0)" onclick="upload_show(\'new\',\'comment\')">Прикрепить</a></p><p id="ufiles"></p></div>';
-        document.getElementById('view').innerHTML=source;
-        document.getElementById('spinner').style.position='relative';
-        document.getElementById('overlay').style.marginTop='0px';
-        init_comments(task['id'],type);
+        document.getElementById('view').innerHTML = source;
+        document.getElementById('spinner').style.position = 'relative';
+        document.getElementById('overlay').style.marginTop = '0px';
+        init_comments(task['id'], type);
         sizing();
-        TM['ufiles']=[];
+        TM['ufiles'] = [];
     }
     if(type=='project'){
         var project=false;
@@ -951,9 +971,11 @@ function view(id,type){
             source+='не назначены';
         }
         source+='</div>';
-        if(project['files']) {
-            source += '<div class="files"><div>Прикрепленные файлы</div>';
-            // BUILD FILES
+        if (project['files'].length > 0) {
+            source += '<div class="files"><div>Прикрепленные файлы:</div>';
+            for(f in project['files']){
+                source+=(f==0?'':', ')+'<a href="/file.php?id='+project['files'][f]['id']+'">'+project['files'][f]['name']+'</a>';
+            }
             source += '</div>';
         }
         source+='<h4 class="comments_title">Обсуждение</h4><div style="height: 0px" class="comments" id="comments">'+PART['loader']+
@@ -1024,6 +1046,7 @@ function pick_file(idf,namef){
 function unpick_file(idf){
     for(i in TM['ufiles']){
         if(TM['ufiles'][i]=idf){
+            io({'action':'del_file','id':idf});
             get('file'+idf).parentNode.removeChild(get('file'+idf));
             TM['ufiles'].splice(i,1);
             break;

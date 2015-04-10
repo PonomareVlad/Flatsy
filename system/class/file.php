@@ -2,8 +2,13 @@
 require_once ROOT.'system/class/db.php';
 class FILE extends DB
 {
-    public static function listfor($id,$type){
-
+    public static function del_file($id)
+    {
+        if (DB::delete('files', 'idfile=' . $id)) {
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public static function upload($filename){

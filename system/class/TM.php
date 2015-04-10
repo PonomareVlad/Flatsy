@@ -28,9 +28,12 @@ class TM extends DB
                 $chck['executor_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$chck['executor'])));
                 $chck['projectname'] = @mysqli_fetch_assoc(DB::select('project',['nameproject'],'idproject='.$chck['idproject']))['nameproject'];
                 TM::create_notify('new_task',$chck['id']);
+                $chck['files']=[];
                 if($files!=false){
-                    for($i=0;$i<count($files);$i++){
-
+                    for($i=0;$i<count($files);$i++) {
+                        if (DB::update('files', ['object' => $chck['id']], 'idfile=' . $files[$i])) {
+                            $chck['files'][] = ['id' => $files[$i], 'name' => (mysqli_fetch_assoc(DB::select('files', ['*'], 'idfile=' . $files[$i]))['namefile'])];
+                        }
                     }
                 }
                 return $chck;
@@ -46,6 +49,11 @@ class TM extends DB
         $task['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$task['initiator'])));
         $task['executor_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$task['executor'])));
         $task['projectname'] = mysqli_fetch_assoc(DB::select('project',['nameproject'],'idproject='.$task['idproject']))['nameproject'];
+        $tfiles=DB::select('files',['*'],'type="task" AND object="'.$task['id'].'"');
+        $task['files']=[];
+        while($file=mysqli_fetch_assoc($tfiles)){
+            $task['files'][]=['id'=>$file['idfile'],'name'=>$file['namefile']];
+        }
         return $task;
     }
     public static function set_task($query){
@@ -200,6 +208,7 @@ class TM extends DB
             $description=Checkdata($query['description']);
             $date_finish=$query['date_finish'].':00';
             $parentproject='0';
+            $files=$query['files'];
 
             if($name==''||$description==''||$date_finish==''){
                 return 'EMPTY DATA';
@@ -217,6 +226,14 @@ class TM extends DB
                 $proj['users']=[];
                 while($userlink=mysqli_fetch_assoc($users)){
                     $proj['users'][]=User::get_user($userlink['iduser']);
+                }
+                $proj['files']=[];
+                if($files!=false){
+                    for($i=0;$i<count($files);$i++){
+                        if(DB::update('files',['object'=>$proj['idproject']],'idfile='.$files[$i])){
+                            $proj['files'][]=['id'=>$files[$i],'name'=>(mysqli_fetch_assoc(DB::select('files',['*'],'idfile='.$files[$i]))['namefile'])];
+                        }
+                    }
                 }
                 return $proj;
             }
@@ -262,6 +279,11 @@ class TM extends DB
             $task['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$task['initiator'])));
             $task['executor_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$task['executor'])));
             $task['projectname'] = mysqli_fetch_assoc(DB::select('project',['nameproject'],'idproject='.$task['idproject']))['nameproject'];
+            $tfiles=DB::select('files',['*'],'type="task" AND object="'.$task['id'].'"');
+            $task['files']=[];
+            while($file=mysqli_fetch_assoc($tfiles)){
+                $task['files'][]=['id'=>$file['idfile'],'name'=>$file['namefile']];
+            }
             $tasks[]=$task;
         }
         return $tasks;
@@ -273,6 +295,7 @@ class TM extends DB
             if(trim($text)=='<br>'||trim($text=='')){
                 return false;
             }
+            //$files=$query['files'];
             $max=mysqli_fetch_assoc(DB::select('comments',['MAX(numbercom) AS numbercom'],'idobject='.$id.' AND type="'.$type.'"'));
             //$add=mysqli_query($MYSQL_CONNECTION,'INSERT INTO comments (idtask, numbercom, usercom, comment, datacom) VALUES ('.$query['id'].','.($max['numbercom']+1).','.USER_ID.',"'.$text.'","'.$now.'")');
             $add=DB::inserti('comments','(idobject, type, numbercom, usercom, comment, datacom) VALUES ('.$id.',"'.$type.'",'.($max['numbercom']+1).','.USER_ID.',"'.$text.'","'.$now.'")');
@@ -281,6 +304,11 @@ class TM extends DB
                 $comment['usercom_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['firstname', 'lastname'], 'id=' . $comment['usercom'])));
                 $comment['usercom_photo'] = User::get_user($comment['usercom'])['photo'];
                 TM::create_notify('new_comment',$comment['id']);
+                /*if($files!=false){
+                    for($i=0;$i<count($files);$i++){
+                        DB::update('files',['object'=>$comment['id']],'idfile='.$files[$i]);
+                    }
+                }*/
                 return $comment;
             }else{
                 return false;
@@ -326,6 +354,11 @@ class TM extends DB
                 $proj['tasks'][$num]['executor_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['lastname', 'firstname'], 'id="' . $taska['executor'] . '"')));
             }
             $is[$proj['idproject']]=true;
+            $pfiles=DB::select('files',['*'],'type="project" AND object="'.$proj['idproject'].'"');
+            $proj['files']=[];
+            while($file=mysqli_fetch_assoc($pfiles)){
+                $proj['files'][]=['id'=>$file['idfile'],'name'=>$file['namefile']];
+            }
             $project[]=$proj;
         }
         $task = TM::get_tasks();
@@ -344,6 +377,11 @@ class TM extends DB
                         $proj['tasks'][$num]['executor_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['lastname', 'firstname'], 'id="' . $taska['executor'] . '"')));
                     }
                     $is[$proj['idproject']]=true;
+                    $pfiles=DB::select('files',['*'],'type="project" AND object="'.$proj['idproject'].'"');
+                    $proj['files']=[];
+                    while($file=mysqli_fetch_assoc($pfiles)){
+                        $proj['files'][]=['id'=>$file['idfile'],'name'=>$file['namefile']];
+                    }
                     $project[] = $proj;
                 }
             }
