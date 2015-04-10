@@ -1018,7 +1018,7 @@ function pick_file(idf,namef){
     if(TM['upl_window']!=false){TM['upl_window'].window.close();}
     TM['upl_window']=false;
     TM['ufiles'][TM['ufiles'].length]=idf;
-    get('ufiles').innerHTML+='<div id="file'+idf+'">'+namef+' <div class="crest" onclick="unpick_file('+idf+')"><img src="templates/default/images/close.png"></div></div>';
+    get('ufiles').innerHTML+='<div id="file'+idf+'">'+namef+' <a href="javascript:void(0)" onclick="unpick_file('+idf+')"><img src="templates/default/images/close.png"></a></div>';
 }
 
 function unpick_file(idf){

@@ -30,7 +30,7 @@ if (move_uploaded_file($_FILES['f']['tmp_name'], $uploadfile)) {
     DB::insert('files',['iduser'=>USER_ID,'namefile'=>basename($_FILES['f']['name']),'timeload'=>$date,'type'=>$_POST['type'],'object'=>$object]);
     $file=mysqli_fetch_assoc(DB::select('files',['*'],'namefile="'.basename($_FILES['f']['name']).'" AND timeload="'.$date.'"'));
     echo('<html><head><title>Файл загружен</title><script>
-function save(){window.opener.pick_file('.$file['idfile'].',"'.$file['namefile'].'");}
+function save(){window.opener.pick_file('.$file['idfile'].',"'.$file['namefile'].'");window.close();}
 </script></head><body>Файл '.$file['namefile'].' загружен, для продолжения нажмите кнопку:<br/><button onclick="save();" value="Прикрепить">Прикрепить</button></body></html>');
 } else {
     echo "Ошибка загрузки";
