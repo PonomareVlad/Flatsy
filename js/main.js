@@ -8,6 +8,7 @@ TM['time_offset']=3600000*5;
 TM['param_send']=false;
 TM['months']=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
 TM['now'] = new Date(new Date().getTime()+TM['time_offset']).getTime();
+TM['upl_window']=false;
 if(typeof SERVER !='undefined') {
     TM['UID'] = SERVER['ID'];
     TM['USER_NAME'] = SERVER['NAME'];

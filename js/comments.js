@@ -36,7 +36,15 @@ function gen_comments(response){
 function add_comment(){
     text=document.getElementById('new_comm').value;
     document.getElementById('new_comm').value='';
-    io({"action":"add_comment","id":TM['CID'],"type":TM['comments_loaded'],"text":text});
+    if(TM['ufiles'].length==0){
+        files=false;
+    }else{
+        files={};
+        for(i in TM['ufiles']){
+            files[i]=TM['ufiles'][i];
+        }
+    }
+    io({"action":"add_comment","id":TM['CID'],"type":TM['comments_loaded'],"text":text,"files":files});
 }
 
 function reset_comments(){

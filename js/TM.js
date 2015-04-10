@@ -352,7 +352,7 @@ function show_add_task() {
     //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
     '<p><div class="create" onclick="send_task();">Создать</div>' +
     //' * Отображаются, на данный момент,только те поля, которые, функционально, имеют возможность обрабатываться системой!' +
-    '<a href="javascript:void(0)" onclick="upload_show(\'new\',\'task\')";>Прикрепить</a></p></div><div id="ufiles"></div>';
+    '<a href="javascript:void(0)" onclick="upload_show(\'new\',\'task\')">Прикрепить</a></p></div><div id="ufiles"></div>';
     document.getElementById('view').innerHTML = source;
     TM['ufiles']=[];
     loadSearch('#executor','#search_advice_wrapper_exe','get_users');
@@ -404,6 +404,9 @@ function edit_task(id){
     loadSearch('#executor','#search_advice_wrapper_exe','get_users');
     loadSearch('#idproject','#search_advice_wrapper_prj','get_projects');
     calendar_init();
+    for(i in task['files']){
+        pick_file(task['files'][i]['id'],task['files'][i]['name']);
+    }
     return false;
 }
 
@@ -500,6 +503,15 @@ function send_edit_task(){
     date_finish=date_finish.split('.');
     date_finish=date_finish[2]+'-'+date_finish[1]+'-'+date_finish[0]+' '+(hours<10?'0':'')+hours+':'+(minuts<10?'0':'')+minuts;
 
+    if(TM['ufiles'].length==0){
+        files=false;
+    }else{
+        files={};
+        for(i in TM['ufiles']){
+            files[i]=TM['ufiles'][i];
+        }
+    }
+
     TM['tmp_edit_executor']=false;
     TM['tmp_edit_idproject']=false;
 
@@ -511,7 +523,8 @@ function send_edit_task(){
             "description": description,
             "executor": executor,
             "date_finish": date_finish,
-            "project":project
+            "project":project,
+            "files":files
         });
     }
 }
@@ -596,11 +609,12 @@ function show_add_project() {
     '<div class="search_advice_wrapper" id="prj_wrapp"></div></p>' +
         //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
         //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
-    '<p><div class="create" onclick="new_project();">Создать</div><a href="javascript:void(0)">Прикрепить</a></div></p>';
+    '<p><div class="create" onclick="new_project();">Создать</div><a href="javascript:void(0)" onclick="upload_show(\'new\',\'project\');">Прикрепить</a></div></p><div id="ufiles"></div>';
     //' * Отображаются, на данный момент,только те поля, которые, функционально, имеют возможность обрабатываться системой!</p>';
     document.getElementById('view').innerHTML = source;
     loadSearch('#executor','#prj_wrapp','get_users');
     calendar_init();
+    TM['ufiles']=[];
     return false;
 }
 
@@ -613,12 +627,21 @@ function new_project() {
     date_finish = document.getElementById('date_finish').value;
     date_finish = date_finish.split('.');
     date_finish = date_finish[2] + '-' + date_finish[1] + '-' + date_finish[0] + ' ' + (hours < 10 ? '0' : '') + hours + ':' + (minuts < 10 ? '0' : '') + minuts;
+    if(TM['ufiles'].length==0){
+        files=false;
+    }else{
+        files={};
+        for(i in TM['ufiles']){
+            files[i]=TM['ufiles'][i];
+        }
+    }
     io({
         "action": "add_project",
         "name": name,
         "description": description,
         "date_finish": date_finish,
-        "executor": executor
+        "executor": executor,
+        "files":files
     });
 
 }
@@ -799,7 +822,7 @@ function upload_show(id,type){
     if(!TM['upl_window']) {
         TM['upl_window']=window.open('','upl_'+type+'_'+id,"width=420,height=230,menubar=no,location=no,resizable=no,scrollbars=yes,status=no");
         TM['upl_window'].document.write('<!DOCTYPE html><html><head><meta charset="utf-8"></head>' +
-        '<body><div id="files"><form enctype="multipart/form-data" action="/upl.php" method="post"><p>' +
+        '<body onunload="window.opener.TM[\'upl_window\']=false;"><div id="files"><form enctype="multipart/form-data" action="/upl.php" method="post"><p>' +
         '<input type="hidden" name="type" value="'+type+'">' +
         '<input type="hidden" name="id" value="'+id+'">' +
         //'<input class="file" type="file" name="f1"></br>' +
@@ -821,6 +844,8 @@ function view(id,type){
         }
         TM['view_type']=type;
         TM['view_id']=id;
+        if(TM['upl_window']!=false){TM['upl_window'].window.close();}
+        TM['upl_window']=false;
         date=new Date();
         now = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
         if(TM['highlight_day']){document.getElementById(TM['highlight_day']).className='task_day';TM['highlight_day']=false;}
@@ -854,12 +879,13 @@ function view(id,type){
         '</div>';
         source+='<h4 class="comments_title">Обсуждение</h4><div style="height: 0px" class="comments" id="comments">'+PART['loader']+
         '</div><textarea id="new_comm" placeholder="Ваш комментарий..."></textarea><p>' +
-        '<div class="create" onclick="add_comment()">Отправить</div><a href="javascript:void(0)">Прикрепить</a></p></div>';
+        '<div class="create" onclick="add_comment()">Отправить</div><a href="javascript:void(0)" onclick="upload_show(\'new\',\'comment\')">Прикрепить</a></p><p id="ufiles"></p></div>';
         document.getElementById('view').innerHTML=source;
         document.getElementById('spinner').style.position='relative';
         document.getElementById('overlay').style.marginTop='0px';
         init_comments(task['id'],type);
         sizing();
+        TM['ufiles']=[];
     }
     if(type=='project'){
         var project=false;
@@ -873,6 +899,8 @@ function view(id,type){
         }
         TM['view_type']=type;
         TM['view_id']=ID;
+        if(TM['upl_window']!=false){TM['upl_window'].window.close();}
+        TM['upl_window']=false;
         //alert(DB['PROJECT'][id]['percent']);
         //if(!DB['PROJECT'][id]['percent']){
         DB['PROJECT'][id]['time_finish'] = new Date(new Date(project['date_finish'].replace(' ', 'T')).getTime()+TM['time_offset']).getTime();
@@ -930,12 +958,13 @@ function view(id,type){
         }
         source+='<h4 class="comments_title">Обсуждение</h4><div style="height: 0px" class="comments" id="comments">'+PART['loader']+
         '</div><textarea id="new_comm" placeholder="Ваш комментарий..."></textarea><p>' +
-        '<div class="create" onclick="add_comment()">Отправить</div><a href="javascript:void(0)">Прикрепить</a></p></div>';
+        '<div class="create" onclick="add_comment()">Отправить</div><a href="javascript:void(0)" onclick="upload_show(\'new\',\'comment\')">Прикрепить</a></p><p id="ufiles"></p></div>';
         document.getElementById('view').innerHTML=source;
         document.getElementById('spinner').style.position='relative';
         document.getElementById('overlay').style.marginTop='0px';
         init_comments(project['idproject'],type);
         sizing();
+        TM['ufiles']=[];
     }
     if(type=='group'){
         source='';
@@ -954,6 +983,8 @@ function view(id,type){
         }
         TM['view_type']=type;
         TM['view_id']=id;
+        if(TM['upl_window']!=false){TM['upl_window'].window.close();}
+        TM['upl_window']=false;
         source+='<div class="title"><h4>'+group['namegroup']+'</h4></div>';
         if(group['creator']==TM['UID']) {
             source += '<div id="invite" onclick="invite_user_group('+group['idgroup']+');" class="add_group"><div class="plus"><div id="p1"></div><div id="p2"></div><div id="p3"></div><div id="p4"></div></div></div>' +
@@ -984,10 +1015,10 @@ function view(id,type){
 }
 
 function pick_file(idf,namef){
-    TM['upl_window'].window.close();
+    if(TM['upl_window']!=false){TM['upl_window'].window.close();}
     TM['upl_window']=false;
     TM['ufiles'][TM['ufiles'].length]=idf;
-    get('ufiles').innerHTML+='<div id="file'+idf+'">'+namef+' <a href="javascript:void(0)" onclick="unpick_file('+idf+')">[X]</a></div>';
+    get('ufiles').innerHTML+='<div id="file'+idf+'">'+namef+' <div class="crest" onclick="unpick_file('+idf+')"><img src="templates/default/images/close.png"></div></div>';
 }
 
 function unpick_file(idf){

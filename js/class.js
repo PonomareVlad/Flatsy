@@ -85,6 +85,8 @@ function page(name,headgen){
             TM['CID']=false;
             TM['empty_comments']=false;
             TM['tmp_group_add_line']=false;
+            if(TM['upl_window']!=false){TM['upl_window'].window.close();}
+            TM['upl_window']=false;
             document.title = PAGE[name]['title'] + ' | Flatsy';
             history.pushState(null,null,name);
             document.getElementById('page').innerHTML = PAGE[name]['source'];
