@@ -653,23 +653,11 @@ function gen_list(){
                 empty=false;
                 empty_list=false;
                 task=DB['TASK'][i];
-                if(TM['tasks_mode']=='unfinished' && task['finished']==1){
-					if(task['initiator']!=TM['UID']){
-						continue;
-					}
-					
-				}
-				if(TM['tasks_mode']=='finished'&&task['finished']==0&&task['initiator']!=TM['UID']){
-                    alert(TM['tasks_mode']+': '+task['name']);
-					continue;
+                if(TM['tasks_mode']=='unfinished'&&task['finished']==1){
+                    continue;
                 }
-                if(TM['tasks_mode']=='myfinished'&&task['executor']!=TM['UID']&&task['finished']==0){
-                    alert(TM['tasks_mode']+': '+task['name']);
-					continue;
-                }
-				if(TM['tasks_mode']=='myunfinished'&&task['executor']!=TM['UID']&&task['finished']==1){
-                    alert(TM['tasks_mode']+': '+task['name']);
-					continue;
+                if(TM['tasks_mode']=='my'&&task['executor']!=TM['UID']){
+                    continue;
                 }
                 date_finish=task['date_finish'].split(' ');
                 date_finish=date_finish[0].split('-');
