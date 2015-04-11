@@ -1,3 +1,5 @@
+var FLATSY='0.4.1';
+var VERSION=41;
 var TM=[];
 TM['current_page']=false;
 TM['tasks_mode']='all';

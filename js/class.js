@@ -46,7 +46,7 @@ function init_cal(){
 
 function io(array,callback){
     query=JSON.stringify(array);
-    Ajax('GET','/ajax.php?query='+query+'&rand='+new Date().getTime(),callback?callback:handler);
+    Ajax('GET','/ajax.php?query='+query+'&ver='+VERSION+'&rand='+new Date().getTime(),callback?callback:handler);
 }
 
 function get(objID) {
@@ -78,6 +78,7 @@ function page(name,headgen){
                     document.getElementById('header').innerHTML=PART['header'];//name=='lk'?PART['header_slim']:PART['header'];
                     document.getElementById('user_name').innerHTML = TM['USER_NAME'];
                     document.getElementById('user_pic').src = TM['USER_PIC'];
+                    TM['upl_window']=false;
                 }
             }
             TM['highlight_day']=false;
