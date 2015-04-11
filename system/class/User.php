@@ -130,7 +130,7 @@ class User extends DB{
 
             if ($query) {
                 $USERN = mysqli_fetch_assoc(DB::select('users',['*'],'mail="'.$email.'"'));
-                mkdir(ROOT.'users/'.USER_ID.'/files',0777,true);
+                mkdir(ROOT.'users/'.$USERN['id'].'/files',0777,true);
                 /*$CFG_INIT = mysqli_query($MYSQL_CONNECTION,"CREATE TABLE IF NOT EXISTS users.id" . $USERN['id'] . "_config (
   key varchar(50) NOT NULL,
   value varchar(500) NOT NULL

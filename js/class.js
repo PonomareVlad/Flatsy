@@ -72,6 +72,7 @@ function page(name,headgen){
             document.getElementById('main').className='blur';
             if (name == 'auth'||name == 'reg') {
                 document.getElementById('header').innerHTML = '';
+                TM['upl_window']=false;
             } else {
                 if ((TM['current_page'] == 'auth'||TM['current_page'] == 'reg') || headgen) {
                     document.getElementById('header').innerHTML=PART['header'];//name=='lk'?PART['header_slim']:PART['header'];
