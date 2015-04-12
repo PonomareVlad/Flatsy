@@ -301,7 +301,7 @@ function handler(response) {
         }
         if(response['gen_invite_group']){
             if(response['gen_invite_group']!=false){
-                get('invite_text').innerHTML = '<input type="text" value="http://'+location.host+'/?hash='+response['gen_invite_group']+'" size="60" id="name"/>';
+                get('invite_text').innerHTML = 'Передайте данную инвайт-ссылку пользователю, для вступления в группу: <input type="text" value="http://'+location.host+'/?hash='+response['gen_invite_group']+'" size="60" id="name"/>';
             }
         }
     }else{
@@ -1009,10 +1009,9 @@ function view(id,type){
         TM['upl_window']=false;
         source+='<div class="title"><h4>'+group['namegroup']+'</h4></div>';
         if(group['creator']==TM['UID']) {
-            source += '<div id="invite" onclick="invite_user_group('+group['idgroup']+');" class="add_group"><div class="plus"><div id="p1"></div><div id="p2"></div><div id="p3"></div><div id="p4"></div></div></div>' +
-            '<div id="invite_text"></div>';
+            source += '<div id="invite" onclick="invite_user_group('+group['idgroup']+');" class="add_group"><div class="plus"><div id="p1"></div><div id="p2"></div><div id="p3"></div><div id="p4"></div></div></div>';
         }
-        source+='<div class="item_title">Участники ('+group['count_users']+')</div>' +
+        source+='<div class="item_title">Участники ('+group['count_users']+')<div id="invite_text"></div></div>' +
         '<div class="group_table"><div class="group_tr"><div class="names"><div class="account">Аккаунт</div>' +
         '<div class="job_pos">Должность</div><div class="scroll"><div>Добавление/удаление пользователей</div>' +
         '<div>Запуск/удаление задач</div></div><div class="status">Статус</div></div></div>';
