@@ -6,6 +6,11 @@ function init_comments(id,type){
 }
 
 function gen_comments(response){
+    if(TM['OFFLINE']){
+        get('comments').innerHTML='Оффлайн режим';
+        return false;
+    }
+    //alert('___'+response+'___');
     response=JSON.parse(response);
     offset=3600000*5;
     MONTH=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];

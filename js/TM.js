@@ -1,12 +1,128 @@
 function handler(response) {
-    response=JSON.parse(response);
-    if (response['auth']==true) {
-        if(response['check']){
-            if(response['NEW']){
-                if(response['NEW']['TASK']){
-                    for(i in response['NEW']['TASK']) {
-                        // BUILD UPD DB
-                        task = response['NEW']['TASK'][i];
+    if(!TM['OFFLINE']) {
+        response = JSON.parse(response);
+        if (response['auth'] == true) {
+            if (response['check']) {
+                if (response['NEW']) {
+                    if (response['NEW']['TASK']) {
+                        for (i in response['NEW']['TASK']) {
+                            // BUILD UPD DB
+                            task = response['NEW']['TASK'][i];
+                            DB['TASK'][DB['TASK'].length] = task;
+                            if (task['idproject'] != 0) {
+                                for (p in DB['PROJECT']) {
+                                    if (DB['PROJECT'][p]['idproject'] == task['idproject']) {
+                                        DB['PROJECT'][p]['tasks'][DB['PROJECT'][p]['tasks'].length] = task;
+                                    }
+                                }
+                            }
+                            if (TM['current_page'] == 'tasks') {
+                                gen_list();
+                            }
+                            //view(task['id'], 'task');
+                        }
+                    }
+                    if (response['NEW']['COMMENT']) {
+                        offset = 3600000 * 5;
+                        MONTH = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+                        date = new Date(new Date().getTime() + offset);
+                        now = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+                        for (i in response['NEW']['COMMENT']) {
+                            comment = response['NEW']['COMMENT'][i];
+                            // BUILD UPD DB
+                            if (comment['idobject'] == TM['CID'] && comment['type'] == TM['comments_loaded']) {
+                                source = '';
+                                datacom = comment['datacom'].split(' ');
+                                datestring = datacom[0] + 'T' + datacom[1];
+                                date = new Date(new Date(datestring).getTime() + offset);
+                                timecom = [(date.getHours() < 10 ? '0' : '') + date.getHours(), (date.getMinutes() < 10 ? '0' : '') + date.getMinutes()];
+                                datacom = [(date.getDate() < 10 ? '0' : '') + date.getDate(), date.getMonth()];
+                                datestring = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+                                source += '<div class="comment">' +
+                                '<img src="' + comment['usercom_photo'] + '"><div class="info_text">' +
+                                '<a href="javascript:void(0)" onclick=\'view(' + comment['usercom'] + ',"user")\'><div class="name">' + comment['usercom_name'] + '</div></a>' +
+                                '<div class="date">' + (now == datestring ? ('сегодня в ' + timecom[0] + ':' + timecom[1]) : datacom[0] + ' ' + MONTH[parseInt(datacom[1])]) + '</div>' +
+                                '<p class="text">' + comment['comment'] + '</p></div></div>';
+                                if (TM['empty_comments']) {
+                                    document.getElementById('comments').innerHTML = '';
+                                    TM['empty_comments'] = false;
+                                }
+                                //alert(source);
+                                document.getElementById('comments').innerHTML += source;
+                                document.getElementById('comments').scrollTop = 9999;
+                            } else {
+                                //alert('New comment for '+comment['type']+' '+comment['idobject']);
+                            }
+                        }
+                    }
+                }
+            }
+            if (response['DB']) {
+                DB = response['DB'];
+                TM['update_db'] = false;
+                if (TM['wait_load']) {
+                    TM['wait_load'] = false;
+                    //alert('load page..');
+                    TM['current_page'] = (TM['current_page'] == 'auth' || TM['current_page'] == 'reg') ? 'tasks' : TM['current_page'];
+                    //TM['current_page']=PAGE[TM['current_page']]?TM['current_page']:'tasks';
+                    //document.getElementById('main').className='blur';
+                    page(TM['current_page'] == false ? 'tasks' : TM['current_page'], true);
+                    //alert('loaded');
+                }
+                if (TM['tmp_rebuild_lists']) {
+                    TM['highlight_day'] = false;
+                    TM['highlight_element'] = false;
+                    gen_list();
+                    TM['tmp_rebuild_lists'] = false;
+                }
+                if (TM['tmp_view_upd']) {
+                    TM['highlight_day'] = false;
+                    TM['highlight_element'] = false;
+                    gen_list();
+                    view(TM['view_id'], TM['view_type']);
+                    TM['tmp_view_upd'] = false;
+                }
+                document.getElementById('main').className = 'noblur';
+                // TESTING LOCAL STORAGE
+                if (supports_html5_storage()) {
+                    localStorage['DB'] = JSON.stringify(DB);
+                }
+                // BUILD REFRESH VIEW
+                //gen_list();
+            }
+            if (response['new_comment']) {
+                comment = response['new_comment'];
+                if (comment['idobject'] == TM['CID'] && comment['type'] == TM['comments_loaded']) {
+                    source = '';
+                    offset = 3600000 * 5;
+                    MONTH = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+                    date = new Date(new Date().getTime() + offset);
+                    now = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+                    datacom = comment['datacom'].split(' ');
+                    datestring = datacom[0] + 'T' + datacom[1];
+                    date = new Date(new Date(datestring).getTime() + offset);
+                    timecom = [(date.getHours() < 10 ? '0' : '') + date.getHours(), (date.getMinutes() < 10 ? '0' : '') + date.getMinutes()];
+                    datacom = [(date.getDate() < 10 ? '0' : '') + date.getDate(), date.getMonth()];
+                    datestring = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+                    source += '<div class="comment">' +
+                    '<img src="' + comment['usercom_photo'] + '"><div class="info_text">' +
+                    '<a href="javascript:void(0)" onclick=\'view(' + comment['usercom'] + ',"user")\'><div class="name">' + comment['usercom_name'] + '</div></a>' +
+                    '<div class="date">' + (now == datestring ? ('сегодня в ' + timecom[0] + ':' + timecom[1]) : datacom[0] + ' ' + MONTH[parseInt(datacom[1])]) + '</div>' +
+                    '<p class="text">' + comment['comment'] + '</p></div></div>';
+                    if (TM['empty_comments']) {
+                        TM['empty_comments'] = false;
+                        document.getElementById('comments').innerHTML = '';
+                    }
+                    document.getElementById('comments').innerHTML += source;
+                    document.getElementById('comments').scrollTop = 9999;
+                }
+            }
+            if (response['add_task']) {
+                if (response['add_task'] == 'EMPTY DATA') {
+                    alert('Некорректное заполнение полей');
+                } else {
+                    task = response['add_task'];
+                    if (TM['current_page'] == 'tasks') {
                         DB['TASK'][DB['TASK'].length] = task;
                         if (task['idproject'] != 0) {
                             for (p in DB['PROJECT']) {
@@ -15,318 +131,208 @@ function handler(response) {
                                 }
                             }
                         }
-                        if (TM['current_page'] == 'tasks') {
-                            gen_list();
+                        gen_list();
+                        view(task['id'], 'task');
+                    }
+                }
+            }
+            if (response['add_project']) {
+                if (response['add_project'] == 'EMPTY DATA') {
+                    alert('Некорректное заполнение полей');
+                } else {
+                    project = response['add_project'];
+                    if (TM['current_page'] == 'projects') {
+                        DB['PROJECT'][DB['PROJECT'].length] = project;
+                        gen_list();
+                        view(project['idproject'], 'project');
+                    }
+                }
+            }
+            if (response['set_task']) {
+                if (response['set_task'] != false) {
+                    if (response['set_task']['param'] == 'finished') {
+                        if (response['set_task']['value'] == 1) {
+                            get('fhd' + response['set_task']['id']).innerHTML = '<img src="templates/default/images/done.png">';
+                        } else {
+                            get('fhd' + response['set_task']['id']).innerHTML = '<img src="templates/default/images/n_done.png">';
                         }
-                        //view(task['id'], 'task');
-                    }
-                }
-                if(response['NEW']['COMMENT']){
-                    offset=3600000*5;
-                    MONTH=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
-                    date=new Date(new Date().getTime()+offset);
-                    now = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
-                    for(i in response['NEW']['COMMENT']){
-                        comment=response['NEW']['COMMENT'][i];
-                        // BUILD UPD DB
-                        if(comment['idobject']==TM['CID']&&comment['type']==TM['comments_loaded']) {
-                            source='';
-                            datacom=comment['datacom'].split(' ');
-                            datestring=datacom[0]+'T'+datacom[1];
-                            date= new Date(new Date(datestring).getTime()+offset);
-                            timecom=[(date.getHours()<10?'0':'')+date.getHours(),(date.getMinutes()<10?'0':'')+date.getMinutes()];
-                            datacom=[(date.getDate()<10?'0':'')+date.getDate(),date.getMonth()];
-                            datestring=new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
-                            source+='<div class="comment">' +
-                            '<img src="'+comment['usercom_photo']+'"><div class="info_text">' +
-                            '<a href="javascript:void(0)" onclick=\'view('+comment['usercom']+',"user")\'><div class="name">'+comment['usercom_name']+'</div></a>' +
-                            '<div class="date">'+(now==datestring?('сегодня в '+timecom[0]+':'+timecom[1]):datacom[0]+' '+MONTH[parseInt(datacom[1])])+'</div>' +
-                            '<p class="text">'+comment['comment']+'</p></div></div>';
-                            if(TM['empty_comments']){
-                                document.getElementById('comments').innerHTML='';
-                                TM['empty_comments']=false;
-                            }
-                            //alert(source);
-                            document.getElementById('comments').innerHTML += source;
-                            document.getElementById('comments').scrollTop=9999;
-                        }else{
-                            //alert('New comment for '+comment['type']+' '+comment['idobject']);
-                        }
-                    }
-                }
-            }
-        }
-        if(response['DB']){
-            DB=response['DB'];
-            TM['update_db']=false;
-            if(TM['wait_load']){
-                TM['wait_load']=false;
-                //alert('load page..');
-                TM['current_page']=(TM['current_page']=='auth'||TM['current_page']=='reg')?'tasks':TM['current_page'];
-                //TM['current_page']=PAGE[TM['current_page']]?TM['current_page']:'tasks';
-                //document.getElementById('main').className='blur';
-                page(TM['current_page']==false?'tasks':TM['current_page'],true);
-                //alert('loaded');
-            }
-            if(TM['tmp_rebuild_lists']) {
-                TM['highlight_day']=false;
-                TM['highlight_element']=false;
-                gen_list();
-                TM['tmp_rebuild_lists'] = false;
-            }
-            if(TM['tmp_view_upd']){
-                TM['highlight_day']=false;
-                TM['highlight_element']=false;
-                gen_list();
-                view(TM['view_id'],TM['view_type']);
-                TM['tmp_view_upd']=false;
-            }
-            document.getElementById('main').className='noblur';
-            // BUILD REFRESH VIEW
-            //gen_list();
-        }
-        if(response['new_comment']){
-            comment=response['new_comment'];
-            if(comment['idobject']==TM['CID']&&comment['type']==TM['comments_loaded']) {
-                source='';
-                offset=3600000*5;
-                MONTH=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
-                date=new Date(new Date().getTime()+offset);
-                now = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
-                datacom=comment['datacom'].split(' ');
-                datestring=datacom[0]+'T'+datacom[1];
-                date= new Date(new Date(datestring).getTime()+offset);
-                timecom=[(date.getHours()<10?'0':'')+date.getHours(),(date.getMinutes()<10?'0':'')+date.getMinutes()];
-                datacom=[(date.getDate()<10?'0':'')+date.getDate(),date.getMonth()];
-                datestring=new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
-                source+='<div class="comment">' +
-                '<img src="'+comment['usercom_photo']+'"><div class="info_text">' +
-                '<a href="javascript:void(0)" onclick=\'view('+comment['usercom']+',"user")\'><div class="name">'+comment['usercom_name']+'</div></a>' +
-                '<div class="date">'+(now==datestring?('сегодня в '+timecom[0]+':'+timecom[1]):datacom[0]+' '+MONTH[parseInt(datacom[1])])+'</div>' +
-                '<p class="text">'+comment['comment']+'</p></div></div>';
-                if(TM['empty_comments']){
-                    TM['empty_comments']=false;
-                    document.getElementById('comments').innerHTML='';
-                }
-                document.getElementById('comments').innerHTML += source;
-                document.getElementById('comments').scrollTop = 9999;
-            }
-        }
-        if(response['add_task']) {
-            if (response['add_task'] == 'EMPTY DATA') {
-                alert('Некорректное заполнение полей');
-            } else {
-                task = response['add_task'];
-                if (TM['current_page'] == 'tasks') {
-                    DB['TASK'][DB['TASK'].length] = task;
-                    if(task['idproject']!=0){
-                        for(p in DB['PROJECT']){
-                            if(DB['PROJECT'][p]['idproject']==task['idproject']){
-                                DB['PROJECT'][p]['tasks'][DB['PROJECT'][p]['tasks'].length]=task;
-                            }
-                        }
-                    }
-                    gen_list();
-                    view(task['id'], 'task');
-                }
-            }
-        }
-        if(response['add_project']) {
-            if (response['add_project'] == 'EMPTY DATA') {
-                alert('Некорректное заполнение полей');
-            } else {
-                project = response['add_project'];
-                if (TM['current_page'] == 'projects') {
-                    DB['PROJECT'][DB['PROJECT'].length] = project;
-                    gen_list();
-                    view(project['idproject'], 'project');
-                }
-            }
-        }
-        if(response['set_task']){
-            if(response['set_task']!=false){
-                if(response['set_task']['param']=='finished'){
-                    if(response['set_task']['value']==1) {
-                        get('fhd' + response['set_task']['id']).innerHTML='<img src="templates/default/images/done.png">';
-                    }else{
-                        get('fhd' + response['set_task']['id']).innerHTML='<img src="templates/default/images/n_done.png">';
-                    }
 
-                }
-                for(t in DB['TASK']){
-                    if(DB['TASK'][t]['id']==response['set_task']['id']){
-                        DB['TASK'][t][response['set_task']['param']]=response['set_task']['value'];
-                        if(DB['TASK'][t]['idproject']!=0){
-                            for(p in DB['PROJECT']){
-                                if(DB['PROJECT'][p]['idproject']==DB['TASK'][t]['idproject']){
-                                    for(i in DB['PROJECT'][p]['tasks']){
-                                        if(DB['PROJECT'][p]['tasks'][i]['id']==DB['TASK'][t]['id']){
-                                            DB['PROJECT'][p]['tasks'][i][response['set_task']['param']]=response['set_task']['value'];
-                                        }
-                                    }
-                                }
-                            }
-                        }
                     }
-                }
-            }
-        }
-        if(response['edit_task']){
-            if(response['edit_task']!=false){
-                for(t in DB['TASK']){
-                    if(DB['TASK'][t]['id']==response['edit_task']['id']){
-                        if(DB['TASK'][t]['idproject']!=response['edit_task']['idproject']) {
-                            //alert(DB['TASK'][t]['idproject']+'>>'+response['edit_task']['idproject'])
-                            if (response['edit_task']['idproject'] != 0) {
-                                for (p in DB['PROJECT']) {
-                                    if (DB['PROJECT'][p]['idproject'] == DB['TASK'][t]['idproject']) {
-                                        for (i in DB['PROJECT'][p]['tasks']) {
-                                            if (DB['PROJECT'][p]['tasks'][i]['id'] == DB['TASK'][t]['id']) {
-                                                DB['PROJECT'][p]['tasks'].splice(i, 1);
-                                                //alert('Deleted from '+DB['PROJECT'][p]['nameproject']);
-                                            }
-                                        }
-                                    }
-                                    if(DB['PROJECT'][p]['idproject'] == response['edit_task']['idproject']){
-                                        DB['PROJECT'][p]['tasks'][DB['PROJECT'][p]['tasks'].length]=response['edit_task'];
-                                        //alert('Inserted into '+DB['PROJECT'][p]['nameproject']);
-                                    }
-                                }
-                            }else{
-                                for (p in DB['PROJECT']) {
-                                    if (DB['PROJECT'][p]['idproject'] == DB['TASK'][t]['idproject']) {
-                                        for (i in DB['PROJECT'][p]['tasks']) {
-                                            if (DB['PROJECT'][p]['tasks'][i]['id'] == DB['TASK'][t]['id']) {
-                                                DB['PROJECT'][p]['tasks'].splice(i, 1);
-                                                //alert('Deleted from '+DB['PROJECT'][p]['nameproject']);
-                                            }
-                                        }
-                                    }
-                                }
-                                page('tasks');
-                            }
-                        }else {
+                    for (t in DB['TASK']) {
+                        if (DB['TASK'][t]['id'] == response['set_task']['id']) {
+                            DB['TASK'][t][response['set_task']['param']] = response['set_task']['value'];
                             if (DB['TASK'][t]['idproject'] != 0) {
                                 for (p in DB['PROJECT']) {
-                                    if (DB['PROJECT'][p]['idproject'] == response['edit_task']['idproject']) {
+                                    if (DB['PROJECT'][p]['idproject'] == DB['TASK'][t]['idproject']) {
                                         for (i in DB['PROJECT'][p]['tasks']) {
-                                            if (DB['PROJECT'][p]['tasks'][i]['id'] == response['edit_task']['id']) {
-                                                DB['PROJECT'][p]['tasks'][i] = response['edit_task'];
+                                            if (DB['PROJECT'][p]['tasks'][i]['id'] == DB['TASK'][t]['id']) {
+                                                DB['PROJECT'][p]['tasks'][i][response['set_task']['param']] = response['set_task']['value'];
                                             }
                                         }
                                     }
                                 }
                             }
                         }
-                        DB['TASK'][t]=response['edit_task'];
-                        if(TM['CID']==response['edit_task']['id']){
-                            gen_list();
-                            TM['highlight_day']=false;
-                            TM['highlight_element']=false;
-                            view(response['edit_task']['id'],'task');
-                        }
                     }
                 }
             }
-        }
-        if(response['del_task']){
-            if(response['del_task']!=false){
-                for(t in DB['TASK']){
-                    if(DB['TASK'][t]['id']==response['del_task']){
-                        if(DB['TASK'][t]['idproject']!=0){
-                            for(p in DB['PROJECT']){
-                                if(DB['PROJECT'][p]['idproject']==DB['TASK'][t]['idproject']){
-                                    for(i in DB['PROJECT'][p]['tasks']){
-                                        if(DB['PROJECT'][p]['tasks'][i]['id']==DB['TASK'][t]['id']){
-                                            DB['PROJECT'][p]['tasks'].splice(i,1);
+            if (response['edit_task']) {
+                if (response['edit_task'] != false) {
+                    for (t in DB['TASK']) {
+                        if (DB['TASK'][t]['id'] == response['edit_task']['id']) {
+                            if (DB['TASK'][t]['idproject'] != response['edit_task']['idproject']) {
+                                //alert(DB['TASK'][t]['idproject']+'>>'+response['edit_task']['idproject'])
+                                if (response['edit_task']['idproject'] != 0) {
+                                    for (p in DB['PROJECT']) {
+                                        if (DB['PROJECT'][p]['idproject'] == DB['TASK'][t]['idproject']) {
+                                            for (i in DB['PROJECT'][p]['tasks']) {
+                                                if (DB['PROJECT'][p]['tasks'][i]['id'] == DB['TASK'][t]['id']) {
+                                                    DB['PROJECT'][p]['tasks'].splice(i, 1);
+                                                    //alert('Deleted from '+DB['PROJECT'][p]['nameproject']);
+                                                }
+                                            }
+                                        }
+                                        if (DB['PROJECT'][p]['idproject'] == response['edit_task']['idproject']) {
+                                            DB['PROJECT'][p]['tasks'][DB['PROJECT'][p]['tasks'].length] = response['edit_task'];
+                                            //alert('Inserted into '+DB['PROJECT'][p]['nameproject']);
+                                        }
+                                    }
+                                } else {
+                                    for (p in DB['PROJECT']) {
+                                        if (DB['PROJECT'][p]['idproject'] == DB['TASK'][t]['idproject']) {
+                                            for (i in DB['PROJECT'][p]['tasks']) {
+                                                if (DB['PROJECT'][p]['tasks'][i]['id'] == DB['TASK'][t]['id']) {
+                                                    DB['PROJECT'][p]['tasks'].splice(i, 1);
+                                                    //alert('Deleted from '+DB['PROJECT'][p]['nameproject']);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    page('tasks');
+                                }
+                            } else {
+                                if (DB['TASK'][t]['idproject'] != 0) {
+                                    for (p in DB['PROJECT']) {
+                                        if (DB['PROJECT'][p]['idproject'] == response['edit_task']['idproject']) {
+                                            for (i in DB['PROJECT'][p]['tasks']) {
+                                                if (DB['PROJECT'][p]['tasks'][i]['id'] == response['edit_task']['id']) {
+                                                    DB['PROJECT'][p]['tasks'][i] = response['edit_task'];
+                                                }
+                                            }
                                         }
                                     }
                                 }
                             }
+                            DB['TASK'][t] = response['edit_task'];
+                            if (TM['CID'] == response['edit_task']['id']) {
+                                gen_list();
+                                TM['highlight_day'] = false;
+                                TM['highlight_element'] = false;
+                                view(response['edit_task']['id'], 'task');
+                            }
                         }
-                        DB['TASK'].splice(t,1);
-                        if(TM['CID']==response['del_task']){
-                            reset_comments();
-                            get('view').innerHTML='';
-                            TM['highlight_day']=false;
-                            TM['highlight_element']=false;
+                    }
+                }
+            }
+            if (response['del_task']) {
+                if (response['del_task'] != false) {
+                    for (t in DB['TASK']) {
+                        if (DB['TASK'][t]['id'] == response['del_task']) {
+                            if (DB['TASK'][t]['idproject'] != 0) {
+                                for (p in DB['PROJECT']) {
+                                    if (DB['PROJECT'][p]['idproject'] == DB['TASK'][t]['idproject']) {
+                                        for (i in DB['PROJECT'][p]['tasks']) {
+                                            if (DB['PROJECT'][p]['tasks'][i]['id'] == DB['TASK'][t]['id']) {
+                                                DB['PROJECT'][p]['tasks'].splice(i, 1);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            DB['TASK'].splice(t, 1);
+                            if (TM['CID'] == response['del_task']) {
+                                reset_comments();
+                                get('view').innerHTML = '';
+                                TM['highlight_day'] = false;
+                                TM['highlight_element'] = false;
+                            }
                         }
                     }
+                    gen_list();
                 }
-                gen_list();
             }
-        }
-        if(response['del_project']) {
-            if (response['del_project'] != false) {
-                document.getElementById('main').className='blur';
-                get('view').innerHTML='';
-                TM['tmp_rebuild_lists']=true;
-                io({'action':'load_db'});
+            if (response['del_project']) {
+                if (response['del_project'] != false) {
+                    document.getElementById('main').className = 'blur';
+                    get('view').innerHTML = '';
+                    TM['tmp_rebuild_lists'] = true;
+                    io({'action': 'load_db'});
+                }
             }
-        }
-        if(response['edit_project']) {
-            if (response['edit_project'] != false) {
-                document.getElementById('main').className='blur';
-                //TM['tmp_rebuild_lists']=true
-                TM['tmp_view_upd']=true;
-                io({'action':'load_db'});
+            if (response['edit_project']) {
+                if (response['edit_project'] != false) {
+                    document.getElementById('main').className = 'blur';
+                    //TM['tmp_rebuild_lists']=true
+                    TM['tmp_view_upd'] = true;
+                    io({'action': 'load_db'});
+                }
             }
-        }
-        if(response['add_group']) {
-            if (response['add_group'] != false) {
-                DB['GROUP'][DB['GROUP'].length]=response['add_group'];
-                TM['tmp_group_add_line']=false;
-                get('add_line').innerHTML='<div class="plus"><div id="p1"></div><div id="p2"></div><div id="p3"></div><div id="p4"></div></div>Добавить группу</div>';
-                gen_list();
-                view(response['add_group']['idgroup'],'group');
+            if (response['add_group']) {
+                if (response['add_group'] != false) {
+                    DB['GROUP'][DB['GROUP'].length] = response['add_group'];
+                    TM['tmp_group_add_line'] = false;
+                    get('add_line').innerHTML = '<div class="plus"><div id="p1"></div><div id="p2"></div><div id="p3"></div><div id="p4"></div></div>Добавить группу</div>';
+                    gen_list();
+                    view(response['add_group']['idgroup'], 'group');
+                }
             }
-        }
-        if(response['del_user']) {
-            if (response['del_user'] != false) {
-                for (g in DB['GROUP']) {
-                    if (DB['GROUP'][g]['idgroup'] == TM['view_id']) {
-                        group = DB['GROUP'][g];
-                        break;
+            if (response['del_user']) {
+                if (response['del_user'] != false) {
+                    for (g in DB['GROUP']) {
+                        if (DB['GROUP'][g]['idgroup'] == TM['view_id']) {
+                            group = DB['GROUP'][g];
+                            break;
+                        }
+                    }
+                    for (u in group['users']) {
+                        if (group['users'][u]['id'] == response['del_user']) {
+                            DB['GROUP'][g]['users'].splice(u, 1);
+                        }
+                    }
+                    if (TM['view_type'] == 'group') {
+                        view(TM['view_id'], 'group');
                     }
                 }
-                for(u in group['users']){
-                    if(group['users'][u]['id']==response['del_user']){
-                        DB['GROUP'][g]['users'].splice(u,1);
-                    }
-                }
-                if (TM['view_type'] == 'group') {
-                    view(TM['view_id'],'group');
+            }
+            if (response['gen_invite_group']) {
+                if (response['gen_invite_group'] != false) {
+                    get('invite_text').innerHTML = 'Передайте данную инвайт-ссылку пользователю, для вступления в группу: <input type="text" value="http://' + location.host + '/?hash=' + response['gen_invite_group'] + '" size="60" id="name"/>';
                 }
             }
-        }
-        if(response['gen_invite_group']){
-            if(response['gen_invite_group']!=false){
-                get('invite_text').innerHTML = 'Передайте данную инвайт-ссылку пользователю, для вступления в группу: <input type="text" value="http://'+location.host+'/?hash='+response['gen_invite_group']+'" size="60" id="name"/>';
-            }
-        }
-    }else{
-        if(TM['UID']){
-            DB=false;
-            clearInterval(TM['AUID']);
-            page('auth');
-            TM=false;
-            TASK=false;
-            task=false;
-            DAY=false;
-            TM=[];
-            TM['UID']=false;
-            TM['USER_NAME']=false;
-            TM['USER_PIC']=false;
+        } else {
+            if (TM['UID']) {
+                DB = false;
+                clearInterval(TM['AUID']);
+                page('auth');
+                TM = false;
+                TASK = false;
+                task = false;
+                DAY = false;
+                TM = [];
+                TM['UID'] = false;
+                TM['USER_NAME'] = false;
+                TM['USER_PIC'] = false;
 
-            TM['current_page']='auth';
-            TM['tasks_mode']='all';
-            TM['projects_mode']='all';
-            TM['update_db']=false;
-            TM['apic_loaded']=false;
-            TM['time_offset']=3600000*5;
-            TM['months']=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
-            TM['now'] = new Date(new Date().getTime()+TM['time_offset']).getTime();
-            //document.getElementById('main').className='noblur';
+                TM['current_page'] = 'auth';
+                TM['tasks_mode'] = 'all';
+                TM['projects_mode'] = 'all';
+                TM['update_db'] = false;
+                TM['apic_loaded'] = false;
+                TM['time_offset'] = 3600000 * 5;
+                TM['months'] = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+                TM['now'] = new Date(new Date().getTime() + TM['time_offset']).getTime();
+                //document.getElementById('main').className='noblur';
+            }
         }
     }
 }
