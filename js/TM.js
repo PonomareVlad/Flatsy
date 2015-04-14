@@ -1039,6 +1039,10 @@ function view(id,type){
         //source+='</div><div class="item_title">Подгруппы ('+(group['subgroup'].length)+')</div>';
         get('view').innerHTML=source;
     }
+    // TESTING LOCAL STORAGE
+    if(supports_html5_storage()){
+        localStorage['TM']=JSON.stringify(TM);
+    }
 }
 
 function pick_file(idf,namef){

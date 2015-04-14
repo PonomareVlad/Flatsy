@@ -10,3 +10,8 @@ RewriteRule ^templates/default/includes/([^/\.]+) index.php [L]
 ErrorDocument 404 /index.php
 Options All -Indexes
 DirectoryIndex index.php
+AddType text/cache-manifest .manifest
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/cache-manifest "access plus 0 seconds"
+</IfModule>
