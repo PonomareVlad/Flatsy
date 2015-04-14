@@ -169,6 +169,7 @@ function handler(response) {
                         }
                     }
                 }
+                gen_list();
             }
         }
         if(response['edit_task']){
@@ -307,7 +308,7 @@ function handler(response) {
     }else{
         if(TM['UID']){
             DB=false;
-            clearInterval(TM['AUID']);
+            offline();
             page('auth');
             TM=false;
             TASK=false;
@@ -571,7 +572,12 @@ function task_end(id){
     for(t in DB['TASK']){ // Поиск запрошенной задачи в БД
         if(DB['TASK'][t]['id']==id){
             task=DB['TASK'][t];
-            break;
+            if(TM['UID']==task['initiator']||TM['UID']==task['executor']){
+                break;
+            }else{
+                return false;
+            }
+
         }
     }
     value=task['finished']==1?0:1;
@@ -674,6 +680,7 @@ function gen_list(){
         if(!DB['TASK']){
             TM['update_db']=true;
         }else{
+            current_in_list=TM['view_type']=='task'?false:true;
             source='';
             empty_list=true;
             //highlightd=false;
@@ -684,7 +691,16 @@ function gen_list(){
                 empty=false;
                 empty_list=false;
                 task=DB['TASK'][i];
-                if(TM['tasks_mode']=='unfinished'&&task['finished']==1){
+                if(task['view']==false){
+                    continue;
+                }
+                if(TM['tasks_mode']=='finished'&&task['finished']==0){
+                    continue;
+                }
+                if(TM['tasks_mode']!='finished'&&task['finished']==1){
+                    continue;
+                }
+                if(TM['tasks_mode']=='unfinished'&&task['finished']==1){//Атавизм
                     continue;
                 }
                 if(TM['tasks_mode']=='my'&&task['executor']!=TM['UID']){
@@ -713,10 +729,16 @@ function gen_list(){
                     TASK[time][num]+='<div id="fhd'+task['id']+'" class="galka" onclick="task_end('+task['id']+')"><img src="templates/default/images/n_done.png"></div>';
                 }
                 TASK[time][num]+='</div><div class="task_text">'+task['name']+'</div></div>';
+                if(task['id']==TM['view_id']){
+                    current_in_list=true;
+                }
                 // BUILD SORT BY TIME
             }
             DAY.sort();
             overdue='<div class="task_day'+(highlight&&TM['highlight_day']=='overdue'?' active_day':'')+'" id="overdue"><div class="task_name">Просрочено</div>';
+            if(TM['tasks_mode']=='finished'){
+                overdue='<div class="task_day'+(highlight&&TM['highlight_day']=='overdue'?' active_day':'')+'" id="overdue"><div class="task_name">Завершено</div>';
+            }
             overdue_view=false;
             for(d in DAY) {
                 over=false;
@@ -755,6 +777,9 @@ function gen_list(){
                 TM['highlight_element']=false;
             }
             document.getElementById('tasks').innerHTML=empty_list?'Нет задач':source; // BUILD WRITE
+            if(current_in_list==false){
+                get('view').innerHTML='';
+            }
         }
     }
     if(TM['current_page']=='projects'){
@@ -872,8 +897,8 @@ function view(id,type){
         time = time < now ? 'overdue' : time;
         TM['highlight_day'] = TM['current_page'] == 'tasks' ? time : 'prj' + task['idproject'];
         TM['highlight_element'] = task['id'];
-        document.getElementById(TM['highlight_day']).className = 'task_day active_day';
-        document.getElementById(TM['highlight_element']).className = 'task_info task_active';
+        if(get(TM['highlight_day'])){get(TM['highlight_day']).className = 'task_day active_day';};
+        if(get(TM['highlight_element'])){get(TM['highlight_element']).className = 'task_info task_active';}else{return false;}
         source += '<div class="task_title"><h4>' + task['name']
         if (task['initiator'] == TM['UID']) {
             source += '<img onclick="task_del(' + task['id'] + ');" src="templates/default/images/trash.png" id="trash"><img onclick="edit_task(' + task['id'] + ');" src="templates/default/images/b_pan_hover.png" id="edit_pen">';

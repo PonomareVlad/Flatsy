@@ -47,10 +47,10 @@ if(defined('USER_ID')) { // Статус авторизации
                 $RESPONSE['check'] = false;
             }
         }
-        if ($QUERY['action']=='load_db'){
+        if ($QUERY['action'] == 'load_db'){
             $DB=[];
-            $DB['TASK']=TM::get_tasks();
             $DB['PROJECT']=TM::get_projects();
+            $DB['TASK']=TM::get_tasks($DB['PROJECT']);
             $DB['GROUP']=User::get_groups();
             $RESPONSE['DB']=$DB;
         }

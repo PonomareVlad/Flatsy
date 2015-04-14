@@ -29,6 +29,7 @@ class TM extends DB
                 $chck['projectname'] = @mysqli_fetch_assoc(DB::select('project',['nameproject'],'idproject='.$chck['idproject']))['nameproject'];
                 TM::create_notify('new_task',$chck['id']);
                 $chck['files']=[];
+                $chck['view']=true;
                 if($files!=false){
                     for($i=0;$i<count($files);$i++) {
                         if (DB::update('files', ['object' => $chck['id']], 'idfile=' . $files[$i])) {
@@ -54,6 +55,7 @@ class TM extends DB
         while($file=mysqli_fetch_assoc($tfiles)){
             $task['files'][]=['id'=>$file['idfile'],'name'=>$file['namefile']];
         }
+        $task['view']=true;
         return $task;
     }
     public static function set_task($query){
@@ -272,68 +274,7 @@ class TM extends DB
             return $group;
         }
     }
-    public static function get_tasks(){
-        $tasks=[];
-        $sql = DB::select('task',['*'],'initiator="'.USER_ID.'" OR executor="'.USER_ID.'"');
-        while ($task = mysqli_fetch_assoc($sql)) {
-            $task['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$task['initiator'])));
-            $task['executor_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$task['executor'])));
-            $task['projectname'] = mysqli_fetch_assoc(DB::select('project',['nameproject'],'idproject='.$task['idproject']))['nameproject'];
-            $tfiles=DB::select('files',['*'],'type="task" AND object="'.$task['id'].'"');
-            $task['files']=[];
-            while($file=mysqli_fetch_assoc($tfiles)){
-                $task['files'][]=['id'=>$file['idfile'],'name'=>$file['namefile']];
-            }
-            $tasks[]=$task;
-        }
-        return $tasks;
-    }
-    public static function add_comment($id,$type,$text){
-        if(isset($id,$type,$text)){
-            $now=date("y-m-d G:i:s");
-            $text=str_replace(array("\r\n", "\r", "\n"), '<br>', strip_tags(Checkdata($text)));
-            if(trim($text)=='<br>'||trim($text=='')){
-                return false;
-            }
-            //$files=$query['files'];
-            $max=mysqli_fetch_assoc(DB::select('comments',['MAX(numbercom) AS numbercom'],'idobject='.$id.' AND type="'.$type.'"'));
-            //$add=mysqli_query($MYSQL_CONNECTION,'INSERT INTO comments (idtask, numbercom, usercom, comment, datacom) VALUES ('.$query['id'].','.($max['numbercom']+1).','.USER_ID.',"'.$text.'","'.$now.'")');
-            $add=DB::inserti('comments','(idobject, type, numbercom, usercom, comment, datacom) VALUES ('.$id.',"'.$type.'",'.($max['numbercom']+1).','.USER_ID.',"'.$text.'","'.$now.'")');
-            if($add==1){
-                $comment=mysqli_fetch_assoc(DB::select('comments',['*'],'idobject='.$id.' AND type="'.$type.'" AND datacom="'.$now.'"'));
-                $comment['usercom_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['firstname', 'lastname'], 'id=' . $comment['usercom'])));
-                $comment['usercom_photo'] = User::get_user($comment['usercom'])['photo'];
-                TM::create_notify('new_comment',$comment['id']);
-                /*if($files!=false){
-                    for($i=0;$i<count($files);$i++){
-                        DB::update('files',['object'=>$comment['id']],'idfile='.$files[$i]);
-                    }
-                }*/
-                return $comment;
-            }else{
-                return false;
-            }
-        }else{
-            return false;
-        }
-    }
-    public static function get_comments($id,$type){
-        if(isset($id)){
-            $comms=[];
-            $array=DB::select('comments',['*'],'idobject='.$id.' AND type="'.$type.'"');
-            while($comment=mysqli_fetch_assoc($array)){
-                $num=count($comms);
-                $comms[$num]=$comment;
-                $comms[$num]['usercom_name']=@implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$comment['usercom'])));
-                $comms[$num]['usercom_photo']=User::get_user($comment['usercom'])['photo'];
-            }
-            return $comms;//array_reverse($comms);
-        }else{
-            return false;
-        }
-    }
-    public static function get_projects()
-    {
+    public static function get_projects(){
         $is=[];
         $project = [];
         $res = DB::select('project', ['*'], 'initiator="' . USER_ID . '"');
@@ -388,6 +329,91 @@ class TM extends DB
         }
 
         return $project;
+    }
+    public static function get_tasks($projects=false){
+        $tasks=[];
+        $sql = DB::select('task',['*'],'initiator="'.USER_ID.'" OR executor="'.USER_ID.'"');
+        while ($task = mysqli_fetch_assoc($sql)) {
+            $task['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$task['initiator'])));
+            $task['executor_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$task['executor'])));
+            $task['projectname'] = mysqli_fetch_assoc(DB::select('project',['nameproject'],'idproject='.$task['idproject']))['nameproject'];
+            $tfiles=DB::select('files',['*'],'type="task" AND object="'.$task['id'].'"');
+            $task['files']=[];
+            while($file=mysqli_fetch_assoc($tfiles)){
+                $task['files'][]=['id'=>$file['idfile'],'name'=>$file['namefile']];
+            }
+            $task['view']=true;
+            $tasks[]=$task;
+        }
+        if($projects!=false) {
+            foreach ($projects as $project) {
+                foreach ($project['tasks'] as $task) {
+                    $exist = false;
+                    foreach ($tasks as $taska) {
+                        if ($task['id'] == $taska['id']) {
+                            $exist = true;
+                        }
+                    }
+                    if ($exist == false) {
+                        $task['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['firstname', 'lastname'], 'id=' . $task['initiator'])));
+                        $task['executor_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['firstname', 'lastname'], 'id=' . $task['executor'])));
+                        $task['projectname'] = mysqli_fetch_assoc(DB::select('project', ['nameproject'], 'idproject=' . $task['idproject']))['nameproject'];
+                        $tfiles = DB::select('files', ['*'], 'type="task" AND object="' . $task['id'] . '"');
+                        $task['files'] = [];
+                        while ($file = mysqli_fetch_assoc($tfiles)) {
+                            $task['files'][] = ['id' => $file['idfile'], 'name' => $file['namefile']];
+                        }
+                        $task['view'] = false;
+                        $tasks[] = $task;
+                    }
+                }
+            }
+        }
+        return $tasks;
+    }
+    public static function add_comment($id,$type,$text){
+        if(isset($id,$type,$text)){
+            $now=date("y-m-d G:i:s");
+            $text=str_replace(array("\r\n", "\r", "\n"), '<br>', strip_tags(Checkdata($text)));
+            if(trim($text)=='<br>'||trim($text=='')){
+                return false;
+            }
+            //$files=$query['files'];
+            $max=mysqli_fetch_assoc(DB::select('comments',['MAX(numbercom) AS numbercom'],'idobject='.$id.' AND type="'.$type.'"'));
+            //$add=mysqli_query($MYSQL_CONNECTION,'INSERT INTO comments (idtask, numbercom, usercom, comment, datacom) VALUES ('.$query['id'].','.($max['numbercom']+1).','.USER_ID.',"'.$text.'","'.$now.'")');
+            $add=DB::inserti('comments','(idobject, type, numbercom, usercom, comment, datacom) VALUES ('.$id.',"'.$type.'",'.($max['numbercom']+1).','.USER_ID.',"'.$text.'","'.$now.'")');
+            if($add==1){
+                $comment=mysqli_fetch_assoc(DB::select('comments',['*'],'idobject='.$id.' AND type="'.$type.'" AND datacom="'.$now.'"'));
+                $comment['usercom_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['firstname', 'lastname'], 'id=' . $comment['usercom'])));
+                $comment['usercom_photo'] = User::get_user($comment['usercom'])['photo'];
+                TM::create_notify('new_comment',$comment['id']);
+                /*if($files!=false){
+                    for($i=0;$i<count($files);$i++){
+                        DB::update('files',['object'=>$comment['id']],'idfile='.$files[$i]);
+                    }
+                }*/
+                return $comment;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+    public static function get_comments($id,$type){
+        if(isset($id)){
+            $comms=[];
+            $array=DB::select('comments',['*'],'idobject='.$id.' AND type="'.$type.'"');
+            while($comment=mysqli_fetch_assoc($array)){
+                $num=count($comms);
+                $comms[$num]=$comment;
+                $comms[$num]['usercom_name']=@implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$comment['usercom'])));
+                $comms[$num]['usercom_photo']=User::get_user($comment['usercom'])['photo'];
+            }
+            return $comms;//array_reverse($comms);
+        }else{
+            return false;
+        }
     }
     public static function del_user($id,$idgroup){
         //DB::inserti('useringroup','(iduser,idgroup,userlvl,statususer) VALUES ('.+USER_ID.','.$group['idgroup'].',5,3)');

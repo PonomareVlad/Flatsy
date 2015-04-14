@@ -263,6 +263,12 @@ function reg_check(mode){
     }
 }
 
+function offline(){
+    if(TM['AUID']) {
+        clearInterval(TM['AUID']);
+    }
+}
+
 var urlParams;
 (window.onpopstate = function () {
     var match,
