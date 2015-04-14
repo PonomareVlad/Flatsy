@@ -1,5 +1,15 @@
 function handler(response) {
     response=JSON.parse(response);
+    if(response['old_version']){
+        if(!TM['need_restart']) {
+            TM['need_restart'] = confirm('Система обновилась, для продолжения работы, необходимо обновить страницу!');
+            if (TM['need_restart']) {
+                location.reload();
+            }
+            TM['need_restart'] = true;
+        }
+        return false;
+    }
     if (response['auth']==true) {
         if(response['check']){
             if(response['NEW']){
@@ -7,6 +17,16 @@ function handler(response) {
                     for(i in response['NEW']['TASK']) {
                         // BUILD UPD DB
                         task = response['NEW']['TASK'][i];
+                        exist=false;
+                        for(t in DB['TASK']){
+                            if(DB['TASK'][t]['id']==task['id']){
+                                exist=true;
+                                break;
+                            }
+                        }
+                        if(exist==true){
+                            continue;
+                        }
                         DB['TASK'][DB['TASK'].length] = task;
                         if (task['idproject'] != 0) {
                             for (p in DB['PROJECT']) {
@@ -277,7 +297,7 @@ function handler(response) {
             if (response['add_group'] != false) {
                 DB['GROUP'][DB['GROUP'].length]=response['add_group'];
                 TM['tmp_group_add_line']=false;
-                get('add_line').innerHTML='<div class="plus"><div id="p1"></div><div id="p2"></div><div id="p3"></div><div id="p4"></div></div>Добавить группу</div>';
+                get('add_line').innerHTML='<div class="plus"><div id="p1"></div><div id="p2"></div><div id="p3"></div><div id="p4"></div></div>Добавить группу';
                 gen_list();
                 view(response['add_group']['idgroup'],'group');
             }
@@ -387,10 +407,10 @@ function edit_task(id){
     ' Минуты: <input type="number" min="0" max="59" value="'+task['minuts']+'" style="width: 3em;" id="minuts">' +
     '<span id="minical"></span></p>' +
     '<p><label for="project_id">Проект</label>' +
-    '<input type="text" class="livesearch_prj" value="'+(task['projectname']||'')+'" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его">' +
+    '<input type="text" onclick="select(this);" class="livesearch_prj" value="'+(task['projectname']||'')+'" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его">' +
     '<div class="search_advice_wrapper" id="search_advice_wrapper_prj"></div></p>' +
     '<p><label for="executor">Ответственный</label>' +
-    '<input type="text" class="livesearch_exe" value="'+task['executor_name']+'" placeholder="Начните набирать имя пользователя" name="main_user" autocomplete="off" id="executor">' +
+    '<input type="text" onclick="select(this);" class="livesearch_exe" value="'+task['executor_name']+'" placeholder="Начните набирать имя пользователя" name="main_user" autocomplete="off" id="executor">' +
     '<div class="search_advice_wrapper" id="search_advice_wrapper_exe"></div></p>' +
         //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
     //'<p>Иван иванов, Иван иванов,Иван иванов</p>' +
@@ -582,6 +602,17 @@ function task_end(id){
     }
     value=task['finished']==1?0:1;
     io({"action":"set_task","param":"finished","value":value,"id":id});
+}
+
+function task_viewed(id){
+    task=false;
+    for(t in DB['TASK']){ // Поиск запрошенной задачи в БД
+        if(DB['TASK'][t]['id']==id){
+            DB['TASK'][t]['new']=false;
+            break;
+        }
+    }
+    io({"action":"del_notify","type":"new_task","id":id});
 }
 
 function task_del(id){
@@ -810,11 +841,11 @@ function gen_list(){
         source='';
         for(g in DB['GROUP']){
             group=DB['GROUP'][g];
-            source+='<div class="group"><div onclick="view('+group['idgroup']+',\'group\')" class="group_name">'+group['namegroup']+'</div>' +
-            '<div class="group_count">Участники ('+group['count_users']+')</div><div class="pod_group">';
+            source+='<div id="g'+group['idgroup']+'" class="group"><div onclick="view('+group['idgroup']+',\'group\')" class="group_name">'+group['namegroup']+'</div>' +
+            '<div onclick="view('+group['idgroup']+',\'group\')" class="group_count">Участники ('+group['count_users']+')</div><div class="pod_group">';
             for(i in group['subgroup']){
-                source+='<div class="group"><div onclick="view('+group['subgroup'][i]['idgroup']+',\'group\')" class="group_name">'+group['subgroup'][i]['namegroup']+'</div>' +
-                '<div class="group_count">Участники ('+group['subgroup'][i]['count_users']+')</div><div class="pod_group"></div></div>';
+                source+='<div id="g'+group['subgroup'][i]['idgroup']+'" class="group"><div onclick="view('+group['subgroup'][i]['idgroup']+',\'group\')" class="group_name">'+group['subgroup'][i]['namegroup']+'</div>' +
+                '<div onclick="view('+group['subgroup'][i]['idgroup']+',\'group\')" class="group_count">Участники ('+group['subgroup'][i]['count_users']+')</div><div class="pod_group"></div></div>';
             }
             source+='</div></div>'
         }
@@ -828,6 +859,7 @@ function groups_query(){
     source+='<br><div class="item_title">История</div>';
 
     get('view').innerHTML=source;
+    onclick();
 }
 
 function show_add_group(){
@@ -863,6 +895,7 @@ function upload_show(id,type){
         '<input class="file" type="file" name="f"><br/><br/><input type="submit" value="Загрузить"></p></form> </div>' +
         '</body></html>');
     }
+    onclick();
 }
 
 function view(id,type){
@@ -895,6 +928,8 @@ function view(id,type){
         date_finish = date_finish[0].split('-');
         time = new Date(date_finish[0], date_finish[1] - 1, date_finish[2]).getTime();
         time = time < now ? 'overdue' : time;
+        date = new Date(new Date(new Date(task['date_finish'].replace(' ', 'T')).getTime()+TM['time_offset']).getTime());
+        day = (date.getDate() < 10 ? '0' : '') + date.getDate();month = TM['months'][date.getMonth()];
         TM['highlight_day'] = TM['current_page'] == 'tasks' ? time : 'prj' + task['idproject'];
         TM['highlight_element'] = task['id'];
         if(get(TM['highlight_day'])){get(TM['highlight_day']).className = 'task_day active_day';};
@@ -913,8 +948,10 @@ function view(id,type){
         source += '<div class="task_table"><div>Инициатор</div>' +
         '<a href="javascript:void(0)" onclick=\'view(' + task['initiator'] + ',"user")\'>' + task['initiator_name'] + '</a></div>';
         source += '<div class="task_table"><div>Исполнитель</div>' +
-        '<a href="javascript:void(0)" onclick=\'view(' + task['executor'] + ',"user")\'>' + task['executor_name'] + '</a>' +
-        '</div>';
+        '<a href="javascript:void(0)" onclick=\'view(' + task['executor'] + ',"user")\'>' + task['executor_name'] + '</a></div>';
+        if(TM['current_page']=='projects'){
+            source+='<div class="task_table"><div>Завершение</div>'+day+' '+month+' '+date.getFullYear()+'</div>';
+        }
         if (task['files'].length > 0) {
             source += '<div class="files"><div>Прикрепленные файлы:</div>';
             for(f in task['files']){
@@ -930,6 +967,9 @@ function view(id,type){
         document.getElementById('overlay').style.marginTop = '0px';
         init_comments(task['id'], type);
         sizing();
+        if(task['new']){
+            task_viewed(task['id']);
+        }
         TM['ufiles'] = [];
     }
     if(type=='project'){
@@ -1014,7 +1054,7 @@ function view(id,type){
         TM['ufiles']=[];
     }
     if(type=='group'){
-        source='';
+        source=''; //.group_active
         for(g in DB['GROUP']){
             if(DB['GROUP'][g]['idgroup']==id){
                 group=DB['GROUP'][g];
@@ -1032,8 +1072,16 @@ function view(id,type){
         TM['view_id']=id;
         if(TM['upl_window']!=false){TM['upl_window'].window.close();}
         TM['upl_window']=false;
+        if (TM['highlight_element']) {
+            get('g'+TM['highlight_element']).className = 'group';
+            TM['highlight_element'] = false;
+        }
+        if(get('g'+group['idgroup'])){
+            get('g'+group['idgroup']).className='group_active';
+            TM['highlight_element']=group['idgroup'];
+        }
         source+='<div class="title"><h4>'+group['namegroup']+'</h4></div>';
-        if(group['creator']==TM['UID']) {
+        if(group['creator']==TM['UID']||group['lvl']==5) {
             source += '<div id="invite" onclick="invite_user_group('+group['idgroup']+');" class="add_group"><div class="plus"><div id="p1"></div><div id="p2"></div><div id="p3"></div><div id="p4"></div></div></div>';
         }
         source+='<div class="item_title">Участники ('+group['count_users']+')<div id="invite_text"></div></div>' +
@@ -1050,7 +1098,7 @@ function view(id,type){
             source+='<div><img src="templates/default/images/'+(user['lvl']>4?'done.png':'n_done.png')+'"></div>';
             source+='<div><img src="templates/default/images/'+(user['lvl']>2?'done.png':'n_done.png')+'"></div>';
             source+='</div><div class="status">Участвует</div>';
-            if(group['creator']==TM['UID']){
+            if(group['creator']==TM['UID']||group['lvl']==5){
                 source+='<div class="crest" onclick="del_user_group('+user['id']+','+group['idgroup']+');"><img src="templates/default/images/close.png"></div>';
             }//else{alert(group['creator']+' '+TM['UID']);}
             source+='</div></div>';
@@ -1058,6 +1106,7 @@ function view(id,type){
         //source+='</div><div class="item_title">Подгруппы ('+(group['subgroup'].length)+')</div>';
         get('view').innerHTML=source;
     }
+    onclick();
 }
 
 function pick_file(idf,namef){

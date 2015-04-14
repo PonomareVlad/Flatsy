@@ -1,5 +1,7 @@
 <?php
 
+require_once(ROOT.'system/config/db.conf.php');
+
 $MYSQL_CONNECTION=mysqli_connect(MYSQL_SERVER,MYSQL_USER,MYSQL_PASSWORD,MYSQL_DB); // Подключение к БД
 //mysqli_select_db($MYSQL_CONNECTION,MYSQLI_DB); // Выбор БД
 

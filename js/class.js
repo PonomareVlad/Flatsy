@@ -115,6 +115,7 @@ function page(name,headgen){
             document.getElementById('main').className='noblur';
             //alert(name);
         }
+        onclick();
         sizing();
     }
     return false;

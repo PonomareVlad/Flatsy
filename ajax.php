@@ -5,13 +5,18 @@ define('AJAX','CORE'); // Блокируем маршрутизацию
 
 require_once ROOT.'system/core.php'; // Инициация запуска системы
 
-if(!isset($_GET['query'])){
+if(!isset($_GET['query'])OR!isset($_GET['ver'])){
     exit;
 }
 
 $QUERY=json_decode($_GET['query']); // Запрос
 $QUERY=objectToArray($QUERY); // Трансформируем из Object в Array
 $RESPONSE=array();
+
+if($_GET['ver']<VERSION){
+    $RESPONSE['old_version']=true;
+    exit(json_encode($RESPONSE));
+}
 
 if(defined('USER_ID')) { // Статус авторизации
     $RESPONSE['auth'] = true;
@@ -24,6 +29,7 @@ if(defined('USER_ID')) { // Статус авторизации
                 while ($notify = mysqli_fetch_assoc($get)) {
                     if ($notify['type'] == 'new_task') {
                         $task = TM::get_task($notify['value']);
+                        $task['new']=true;
                         if (!isset($NEW['TASK'])) {
                             $NEW['TASK'] = [];
                         }
@@ -38,8 +44,8 @@ if(defined('USER_ID')) { // Статус авторизации
                             $NEW['COMMENT'] = [];
                         }
                         $NEW['COMMENT'][] = $comment;
+                        DB::delete('notifications','idnotification='.$notify['idnotification']);
                     }
-                    DB::delete('notifications','idnotification='.$notify['idnotification']);
                 }
                 $RESPONSE['NEW'] = $NEW;
                 $RESPONSE['check'] = true;
@@ -67,6 +73,10 @@ if(defined('USER_ID')) { // Статус авторизации
         if ($QUERY['action'] == 'set_task') { // Изменение свойств задачи
             $setask = TM::set_task($QUERY);
             $RESPONSE['set_task'] = $setask;
+        }
+        if ($QUERY['action'] == 'del_notify') { // Изменение свойств задачи
+            $del_notify = TM::del_notification($QUERY['type'],$QUERY['id']);
+            $RESPONSE['del_notify'] = $del_notify;
         }
         if ($QUERY['action'] == 'del_task') { // Удаление задачи
             $RESPONSE['del_task'] = TM::del_task($QUERY['id']);

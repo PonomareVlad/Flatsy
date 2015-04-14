@@ -343,6 +343,9 @@ class TM extends DB
                 $task['files'][]=['id'=>$file['idfile'],'name'=>$file['namefile']];
             }
             $task['view']=true;
+            if(DB::select('notifications',['*'],'iduser='.USER_ID.' AND type="new_task" AND value='.$task['id'])){
+
+            }
             $tasks[]=$task;
         }
         if($projects!=false) {
@@ -445,6 +448,11 @@ class TM extends DB
             for($i=0;$i<count($notify);$i++){
                 DB::insert('notifications',['iduser'=>$notify[$i],'type'=>$type,'value'=>$id]);
             }
+        }
+    }
+    public static function del_notification($type,$id){
+        if (DB::delete('notifications', 'iduser=' . USER_ID . ' AND type="' . $type . '" AND value=' . $id)) {
+            return true;
         }
     }
     public static function parse_hash($hash)

@@ -350,7 +350,7 @@ header{
     width: 14px;
     position: relative;
     margin: 13px 3px 3px 3px;
-
+    cursor: pointer;
 }
 #p1,#p2,#p3,#p4{
     background: #ffffff;
@@ -859,4 +859,16 @@ h4{
 
 #invite .plus div{
     background: #EFEFEF;
+}
+
+.group:hover {
+    background: #ababab;
+    color: #FFFFFF;
+    transition-duration: 200ms;
+}
+.group_active{
+    cursor: pointer;
+    background: #929292;
+    color: #FFFFFF;
+    transition-duration: 200ms;
 }
