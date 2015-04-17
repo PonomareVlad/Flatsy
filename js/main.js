@@ -1,5 +1,5 @@
-var FLATSY='0.5.0';
-var VERSION=50;
+var FLATSY='0.5.1';
+var VERSION=51;
 var TM={};
 TM['current_page']=false;
 TM['tasks_mode']='all';
@@ -25,14 +25,11 @@ if(supports_html5_storage()){
     }
     if(localStorage['TM']){
         TM=JSON.parse(localStorage['TM']);
+        TM['AUID']=false;
     }
 }
 //////////////////////////////////////
-if(!DB){
-    var DB=[];
-    TM['update_db']=true;
-}
-//TM['update_db']=true;
+TM['update_db']=true;
 
 function main(){
     io({"action":"check"});

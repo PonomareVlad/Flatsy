@@ -33,7 +33,11 @@ function gen_comments(response){
             '<p class="text">'+comm[i]['comment']+'</p></div></div>';
         }
     }
-    if(source==''){source='<div class="comment"><p class="text">(Комментариев нет)</p></div>';TM['empty_comments']=true;}
+    if(source==''){source='<div class="comment"><p class="text">(Комментариев нет)</p></div>';
+        TM['empty_comments']=true;
+    }else{
+        get('cloud_'+TM['CID']).innerHTML='<img src="templates/default/images/dia.png">';
+    }
     document.getElementById('comments').innerHTML=source;
     document.getElementById('comments').scrollTop=9999;
 }

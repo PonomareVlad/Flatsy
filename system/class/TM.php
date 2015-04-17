@@ -450,6 +450,7 @@ class TM extends DB
             if(isset($isnew['idnotification'])){
                 $task['new']=true;
             }
+            $task['comments']=count(TM::get_comments($task['id'],'task'));
             $tasks[]=$task;
         }
         if($projects!=false) {
@@ -471,6 +472,8 @@ class TM extends DB
                             $task['files'][] = ['id' => $file['idfile'], 'name' => $file['namefile']];
                         }
                         $task['view'] = false;
+                        $comms=count(TM::get_comments($task['id'],'task'));
+                        if($comms>0){$task['comments']=true;}
                         $tasks[] = $task;
                     }
                 }

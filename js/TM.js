@@ -43,13 +43,22 @@ function handler(response) {
                         }
                     }
                     if (response['NEW']['COMMENT']) {
-                        offset = 3600000 * 5;
-                        MONTH = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+                        offset = TM['time_offset'];
+                        MONTH = TM['months'];//["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
                         date = new Date(new Date().getTime() + offset);
-                        now = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+                        now = TM['now'];
                         for (i in response['NEW']['COMMENT']) {
                             comment = response['NEW']['COMMENT'][i];
                             // BUILD UPD DB
+                            if(comment['type']=='task') {
+                                for (t in DB['TASK']) {
+                                    if (DB['TASK'][t]['id'] == comment['idobject']) {
+                                        get('cloud_'+DB['TASK'][t]['id']).innerHTML='<img src="templates/default/images/diaY.png">';
+                                        DB['TASK'][t]['comments']++;
+                                        break;
+                                    }
+                                }
+                            }
                             if (comment['idobject'] == TM['CID'] && comment['type'] == TM['comments_loaded']) {
                                 source = '';
                                 datacom = comment['datacom'].split(' ');
@@ -103,16 +112,13 @@ function handler(response) {
                     TM['tmp_view_upd'] = false;
                 }
                 document.getElementById('main').className = 'noblur';
-                // TESTING LOCAL STORAGE
-                if(supports_html5_storage()){
-                    localStorage['DB'] = JSON.stringify(DB);
-                }
                 // BUILD REFRESH VIEW
                 //gen_list();
             }
             if (response['new_comment']) {
                 comment = response['new_comment'];
                 if (comment['idobject'] == TM['CID'] && comment['type'] == TM['comments_loaded']) {
+                    get('cloud_'+TM['CID']).innerHTML='<img src="templates/default/images/dia.png">';
                     source = '';
                     offset = 3600000 * 5;
                     MONTH = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
@@ -336,6 +342,10 @@ function handler(response) {
             }
             if (response['del_notify']) {
                 gen_list();
+            }
+            // TESTING LOCAL STORAGE
+            if(supports_html5_storage()){
+                localStorage['DB'] = JSON.stringify(DB);
             }
         } else {
             if (TM['UID']) {
@@ -768,6 +778,14 @@ function gen_list(){
                         highlight = true;
                     }
                     NEW[num] += '" onclick="view(' + task['id'] + ',\'task\')"><div>';
+                    if (task['comments']>0){
+                        NEW[num] +='<div id="cloud_'+task['id']+'" class="dia"><img src="templates/default/images/dia.png"></div>';
+                    }else{
+                        NEW[num] +='<div id="cloud_'+task['id']+'" class="dia"></div>';
+                    }
+                    if (task['files'].length > 0){
+                        NEW[num] +='<div class="screpka"><img src="templates/default/images/skr.png"></div>';
+                    }
                     if (task['finished'] == 1) {
                         NEW[num] += '<div id="fhd' + task['id'] + '" class="galka" onclick="task_end(' + task['id'] + ')"><img src="templates/default/images/done.png"></div>';
                     } else {
@@ -785,11 +803,9 @@ function gen_list(){
                             key = t
                         }
                     }
-                    ;
                     if (!key) {
                         key = DAY.length
                     }
-                    ;
                     DAY[key] = time;
                     //alert(date_finish[0]+'.'+(date_finish[1]-1)+'.'+date_finish[2]);
                     if (!TASK[time]) {
@@ -803,6 +819,14 @@ function gen_list(){
                         highlight = true;
                     }
                     TASK[time][num] += '" onclick="view(' + task['id'] + ',\'task\')"><div>';
+                    if (task['comments']>0){
+                        TASK[time][num] +='<div id="cloud_'+task['id']+'" class="dia"><img src="templates/default/images/dia.png"></div>';
+                    }else{
+                        TASK[time][num] +='<div id="cloud_'+task['id']+'" class="dia"></div>';
+                    }
+                    if (task['files'].length > 0){
+                        TASK[time][num] +='<div class="screpka"><img src="templates/default/images/skr.png"></div>';
+                    }
                     if (task['finished'] == 1) {
                         TASK[time][num] += '<div id="fhd' + task['id'] + '" class="galka" onclick="task_end(' + task['id'] + ')"><img src="templates/default/images/done.png"></div>';
                     } else {
@@ -880,7 +904,20 @@ function gen_list(){
                 source+='<div class="task_day" id="prj'+project['idproject']+'"><div style="cursor: pointer;" onclick="view('+project['idproject']+',\'project\')" class="task_name">'+project['nameproject']+'</div>';
                 for(j in project['tasks']){
                     task=project['tasks'][j];
+                    for(t in DB['TASK']){
+                        if(DB['TASK'][t]['id']==task['id']){
+                            task=DB['TASK'][t];
+                        }
+                    }
                     source+='<div id="'+task['id']+'" class="task_info" onclick="view('+task['id']+',\'task\')"><div>';
+                    if (task['comments']>0){
+                        source +='<div id="cloud_'+task['id']+'" class="dia"><img src="templates/default/images/dia.png"></div>';
+                    }else{
+                        source +='<div id="cloud_'+task['id']+'" class="dia"></div>';
+                    }
+                    if (task['files'].length > 0){
+                        source +='<div class="screpka"><img src="templates/default/images/skr.png"></div>';
+                    }
                     if(task['finished']==1){
                         source+='<div id="fhd'+task['id']+'" class="galka" onclick="task_end('+task['id']+')"><img src="templates/default/images/done.png"></div>';
                     }else{
@@ -1057,7 +1094,7 @@ function view(id,type){
         DB['PROJECT'][id]['percent_view']=DB['PROJECT'][id]['percent_view'].toString();
         DB['PROJECT'][id]['percent_view'] = DB['PROJECT'][id]['percent_view'].split('.');
         DB['PROJECT'][id]['percent_view'] = DB['PROJECT'][id]['percent_view'][0];
-        if(DB['PROJECT'][id]['percent']<0){DB['PROJECT'][id]['percent']=100;DB['PROJECT'][id]['percent_view']='Завершено'}else
+        if(DB['PROJECT'][id]['percent']<0){DB['PROJECT'][id]['percent']=0;DB['PROJECT'][id]['percent_view']='Еще не начато'}else
         if(DB['PROJECT'][id]['percent'] >= 100){DB['PROJECT'][id]['percent'] = 100;DB['PROJECT'][id]['percent_view'] = 'Завершено';}else{DB['PROJECT'][id]['percent_view']+='%';}//}
         if(TM['highlight_day']){document.getElementById(TM['highlight_day']).className='task_day';TM['highlight_day']=false;}
         if(TM['highlight_element']){document.getElementById(TM['highlight_element']).className='task_info';TM['highlight_element']=false;}
