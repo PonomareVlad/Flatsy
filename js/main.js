@@ -1,6 +1,6 @@
 var FLATSY='0.5.0';
 var VERSION=50;
-var TM=[];
+var TM={};
 TM['current_page']=false;
 TM['tasks_mode']='all';
 TM['projects_mode']='all';
@@ -17,10 +17,22 @@ if(typeof SERVER !='undefined') {
     TM['USER_PIC'] = SERVER['PIC'];
     TM['current_page'] = SERVER['PAGE']?SERVER['PAGE']:false;
 }
+//////////////////////////////////////
+// TESTING LOCAL STORAGE
+if(supports_html5_storage()){
+    if(localStorage['DB']){
+        DB=JSON.parse(localStorage['DB']);
+    }
+    if(localStorage['TM']){
+        TM=JSON.parse(localStorage['TM']);
+    }
+}
+//////////////////////////////////////
 if(!DB){
     var DB=[];
     TM['update_db']=true;
-}TM['update_db']=true;
+}
+//TM['update_db']=true;
 
 function main(){
     io({"action":"check"});

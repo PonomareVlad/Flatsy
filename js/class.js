@@ -12,9 +12,17 @@ function Ajax(method,url,callback){
     {
         if (xmlhttp.readyState==4 && xmlhttp.status==200)
         {
+            TM['OFFLINE']=false;
             response=xmlhttp.responseText;
             //eval(callback+'(\''+response+'\');');
+            try{var jsonObject = JSON.parse(response);}catch(e){
+                // handle error
+                return false;
+            }
             callback(response);
+        }else{
+            TM['OFFLINE']=true;
+            callback('{"offline":"true"}');
         }
     }
     xmlhttp.open(method,url,true);
@@ -110,6 +118,10 @@ function page(name,headgen){
                 if(!TM['AUID']) {
                     TM['AUID'] = setInterval('main()', 1000);
                 }
+            }
+            // TESTING LOCAL STORAGE
+            if(supports_html5_storage()){
+                localStorage['TM']=JSON.stringify(TM);
             }
             //setTimeout(document.getElementById('main').className='noblur',2000);
             document.getElementById('main').className='noblur';
@@ -267,6 +279,14 @@ function reg_check(mode){
 function offline(){
     if(TM['AUID']) {
         clearInterval(TM['AUID']);
+    }
+}
+
+function supports_html5_storage() {
+    try {
+        return 'localStorage' in window && window['localStorage'] !== null;
+    } catch (e) {
+        return false;
     }
 }
 

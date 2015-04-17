@@ -15,7 +15,7 @@ function head(){ // Фунция генерации основных элеме�
         }
         $DB=[];
         $DB['TASK']=TM::get_tasks();
-        $scripts.='var DB='.json_encode($DB).';';
+        //$scripts.='var DB='.json_encode($DB).';';
         $scripts.='</script>';
     }
 
