@@ -8,8 +8,10 @@ class TM extends DB
 
             $now=date("y-m-d G:i:s",strtotime(date('y-m-d G:i:s'))+14400);
             $name=Checkdata($query['name']);
-            $description=Checkdata($query['description']);
+            //$description=Checkdata($query['description']);
+            $description=str_replace(array("\r\n", "\r", "\n"), '<br>', strip_tags(Checkdata($query['description'])));
             $executor=Checkdata($query['executor']);
+            //$executor_type=Checkdata($query['executor_type']);
             $date_finish=$query['date_finish'].':00';
             $idproject=$query['project']?$query['project']:'0';
             $parentask='0';
@@ -72,7 +74,8 @@ class TM extends DB
     public static function edit_task($query)
     {
         $name = Checkdata($query['name']);
-        $description = Checkdata($query['description']);
+        //$description = Checkdata($query['description']);
+        $description=str_replace(array("\r\n", "\r", "\n"), '<br>', strip_tags(Checkdata($query['description'])));
         $executor = Checkdata($query['executor']);
         $date_finish = $query['date_finish'] . ':00';
         $idproject = $query['project'] ? $query['project'] : '0';
@@ -115,7 +118,8 @@ class TM extends DB
     public static function edit_project($query)
     {
         $name = Checkdata($query['name']);
-        $description = Checkdata($query['description']);
+        //$description = Checkdata($query['description']);
+        $description=str_replace(array("\r\n", "\r", "\n"), '<br>', strip_tags(Checkdata($query['description'])));
         //$executor = Checkdata($query['executor']);
         $date_finish = $query['date_finish'] . ':00';
         //$idproject = $query['project'] ? $query['project'] : '0';
@@ -207,7 +211,10 @@ class TM extends DB
 
             $now=date("y-m-d G:i:s",strtotime(date('y-m-d G:i:s'))+14400);
             $name=Checkdata($query['name']);
-            $description=Checkdata($query['description']);
+            //$executor=Checkdata($query['executor']);
+            //$executor_type=Checkdata($query['executor_type']);
+            $lusers=$query['users'];
+            $description=str_replace(array("\r\n", "\r", "\n"), '<br>', strip_tags(Checkdata($query['description'])));
             $date_finish=$query['date_finish'].':00';
             $parentproject='0';
             $files=$query['files'];
@@ -224,11 +231,6 @@ class TM extends DB
                 $proj['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['lastname', 'firstname'], 'id=' . $proj['initiator'])));
                 $proj['tasks'] = [];
                 DB::inserti('visprojectuser','(iduser,idproject) VALUES ('.USER_ID.','.$proj['idproject'].')');
-                $users=DB::select('visprojectuser',['*'],'idproject='.$proj['idproject']);
-                $proj['users']=[];
-                while($userlink=mysqli_fetch_assoc($users)){
-                    $proj['users'][]=User::get_user($userlink['iduser']);
-                }
                 $proj['files']=[];
                 if($files!=false){
                     for($i=0;$i<count($files);$i++){
@@ -237,6 +239,22 @@ class TM extends DB
                         }
                     }
                 }
+                foreach($lusers as $user){
+                    if($user['type']=='group'){
+                        DB::insert('visprojectgroup',['idproject'=>$proj['idproject'],'idgroup'=>$user['id']]);
+                    }
+                    if($user['type']=='user'){
+                        if($user['id']!=USER_ID) {
+                            DB::insert('visprojectuser', ['idproject' => $proj['idproject'], 'iduser' => $user['id']]);
+                        }
+                    }
+                }
+                $users=DB::select('visprojectuser',['*'],'idproject='.$proj['idproject']);
+                $proj['users']=[];
+                while($userlink=mysqli_fetch_assoc($users)){
+                    $proj['users'][]=User::get_user($userlink['iduser']);
+                }
+                TM::create_notify('new_project',$proj['idproject']);
                 return $proj;
             }
 
@@ -274,10 +292,11 @@ class TM extends DB
             return $group;
         }
     }
-    public static function get_projects(){
-        $is=[];
+    public static function get_projects($groups_all=false)
+    {
+        $is = [];
         $project = [];
-        $res = DB::select('project', ['*'], 'initiator="' . USER_ID . '"');
+        /*$res = DB::select('project', ['*'], 'initiator="' . USER_ID . '"');
         while ($proj = mysqli_fetch_assoc($res)) {
             //$num=count($project);
             $proj['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['lastname', 'firstname'], 'id=' . $proj['initiator'])));
@@ -301,33 +320,117 @@ class TM extends DB
                 $proj['files'][]=['id'=>$file['idfile'],'name'=>$file['namefile']];
             }
             $project[]=$proj;
+        }*/
+        $res = DB::select('visprojectuser', ['*'], 'iduser="' . USER_ID . '"');
+        while ($projects = mysqli_fetch_assoc($res)) {
+            $res2 = DB::select('project', ['*'], 'idproject="' . $projects['idproject'] . '"');
+            $proj = mysqli_fetch_assoc($res2);
+            if (!isset($proj['idproject'])) {
+                continue;
+            }
+            $proj['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['lastname', 'firstname'], 'id=' . $proj['initiator'])));
+            $proj['tasks'] = [];
+            $groups = DB::select('visprojectgroup', ['*'], 'idproject="' . $proj['idproject'] . '"');
+            $proj['groups'] = [];
+            while ($grouplink = mysqli_fetch_assoc($groups)) {
+                $grname = User::get_group($grouplink['idgroup']);
+                $proj['groups'][] = ['id' => $grname['idgroup'], 'name' => $grname['namegroup']];
+            }
+            $users = DB::select('visprojectuser', ['*'], 'idproject=' . $proj['idproject']);
+            $proj['users'] = [];
+            while ($userlink = mysqli_fetch_assoc($users)) {
+                $proj['users'][] = User::get_user($userlink['iduser']);
+            }
+            $tasks = DB::select('task', ['*'], 'idproject=' . $proj['idproject']);
+            while ($taska = mysqli_fetch_assoc($tasks)) {
+                $num = count($proj['tasks']);
+                $proj['tasks'][$num] = $taska;
+            }
+            $is[$proj['idproject']] = true;
+            $pfiles = DB::select('files', ['*'], 'type="project" AND object="' . $proj['idproject'] . '"');
+            $proj['files'] = [];
+            while ($file = mysqli_fetch_assoc($pfiles)) {
+                $proj['files'][] = ['id' => $file['idfile'], 'name' => $file['namefile']];
+            }
+            $project[] = $proj;
+
+        }
+        if ($groups_all != false) {
+            foreach ($groups_all as $group) {
+                $res = DB::select('visprojectgroup', ['*'], 'idgroup="' . $group['idgroup'] . '"');
+                while ($projects = mysqli_fetch_assoc($res)) {
+                    $res2 = DB::select('project', ['*'], 'idproject="' . $projects['idproject'] . '"');
+                    $proj = mysqli_fetch_assoc($res2);
+                    if (!isset($proj['idproject'])) {
+                        continue;
+                    }
+                    if (!isset($is[$proj['idproject']])) {
+                        $proj['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['lastname', 'firstname'], 'id=' . $proj['initiator'])));
+                        $proj['tasks'] = [];
+                        $groups = DB::select('visprojectgroup', ['*'], 'idproject="' . $proj['idproject'] . '"');
+                        $proj['groups'] = [];
+                        while ($grouplink = mysqli_fetch_assoc($groups)) {
+                            $grname = User::get_group($grouplink['idgroup']);
+                            $proj['groups'][] = ['id' => $grname['idgroup'], 'name' => $grname['namegroup']];
+                        }
+                        $users = DB::select('visprojectuser', ['*'], 'idproject=' . $proj['idproject']);
+                        $proj['users'] = [];
+                        while ($userlink = mysqli_fetch_assoc($users)) {
+                            $proj['users'][] = User::get_user($userlink['iduser']);
+                        }
+                        $tasks = DB::select('task', ['*'], 'idproject=' . $proj['idproject']);
+                        while ($taska = mysqli_fetch_assoc($tasks)) {
+                            $num = count($proj['tasks']);
+                            $proj['tasks'][$num] = $taska;
+                            $is[$proj['idproject']] = true;
+                            $pfiles = DB::select('files', ['*'], 'type="project" AND object="' . $proj['idproject'] . '"');
+                            $proj['files'] = [];
+                            while ($file = mysqli_fetch_assoc($pfiles)) {
+                                $proj['files'][] = ['id' => $file['idfile'], 'name' => $file['namefile']];
+                            }
+                        }
+                        $project[] = $proj;
+                    }
+                }
+            }
         }
         $task = TM::get_tasks();
         for ($i = 0; $i < count($task); $i++) {
             if ($task[$i]['idproject'] != 0) {
                 $res = DB::select('project', ['*'], 'idproject="' . $task[$i]['idproject'] . '"');
                 $proj = mysqli_fetch_assoc($res);
-                if(!isset($is[$proj['idproject']])) {
+                if (!isset($proj['idproject'])) {
+                    continue;
+                }
+                if (!isset($is[$proj['idproject']])) {
                     $proj['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['lastname', 'firstname'], 'id="' . $proj['initiator'] . '"')));
                     $proj['tasks'] = [];
+                    $groups = DB::select('visprojectgroup', ['*'], 'idproject="' . $proj['idproject'] . '"');
+                    $proj['groups'] = [];
+                    while ($grouplink = mysqli_fetch_assoc($groups)) {
+                        $grname = User::get_group($grouplink['idgroup']);
+                        $proj['groups'][] = ['id' => $grname['idgroup'], 'name' => $grname['namegroup']];
+                    }
+                    $users = DB::select('visprojectuser', ['*'], 'idproject=' . $proj['idproject']);
+                    $proj['users'] = [];
+                    while ($userlink = mysqli_fetch_assoc($users)) {
+                        $proj['users'][] = User::get_user($userlink['iduser']);
+                    }
                     $tasks = DB::select('task', ['*'], 'idproject=' . $proj['idproject']);
                     while ($taska = mysqli_fetch_assoc($tasks)) {
                         $num = count($proj['tasks']);
                         $proj['tasks'][$num] = $taska;
-                        $proj['tasks'][$num]['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['lastname', 'firstname'], 'id="' . $taska['initiator'] . '"')));
-                        $proj['tasks'][$num]['executor_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['lastname', 'firstname'], 'id="' . $taska['executor'] . '"')));
                     }
-                    $is[$proj['idproject']]=true;
-                    $pfiles=DB::select('files',['*'],'type="project" AND object="'.$proj['idproject'].'"');
-                    $proj['files']=[];
-                    while($file=mysqli_fetch_assoc($pfiles)){
-                        $proj['files'][]=['id'=>$file['idfile'],'name'=>$file['namefile']];
+                    $is[$proj['idproject']] = true;
+                    $pfiles = DB::select('files', ['*'], 'type="project" AND object="' . $proj['idproject'] . '"');
+                    $proj['files'] = [];
+                    while ($file = mysqli_fetch_assoc($pfiles)) {
+                        $proj['files'][] = ['id' => $file['idfile'], 'name' => $file['namefile']];
                     }
                     $project[] = $proj;
                 }
             }
         }
-
         return $project;
     }
     public static function get_tasks($projects=false){
@@ -343,8 +446,9 @@ class TM extends DB
                 $task['files'][]=['id'=>$file['idfile'],'name'=>$file['namefile']];
             }
             $task['view']=true;
-            if(DB::select('notifications',['*'],'iduser='.USER_ID.' AND type="new_task" AND value='.$task['id'])){
-
+            $isnew=mysqli_fetch_assoc(DB::select('notifications',['*'],'iduser='.USER_ID.' AND type="new_task" AND value='.$task['id']));
+            if(isset($isnew['idnotification'])){
+                $task['new']=true;
             }
             $tasks[]=$task;
         }
@@ -429,24 +533,66 @@ class TM extends DB
     }
     public static function create_notify($type,$id)
     {
-        $notify=false;
+        $notify = false;
         if ($type == 'new_comment') {
-            $notify=[];
-            $comment = mysqli_fetch_assoc(DB::select('comments', ['*'], 'id='.$id));
-            if($comment['type']=='task') {
-                $object = mysqli_fetch_assoc(DB::select('task', ['*'], 'id='.$comment['idobject']));
-                if(USER_ID!=$object['executor']){$notify[]=$object['executor'];}
-                if(USER_ID!=$object['initiator']){$notify[]=$object['initiator'];}
+            $notify = [];
+            $comment = mysqli_fetch_assoc(DB::select('comments', ['*'], 'id=' . $id));
+            if ($comment['type'] == 'task') {
+                $object = mysqli_fetch_assoc(DB::select('task', ['*'], 'id=' . $comment['idobject']));
+                if (USER_ID != $object['executor']) {
+                    $notify[] = $object['executor'];
+                }
+                if (USER_ID != $object['initiator']) {
+                    $notify[] = $object['initiator'];
+                }
             }
         }
-        if($type=='new_task'){
-            $notify=[];
-            $task= mysqli_fetch_assoc(DB::select('task',['*'],'id='.$id));
-            if(USER_ID!=$task['executor']){$notify[]=$task['executor'];}
+        if ($type == 'new_task') {
+            $notify = [];
+            $task = mysqli_fetch_assoc(DB::select('task', ['*'], 'id=' . $id));
+            if (USER_ID != $task['executor']) {
+                $notify[] = $task['executor'];
+            }
         }
-        if(is_array($notify)){
-            for($i=0;$i<count($notify);$i++){
-                DB::insert('notifications',['iduser'=>$notify[$i],'type'=>$type,'value'=>$id]);
+        if ($type == 'new_project') {
+            $notify = [];
+            $vproject = DB::select('visprojectuser', ['*'], 'idproject=' . $id);
+            while ($user = mysqli_fetch_assoc($vproject)) {
+                if ($user['iduser'] != USER_ID) {
+                    $exist = false;
+                    foreach ($notify as $noty) {
+                        if ($noty == $user['iduser']) {
+                            $exist = true;
+                            break;
+                        }
+                    }
+                    if ($exist == false) {
+                        $notify[] = $user['iduser'];
+                    }
+                }
+            }
+            $vprojectg = DB::select('visprojectgroup', ['*'], 'idproject=' . $id);
+            while($group=mysqli_fetch_assoc($vprojectg)) {
+                $users=DB::select('useringroup',['*'],'idgroup='.$group['idgroup']);
+                while($user=mysqli_fetch_assoc($users)) {
+                    if ($user['iduser'] != USER_ID) {
+                        $exist = false;
+                        foreach ($notify as $noty) {
+                            if ($noty == $user['iduser']) {
+                                $exist = true;
+                                break;
+                            }
+                        }
+                        if ($exist == false) {
+                            $notify[] = $user['iduser'];
+                        }
+                    }
+                }
+            }
+        }
+        if (is_array($notify)) {
+            for ($i = 0; $i < count($notify); $i++) {
+                DB::insert('notifications', ['iduser' => $notify[$i], 'type' => $type, 'value' => $id]);
             }
         }
     }

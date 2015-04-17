@@ -33,7 +33,7 @@ var LSEARCH=[];
     }
 }*/
 
-function loadSearch(input,wrapper,action) {
+function loadSearch(input,wrapper,action,callback) {
     if(!LSEARCH[action]){
         LSEARCH[action]=[];
     }
@@ -78,12 +78,65 @@ function loadSearch(input,wrapper,action) {
                                 }
                             }
                         }
-                    }else {
+                    }
+                    if(action=='get_users'||action=='get_users_groups') {
+                        stext = $(this).val().toLowerCase();
+                        var list = [];
+                        for (g in DB['GROUP']) {
+                            if(action=='get_users_groups') {
+                                gid = DB['GROUP'][g]['idgroup'];
+                                name = DB['GROUP'][g]['namegroup'].toLowerCase();
+                                if (name.indexOf(stext) + 1) {
+                                    list[list.length] = {
+                                        "id": gid,
+                                        "type": "group",
+                                        "name": 'Группа [' + DB['GROUP'][g]['namegroup'] + ']'
+                                    };
+                                }
+                            }
+                            for (u in DB['GROUP'][g]['users']) {
+                                uid = DB['GROUP'][g]['users'][u]['id']
+                                firstname = DB['GROUP'][g]['users'][u]['firstname'].toLowerCase();
+                                lastname = DB['GROUP'][g]['users'][u]['lastname'].toLowerCase();
+                                patronymic = DB['GROUP'][g]['users'][u]['patronymic'].toLowerCase();
+                                if ((firstname.indexOf(stext) + 1) || (lastname.indexOf(stext) + 1) || (patronymic.indexOf(stext) + 1)) {
+                                    exist = false;
+                                    for (l in list) {
+                                        if (list[l]['id'] == uid) {
+                                            exist = true;
+                                        }
+                                    }
+                                    if (exist == true) {
+                                        continue;
+                                    }
+                                    list[list.length] = {
+                                        "id": uid,
+                                        "type": "user",
+                                        "name": DB['GROUP'][g]['users'][u]['lastname'] + ' ' + DB['GROUP'][g]['users'][u]['firstname']
+                                    };
+                                }
+                            }
+                        }
+                        LSEARCH[action]['list'] = list;
+                        LSEARCH[action]['suggest_count'] = LSEARCH[action]['list'].length;
+                        if (LSEARCH[action]['suggest_count'] > 0) {
+                            $(wrapper).html("").show();
+                            for (var i in LSEARCH[action]['list']) {
+                                if (LSEARCH[action]['list'][i] != '') {
+                                    if (callback) {
+                                        $(wrapper).append('<div onclick="get(\''+input.substr(1)+'\').value=\'\'; '+callback+'(\''+LSEARCH[action]['list'][i]['id']+'\',\''+LSEARCH[action]['list'][i]['name']+'\',\''+LSEARCH[action]['list'][i]['type']+'\'); clean_search(\''+action+'\');" class="advice_variant">' + LSEARCH[action]['list'][i]['name'] + '</div>');
+                                    } else {
+                                        $(wrapper).append('<div onclick="$(\'' + input + '\').val($(this).text()); LSEARCH[\'' + action + '\'][\'selected_id\']=\'' + LSEARCH[action]['list'][i]['id'] + '\'; LSEARCH[\'' + action + '\'][\'selected_type\']=\'' + LSEARCH[action]['list'][i]['type'] + '\';" class="advice_variant">' + LSEARCH[action]['list'][i]['name'] + '</div>');
+                                    }
+                                }
+                            }
+                        }
+                    }else{
                         // производим AJAX запрос к /ajax/ajax.php, передаем ему GET query, в который мы помещаем наш запрос
                         $.get('/ajax.php', 'query=' + JSON.stringify({
                             "action": action,
                             "query": $(this).val()
-                        }) + '', function (data) {
+                        }) + '&ver='+VERSION, function (data) {
                             //php скрипт возвращает нам строку, ее надо распарсить в массив.
                             // возвращаемые данные: ['test','test 1','test 2','test 3']
                             var list = JSON.parse(data);
@@ -148,6 +201,12 @@ function loadSearch(input,wrapper,action) {
         event.stopPropagation();
     });
 };
+
+function clean_search(action){
+    LSEARCH[action]['input_initial_value'] = '';
+    LSEARCH[action]['list']=[];
+    LSEARCH[action]['suggest_count'] = 0;
+}
 
 function key_activate(n,input,wrapper){
     $(wrapper+' div').eq(LSEARCH[action]['suggest_selected']-1).removeClass('active');

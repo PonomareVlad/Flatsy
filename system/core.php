@@ -1,8 +1,9 @@
 <?php
 
 header("HTTP/1.0 200 OK"); // Возвращаем успешное состояние при любых запросах
+header("Access-Control-Allow-Origin: *"); // Разрешаем CORS
 
-define('VERSION',42);
+define('VERSION',50);
 
 require_once(ROOT.'system/func.php'); // Подключаем вспомогательные функции
 

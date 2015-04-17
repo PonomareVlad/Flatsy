@@ -154,7 +154,7 @@ class User extends DB{
     {
         global $MYSQL_CONNECTION;
         $users = [];
-        $array = mysqli_query($MYSQL_CONNECTION,"SELECT * FROM users WHERE lastname LIKE '%" . mysqli_real_escape_string($MYSQL_CONNECTION,$query['query']) . "%' OR firstname LIKE '%" . mysqli_real_escape_string($MYSQL_CONNECTION,$query['query']) . "%' OR patronymic LIKE '%" . mysqli_real_escape_string($MYSQL_CONNECTION,$query['query']) . "%' LIMIT 0, 10");
+        $array = DB::select('users',['*'],'lastname LIKE "%' . mysqli_real_escape_string($MYSQL_CONNECTION,$query['query']) . '%" OR firstname LIKE "%' . mysqli_real_escape_string($MYSQL_CONNECTION,$query['query']) . '%" OR patronymic LIKE "%' . mysqli_real_escape_string($MYSQL_CONNECTION,$query['query']) . '%" LIMIT 0, 10');
         while ($user = mysqli_fetch_assoc($array)) {
             $users[] = ["id" => $user['id'], "name" => $user['lastname'].' '.$user['firstname']];
         }

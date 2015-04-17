@@ -313,17 +313,24 @@ function handler(response) {
                 for(u in group['users']){
                     if(group['users'][u]['id']==response['del_user']){
                         DB['GROUP'][g]['users'].splice(u,1);
+                        DB['GROUP'][g]['count_users']--;
                     }
                 }
                 if (TM['view_type'] == 'group') {
                     view(TM['view_id'],'group');
                 }
+                if(TM['current_page']=='groups'){
+                    gen_list();
+                }
             }
         }
         if(response['gen_invite_group']){
             if(response['gen_invite_group']!=false){
-                get('invite_text').innerHTML = 'Передайте данную инвайт-ссылку пользователю, для вступления в группу: <input type="text" value="http://'+location.host+'/?hash='+response['gen_invite_group']+'" size="60" id="name"/>';
+                get('invite_text').innerHTML = 'Перейдя по ссылке пользователь попадет в вашу группу: <input onclick="select(this);" type="text" value="http://'+location.host+'/?hash='+response['gen_invite_group']+'" size="60" id="name"/>';
             }
+        }
+        if(response['del_notify']){
+            gen_list();
         }
     }else{
         if(TM['UID']){
@@ -375,6 +382,7 @@ function show_add_task() {
     //' * Отображаются, на данный момент,только те поля, которые, функционально, имеют возможность обрабатываться системой!' +
     '<a href="javascript:void(0)" onclick="upload_show(\'new\',\'task\')">Прикрепить</a></p></div><div id="ufiles"></div>';
     document.getElementById('view').innerHTML = source;
+    get('name').focus();
     TM['ufiles']=[];
     loadSearch('#executor','#search_advice_wrapper_exe','get_users');
     loadSearch('#idproject','#search_advice_wrapper_prj','get_projects');
@@ -400,7 +408,7 @@ function edit_task(id){
     '<h4>Редактирование задачи</h4></div><p>' +
     '<label for="name">Постановка задачи</label><input type="text" name="task_title" value="'+task['name']+'" id="name"></p>' +
     '<p><label for="description">Описание</label>' +
-    '<textarea type="text" name="task_description" id="description">'+task['description']+'</textarea></p>' +
+    '<textarea type="text" name="task_description" id="description">'+task['description'].split('<br>').join('\r\n')+'</textarea></p>' +
     '<p><label for="date_finish">Дата завершения:</label>' +
     '<input value="'+task['date']+'" onfocus="this.select();lcs(this);position_calen();" onclick="event.cancelBubble=true;this.select();lcs(this);position_calen()" style="width: 5em;" type="text" name="date_final" id="date_finish">' +
     ' Часы: <input type="number" min="0" max="23" value="'+task['hour']+'" style="width: 3em;" id="hours">' +
@@ -491,6 +499,7 @@ function send_task(){
     name=document.getElementById('name').value;
     description=document.getElementById('description').value;
     executor=LSEARCH['get_users']['selected_id'];//selected_id;
+    //executor_type=LSEARCH['get_users']['selected_type'];
     project=LSEARCH['get_projects']['selected_id'];
     hours=document.getElementById('hours').value;
     minuts=document.getElementById('minuts').value;
@@ -512,6 +521,7 @@ function send_task(){
             "name": name,
             "description": description,
             "executor": executor,
+            //"executor_type": executor_type,
             "date_finish": date_finish,
             "project":project,
             "files":files
@@ -651,22 +661,26 @@ function show_add_project() {
         //'<input type="text" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его"></p>' +
     '<p><label for="executor">Участники</label>' +
     '<input size="33" type="text" class="livesearch" placeholder="Начните набирать имя пользователя" name="main_user" value="" autocomplete="off" id="executor">' +
-    '<div class="search_advice_wrapper" id="prj_wrapp"></div></p>' +
+    '<div class="search_advice_wrapper" id="prj_wrapp"></div></p><div id="lusers"></div>' +
         //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
         //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
     '<p><div class="create" onclick="new_project();">Создать</div><a href="javascript:void(0)" onclick="upload_show(\'new\',\'project\');">Прикрепить</a></div></p><div id="ufiles"></div>';
     //' * Отображаются, на данный момент,только те поля, которые, функционально, имеют возможность обрабатываться системой!</p>';
     document.getElementById('view').innerHTML = source;
-    loadSearch('#executor','#prj_wrapp','get_users');
+    get('name').focus();
+    loadSearch('#executor','#prj_wrapp','get_users_groups','pick_user');
     calendar_init();
     TM['ufiles']=[];
+    TM['lusers']=[];
     return false;
 }
 
 function new_project() {
     name = document.getElementById('name').value;
     description = document.getElementById('description').value;
-    executor = LSEARCH['get_users']['selected_id'];
+    //executor = LSEARCH['get_users_groups']['selected_id'];
+    //executor_type = LSEARCH['get_users_groups']['selected_type'];
+    users=TM['lusers'];
     hours = document.getElementById('hours').value;
     minuts = document.getElementById('minuts').value;
     date_finish = document.getElementById('date_finish').value;
@@ -685,7 +699,7 @@ function new_project() {
         "name": name,
         "description": description,
         "date_finish": date_finish,
-        "executor": executor,
+        "users": users,
         "files":files
     });
 
@@ -716,56 +730,87 @@ function gen_list(){
             empty_list=true;
             //highlightd=false;
             highlight=false;
+            new_view=false;
             TASK=[];
             DAY=[];
-            for(i in DB['TASK']){
-                empty=false;
-                empty_list=false;
-                task=DB['TASK'][i];
-                if(task['view']==false){
+            NEW=[];
+            for(i in DB['TASK']) {
+                empty = false;
+                empty_list = false;
+                task = DB['TASK'][i];
+                if (task['view'] == false) {
                     continue;
                 }
-                if(TM['tasks_mode']=='finished'&&task['finished']==0){
+                if (TM['tasks_mode'] == 'finished' && task['finished'] == 0) {
                     continue;
                 }
-                if(TM['tasks_mode']!='finished'&&task['finished']==1){
+                if (TM['tasks_mode'] != 'finished' && task['finished'] == 1) {
                     continue;
                 }
-                if(TM['tasks_mode']=='unfinished'&&task['finished']==1){//Атавизм
+                if (TM['tasks_mode'] == 'unfinished' && task['finished'] == 1) {//Атавизм
                     continue;
                 }
-                if(TM['tasks_mode']=='my'&&task['executor']!=TM['UID']){
+                if (TM['tasks_mode'] == 'my' && task['executor'] != TM['UID']) {
                     continue;
                 }
-                date_finish=task['date_finish'].split(' ');
-                date_finish=date_finish[0].split('-');
-                //key=date_finish[2]+'.'+date_finish[1]+'.'+date_finish[0];
-                key=false;
-                time=new Date(date_finish[0], date_finish[1]-1, date_finish[2]).getTime();
-                for(t in DAY){if(DAY[t]==time){key=t}};
-                if(!key){key=DAY.length};
-                DAY[key]=time;
-                //alert(date_finish[0]+'.'+(date_finish[1]-1)+'.'+date_finish[2]);
-                if(!TASK[time]){
-                    TASK[time]=[];
+                if(task['new']){
+                    num=NEW.length;
+                    new_view=true;
+                    NEW[num] = '<div id="' + task['id'] + '" class="task_info';
+                    if (TM['highlight_element'] == task['id']) {
+                        NEW[num] += ' task_active';
+                        highlight = true;
+                    }
+                    NEW[num] += '" onclick="view(' + task['id'] + ',\'task\')"><div>';
+                    if (task['finished'] == 1) {
+                        NEW[num] += '<div id="fhd' + task['id'] + '" class="galka" onclick="task_end(' + task['id'] + ')"><img src="templates/default/images/done.png"></div>';
+                    } else {
+                        NEW[num] += '<div id="fhd' + task['id'] + '" class="galka" onclick="task_end(' + task['id'] + ')"><img src="templates/default/images/n_done.png"></div>';
+                    }
+                    NEW[num] += '</div><div class="task_text">' + task['name'] + '</div></div>';
+                }else {
+                    date_finish = task['date_finish'].split(' ');
+                    date_finish = date_finish[0].split('-');
+                    //key=date_finish[2]+'.'+date_finish[1]+'.'+date_finish[0];
+                    key = false;
+                    time = new Date(date_finish[0], date_finish[1] - 1, date_finish[2]).getTime();
+                    for (t in DAY) {
+                        if (DAY[t] == time) {
+                            key = t
+                        }
+                    }
+                    ;
+                    if (!key) {
+                        key = DAY.length
+                    }
+                    ;
+                    DAY[key] = time;
+                    //alert(date_finish[0]+'.'+(date_finish[1]-1)+'.'+date_finish[2]);
+                    if (!TASK[time]) {
+                        TASK[time] = [];
+                    }
+                    num = TASK[time].length;
+                    TASK[time][num] = '<div id="' + task['id'] + '" class="task_info';
+                    if (TM['highlight_element'] == task['id']) {
+                        TM['highlight_day'] = time<now?'overdue':time;
+                        TASK[time][num] += ' task_active';
+                        highlight = true;
+                    }
+                    TASK[time][num] += '" onclick="view(' + task['id'] + ',\'task\')"><div>';
+                    if (task['finished'] == 1) {
+                        TASK[time][num] += '<div id="fhd' + task['id'] + '" class="galka" onclick="task_end(' + task['id'] + ')"><img src="templates/default/images/done.png"></div>';
+                    } else {
+                        TASK[time][num] += '<div id="fhd' + task['id'] + '" class="galka" onclick="task_end(' + task['id'] + ')"><img src="templates/default/images/n_done.png"></div>';
+                    }
+                    TASK[time][num] += '</div><div class="task_text">' + task['name'] + '</div></div>';
+                    // BUILD SORT BY TIME
                 }
-                num=TASK[time].length;
-                TASK[time][num]='<div id="'+task['id']+'" class="task_info';
-                if(TM['highlight_element']==task['id']){
-                    TASK[time][num]+=' task_active';highlight=true;}
-                TASK[time][num]+='" onclick="view('+task['id']+',\'task\')"><div>';
-                if(task['finished']==1){
-                    TASK[time][num]+='<div id="fhd'+task['id']+'" class="galka" onclick="task_end('+task['id']+')"><img src="templates/default/images/done.png"></div>';
-                }else{
-                    TASK[time][num]+='<div id="fhd'+task['id']+'" class="galka" onclick="task_end('+task['id']+')"><img src="templates/default/images/n_done.png"></div>';
+                if (task['id'] == TM['view_id']) {
+                    current_in_list = true;
                 }
-                TASK[time][num]+='</div><div class="task_text">'+task['name']+'</div></div>';
-                if(task['id']==TM['view_id']){
-                    current_in_list=true;
-                }
-                // BUILD SORT BY TIME
             }
             DAY.sort();
+            newtasks='<div class="task_day'+(highlight&&TM['highlight_day']=='new'?' active_day':'')+'" id="new"><div class="task_name">Новые</div>';
             overdue='<div class="task_day'+(highlight&&TM['highlight_day']=='overdue'?' active_day':'')+'" id="overdue"><div class="task_name">Просрочено</div>';
             if(TM['tasks_mode']=='finished'){
                 overdue='<div class="task_day'+(highlight&&TM['highlight_day']=='overdue'?' active_day':'')+'" id="overdue"><div class="task_name">Завершено</div>';
@@ -802,6 +847,12 @@ function gen_list(){
             }
             if(overdue_view){
                 source=overdue+'</div>'+source;
+            }
+            if(new_view){
+                for(n in NEW){
+                    newtasks += NEW[n];
+                }
+                source=newtasks+'</div>'+source;
             }
             if(highlight==false){
                 TM['highlight_day']=false;
@@ -870,6 +921,7 @@ function show_add_group(){
     if(!TM['tmp_group_add_line']) {
         get('add_line').innerHTML = '<input type="text" id="name"/><div class="create" onclick="new_group();">Создать</div>';
         TM['tmp_group_add_line']=true;
+        get('name').focus();
     }
     //
     return false;
@@ -930,6 +982,7 @@ function view(id,type){
         time = time < now ? 'overdue' : time;
         date = new Date(new Date(new Date(task['date_finish'].replace(' ', 'T')).getTime()+TM['time_offset']).getTime());
         day = (date.getDate() < 10 ? '0' : '') + date.getDate();month = TM['months'][date.getMonth()];
+        if(task['new']){time='new'}
         TM['highlight_day'] = TM['current_page'] == 'tasks' ? time : 'prj' + task['idproject'];
         TM['highlight_element'] = task['id'];
         if(get(TM['highlight_day'])){get(TM['highlight_day']).className = 'task_day active_day';};
@@ -968,6 +1021,7 @@ function view(id,type){
         init_comments(task['id'], type);
         sizing();
         if(task['new']){
+            TM['highlight_day'] = false;
             task_viewed(task['id']);
         }
         TM['ufiles'] = [];
@@ -1025,6 +1079,14 @@ function view(id,type){
         source+='<div class="task_table"><div>Участники</div>';
         // BUILD EXECUTORS
         user=false;
+        group=false;
+        for(g in project['groups']){
+            group=project['groups'][g];
+            if(g!=0){
+                source+=', ';
+            }
+            source+='<a href="javascript:void(0)" onclick="view('+group['id']+',\'group\');">'+group['name']+'</a>';
+        }
         for(u in project['users']){
             user=project['users'][u];
             if(u!=0){
@@ -1032,7 +1094,7 @@ function view(id,type){
             }
             source+='<a href="javascript:void(0)" onclick="view('+user['id']+',\'user\');">'+user['lastname']+' '+user['firstname']+'</a>';
         }
-        if(!user){
+        if(!user&&!group){
             source+='не назначены';
         }
         source+='</div>';
@@ -1122,6 +1184,27 @@ function unpick_file(idf){
             io({'action':'del_file','id':idf});
             get('file'+idf).parentNode.removeChild(get('file'+idf));
             TM['ufiles'].splice(i,1);
+            break;
+        }
+    }
+}
+
+function pick_user(id,name,type){
+    for(i in TM['lusers']){
+        if(TM['lusers'][i]['id']==id){
+            return false;
+        }
+    }
+    TM['lusers'][TM['lusers'].length]={'id':id,'name':name,'type':type};
+    get('lusers').innerHTML+='<div id="'+type+'_'+id+'">'+name+' <a href="javascript:void(0)" onclick="unpick_user('+id+')"><img src="templates/default/images/close.png"></a></div>';
+}
+
+function unpick_user(id){
+    for(i in TM['lusers']){
+        if(TM['lusers'][i]['id']==id){
+            type=TM['lusers'][i]['type'];
+            get(type+'_'+id).parentNode.removeChild(get(type+'_'+id));
+            TM['lusers'].splice(i,1);
             break;
         }
     }

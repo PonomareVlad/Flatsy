@@ -1,5 +1,5 @@
-var FLATSY='0.4.2';
-var VERSION=42;
+var FLATSY='0.5.0';
+var VERSION=50;
 var TM=[];
 TM['current_page']=false;
 TM['tasks_mode']='all';
@@ -63,6 +63,7 @@ function init(arg) {
                         alert('Не удалось зарегистрировать ключ');
                         //alert(arg);
                     }
+                    TM['current_page']='groups';
                 }
                 TM['wait_load']=true;
                 TM['GET_PARAM']['hash']=false;
@@ -108,7 +109,7 @@ document.onkeyup = function (e) {
     }
     if(TM['CID']) {
         if(e.keyCode==10||(e.ctrlKey&&e.keyCode==13)) {
-            document.getElementById('new_comm').value+='\n';
+            document.getElementById('new_comm').value+='\r\n';
         }
         if (e.keyCode == 13&&!e.ctrlKey) {
             add_comment();

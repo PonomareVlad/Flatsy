@@ -55,9 +55,9 @@ if(defined('USER_ID')) { // Статус авторизации
         }
         if ($QUERY['action'] == 'load_db'){
             $DB=[];
-            $DB['PROJECT']=TM::get_projects();
-            $DB['TASK']=TM::get_tasks($DB['PROJECT']);
             $DB['GROUP']=User::get_groups();
+            $DB['PROJECT']=TM::get_projects($DB['GROUP']);
+            $DB['TASK']=TM::get_tasks($DB['PROJECT']);
             $RESPONSE['DB']=$DB;
         }
         if ($QUERY['action'] == 'logout') { // Выход из системы

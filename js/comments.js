@@ -2,6 +2,7 @@ function init_comments(id,type){
     TM['comments_loaded']=type;
     TM['CID']=id;
     TM['empty_comments']=false;
+    get('new_comm').focus();
     io({"action":"get_comments","id":id,"type":type},gen_comments);
 }
 
@@ -28,7 +29,7 @@ function gen_comments(response){
             '<p class="text">'+comm[i]['comment']+'</p></div></div>';
         }
     }
-    if(source==''){source='<div class="comment"><p class="text">(Комментриев нет)</p></div>';TM['empty_comments']=true;}
+    if(source==''){source='<div class="comment"><p class="text">(Комментариев нет)</p></div>';TM['empty_comments']=true;}
     document.getElementById('comments').innerHTML=source;
     document.getElementById('comments').scrollTop=9999;
 }
