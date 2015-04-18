@@ -1,6 +1,6 @@
 <?php defined('ROOT') or header('Location: /');?>
 <!DOCTYPE html>
-<html manifest="/manifest.cache">
+<html>
 <head>
     <?=head()?>
     <link href="<?=DIR_TMPL?>styles/style.css" rel="stylesheet" type="text/css" />
