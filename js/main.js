@@ -1,5 +1,5 @@
-var FLATSY='0.5.1';
-var VERSION=51;
+var FLATSY='0.5.2';
+var VERSION=52;
 var TM={};
 TM['current_page']=false;
 TM['tasks_mode']='all';
@@ -11,23 +11,27 @@ TM['param_send']=false;
 TM['months']=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
 TM['now'] = new Date(new Date().getTime()+TM['time_offset']).getTime();
 TM['upl_window']=false;
-if(typeof SERVER !='undefined') {
+/*if(typeof SERVER !='undefined') {
     TM['UID'] = SERVER['ID'];
     TM['USER_NAME'] = SERVER['NAME'];
     TM['USER_PIC'] = SERVER['PIC'];
     TM['current_page'] = SERVER['PAGE']?SERVER['PAGE']:false;
-}
+}*/
 //////////////////////////////////////
 // TESTING LOCAL STORAGE
-if(supports_html5_storage()){
-    if(localStorage['DB']){
-        DB=JSON.parse(localStorage['DB']);
+//if(TM['UID']) {
+    //alert('BUG!!! '+TM['UID']);
+    if (supports_html5_storage()) {
+        if (localStorage['DB']) {
+            DB = JSON.parse(localStorage['DB']);
+        }
+        if (localStorage['TM']) {
+            TM = JSON.parse(localStorage['TM']);
+            TM['AUID'] = false;
+            //reset_comments();
+        }
     }
-    if(localStorage['TM']){
-        TM=JSON.parse(localStorage['TM']);
-        TM['AUID']=false;
-    }
-}
+
 //////////////////////////////////////
 TM['update_db']=true;
 

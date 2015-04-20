@@ -349,6 +349,10 @@ function handler(response) {
             }
         } else {
             if (TM['UID']) {
+                if (supports_html5_storage()) {
+                    alert('Cleaned!');
+                    localStorage.clear();
+                }
                 DB = false;
                 offline();
                 page('auth');
