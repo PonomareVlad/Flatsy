@@ -824,10 +824,12 @@ function gen_list(){
                     if (task['comments']>0){
                         TASK[time][num] +='<div id="cloud_'+task['id']+'" class="dia"><img src="templates/default/images/dia.png"></div>';
                     }else{
-                        TASK[time][num] +='<div id="cloud_'+task['id']+'" class="dia"></div>';
+                        TASK[time][num] +='<div id="cloud_'+task['id']+'" class="dia">&nbsp</div>';
                     }
                     if (task['files'].length > 0){
                         TASK[time][num] +='<div class="screpka"><img src="templates/default/images/skr.png"></div>';
+                    }else{
+                        TASK[time][num] +='<div class="screpka">&nbsp</div>';
                     }
                     if (task['finished'] == 1) {
                         TASK[time][num] += '<div id="fhd' + task['id'] + '" class="galka" onclick="task_end(' + task['id'] + ')"><img src="templates/default/images/done.png"></div>';
@@ -915,10 +917,12 @@ function gen_list(){
                     if (task['comments']>0){
                         source +='<div id="cloud_'+task['id']+'" class="dia"><img src="templates/default/images/dia.png"></div>';
                     }else{
-                        source +='<div id="cloud_'+task['id']+'" class="dia"></div>';
+                        source +='<div id="cloud_'+task['id']+'" class="dia">&nbsp</div>';
                     }
                     if (task['files'].length > 0){
                         source +='<div class="screpka"><img src="templates/default/images/skr.png"></div>';
+                    }else{
+                        source +='<div class="screpka">&nbsp</div>';
                     }
                     if(task['finished']==1){
                         source+='<div id="fhd'+task['id']+'" class="galka" onclick="task_end('+task['id']+')"><img src="templates/default/images/done.png"></div>';
