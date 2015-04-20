@@ -5,6 +5,7 @@
     <?=head()?>
     <link href="<?=DIR_TMPL?>styles/style.css" rel="stylesheet" type="text/css" />
     <link href="<?=DIR_TMPL?>styles/loader.css" rel="stylesheet" type="text/css" />
+    <link rel="icon" href="<?=DIR_TMPL?>images/icon.png">
 </head>
 <body onload="init();" onresize="sizing();">
 <div class="wrapper" id="main">

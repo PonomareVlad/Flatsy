@@ -781,10 +781,12 @@ function gen_list(){
                     if (task['comments']>0){
                         NEW[num] +='<div id="cloud_'+task['id']+'" class="dia"><img src="templates/default/images/dia.png"></div>';
                     }else{
-                        NEW[num] +='<div id="cloud_'+task['id']+'" class="dia"></div>';
+                        NEW[num] +='<div id="cloud_'+task['id']+'" class="dia">&nbsp</div>';
                     }
                     if (task['files'].length > 0){
                         NEW[num] +='<div class="screpka"><img src="templates/default/images/skr.png"></div>';
+                    }else{
+                        NEW[num] +='<div class="screpka">&nbsp</div>';
                     }
                     if (task['finished'] == 1) {
                         NEW[num] += '<div id="fhd' + task['id'] + '" class="galka" onclick="task_end(' + task['id'] + ')"><img src="templates/default/images/done.png"></div>';
