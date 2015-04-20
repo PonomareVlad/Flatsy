@@ -475,6 +475,7 @@ header{
 .alert, .dia, .screpka, .galka{
     float: left;
     margin: 0 3px;
+	min-width: 20px;
 }
 .galka{
     margin-right: 10px;
