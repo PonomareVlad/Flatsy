@@ -17,7 +17,7 @@ class TM extends DB
             $parentask='0';
             $files=$query['files'];
 
-            if($name==''||$description==''||$executor==''||$date_finish==''){
+            if($name==''||$executor==''||$date_finish==''){
                 return 'EMPTY DATA';
             }
 
@@ -219,7 +219,7 @@ class TM extends DB
             $parentproject='0';
             $files=$query['files'];
 
-            if($name==''||$description==''||$date_finish==''){
+            if($name==''||$date_finish==''){
                 return 'EMPTY DATA';
             }
 
@@ -388,6 +388,12 @@ class TM extends DB
                             while ($file = mysqli_fetch_assoc($pfiles)) {
                                 $proj['files'][] = ['id' => $file['idfile'], 'name' => $file['namefile']];
                             }
+                        }
+                        $is[$proj['idproject']] = true;
+                        $pfiles = DB::select('files', ['*'], 'type="project" AND object="' . $proj['idproject'] . '"');
+                        $proj['files'] = [];
+                        while ($file = mysqli_fetch_assoc($pfiles)) {
+                            $proj['files'][] = ['id' => $file['idfile'], 'name' => $file['namefile']];
                         }
                         $project[] = $proj;
                     }

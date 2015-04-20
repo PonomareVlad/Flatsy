@@ -349,6 +349,7 @@ function handler(response) {
             }
         } else {
             if (TM['UID']) {
+                localStorage.clear();
                 DB = false;
                 offline();
                 page('auth');
@@ -356,7 +357,7 @@ function handler(response) {
                 TASK = false;
                 task = false;
                 DAY = false;
-                TM = [];
+                TM = {};
                 TM['UID'] = false;
                 TM['USER_NAME'] = false;
                 TM['USER_PIC'] = false;
@@ -1129,24 +1130,27 @@ function view(id,type){
         // BUILD EXECUTORS
         user=false;
         group=false;
+        list='';
         for(g in project['groups']){
             group=project['groups'][g];
+            if(group['id']==null){continue;}
             if(g!=0){
-                source+=', ';
+                list+=', ';
             }
-            source+='<a href="javascript:void(0)" onclick="view('+group['id']+',\'group\');">'+group['name']+'</a>';
+            list+='<a href="javascript:void(0)" onclick="view('+group['id']+',\'group\');">'+group['name']+'</a>';
         }
         for(u in project['users']){
             user=project['users'][u];
+            if(user['id']==null){continue;}
             if(u!=0){
-                source+=', ';
+                list+=', ';
             }
-            source+='<a href="javascript:void(0)" onclick="view('+user['id']+',\'user\');">'+user['lastname']+' '+user['firstname']+'</a>';
+            list+='<a href="javascript:void(0)" onclick="view('+user['id']+',\'user\');">'+user['lastname']+' '+user['firstname']+'</a>';
         }
-        if(!user&&!group){
-            source+='не назначены';
+        if(list==''){
+            list+='не назначены';
         }
-        source+='</div>';
+        source+=list+'</div>';
         if (project['files'].length > 0) {
             source += '<div class="files"><div>Прикрепленные файлы:</div>';
             for(f in project['files']){

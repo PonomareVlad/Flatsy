@@ -16,6 +16,8 @@ if(typeof SERVER !='undefined') {
     TM['USER_NAME'] = SERVER['NAME'];
     TM['USER_PIC'] = SERVER['PIC'];
     TM['current_page'] = SERVER['PAGE']?SERVER['PAGE']:false;
+}else{
+    localStorage.clear();
 }
 //////////////////////////////////////
 // TESTING LOCAL STORAGE
