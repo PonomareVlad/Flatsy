@@ -251,6 +251,11 @@ header{
 /* Header - end */
 
 
+.add_lusers {
+	float: left;
+}
+
+
 /* Calendar */
 .calendar{
     border-bottom: 3px solid #D0D0D0;
@@ -283,22 +288,29 @@ header{
     padding-left: 0;
     height: 80px;
     display: table;
-    margin-top: 10px;
+    margin-top: 0px;
 }
 .calendar ul li{
     color: #bcbcbc;
     display: table-cell;
     list-style: none;
     text-align: center;
-    padding: 0 14px;
+    padding: 10px 14px;
     cursor: default;
+	
 }
 .calendar_task{
     background: #EEEEEE;
 }
 .calendar_active{
     background: #FD9B01;
+	width: 0;
+    height: 0;
 }
+.calendar_active span {
+color: #fff;
+}
+
 .calendar li .month{
 
 }
