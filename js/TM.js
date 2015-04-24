@@ -1,6 +1,6 @@
 function handler(response) {
     if (!TM['OFFLINE']) {
-        response = JSON.parse(response);
+        //response = JSON.parse(response);
         if (response['old_version']) {
             if (!TM['need_restart']) {
                 TM['need_restart'] = confirm('Система обновилась, для продолжения работы, необходимо обновить страницу!');

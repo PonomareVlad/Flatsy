@@ -53,8 +53,30 @@ function init_cal(){
 }
 
 function io(array,callback){
+    callback=callback ? callback : handler;
     query=JSON.stringify(array);
-    Ajax('GET','/ajax.php?query='+query+'&ver='+VERSION+'&rand='+new Date().getTime(),callback?callback:handler);
+    var xmlhttp;if (window.XMLHttpRequest){xmlhttp=new XMLHttpRequest();}else{xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");}
+    xmlhttp.onreadystatechange=function() {
+        if (xmlhttp.readyState == 4) {
+            if (xmlhttp.status == 200) {
+                response = xmlhttp.responseText;
+                try {
+                    var jsonObject = JSON.parse(response);
+                } catch (e) {
+                    // handle error
+                    alert('ERROR PARSING RESPONSE FROM SERVER [' + callback + '] SOURCE: ' + response);
+                    return false;
+                }
+                TM['OFFLINE'] = false;
+                callback(JSON.parse(response));
+            }else{
+                TM['OFFLINE'] = true;
+                callback();
+            }
+        }
+    }
+    xmlhttp.open('GET','/ajax.php?query='+query+'&ver='+VERSION+'&rand='+new Date().getTime(),true);
+    xmlhttp.send();
 }
 
 function get(objID) {
