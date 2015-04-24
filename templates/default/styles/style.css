@@ -251,6 +251,11 @@ header{
 /* Header - end */
 
 
+.add_lusers {
+	float: left;
+}
+
+
 /* Calendar */
 .calendar{
     border-bottom: 3px solid #D0D0D0;
@@ -283,22 +288,29 @@ header{
     padding-left: 0;
     height: 80px;
     display: table;
-    margin-top: 10px;
+    margin-top: 0px;
 }
 .calendar ul li{
     color: #bcbcbc;
     display: table-cell;
     list-style: none;
     text-align: center;
-    padding: 0 14px;
+    padding: 10px 14px;
     cursor: default;
+	
 }
 .calendar_task{
     background: #EEEEEE;
 }
 .calendar_active{
     background: #FD9B01;
+	width: 0;
+    height: 0;
 }
+.calendar_active span {
+color: #fff;
+}
+
 .calendar li .month{
 
 }
@@ -316,7 +328,7 @@ header{
     border-right: 3px solid #D0D0D0;
     float: left;
     position: relative;
-    width: 500px;
+    width: 33%;
     z-index: 3;
 }
 .left_bar a{
@@ -330,9 +342,9 @@ header{
 }
 .action_bar{
     height: 40px;
-    line-height: 40px;
-    margin: 0 auto;
-    width: 410px;
+    line-height: 37px;
+    /*margin: auto;
+    width: 410px;*/
     font-size: 14px;
 }
 
@@ -458,7 +470,7 @@ header{
 }
 
 .task_info{
-    padding: 7px 0 7px 30px;
+    padding: 5px 0px 5px 5px;
     cursor: pointer;
     transition-duration: 200ms;
 }
@@ -488,8 +500,8 @@ header{
 
 /* Center */
 
-.center{
-    margin-left: 500px;
+.center {
+    margin-left: 33%;
     padding: 0 10px;
 
 }
@@ -508,7 +520,7 @@ header{
     position: relative;
 }
 .task_add label{
-    width: 200px;
+    width: 150px;
     float: left;
 
 }
@@ -531,7 +543,9 @@ header{
 .task_add .create{
     position: absolute;
     left: 70%;
-    margin-left: 85px;
+    margin-left: 36px;
+	margin-top: 2px;
+}
 }
 .search_advice_wrapper{
     background-color: rgb(220, 220, 220);

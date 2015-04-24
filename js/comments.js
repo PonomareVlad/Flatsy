@@ -34,10 +34,8 @@ function gen_comments(response){
     }
     if(source==''){source='<div class="comment"><p class="text">(Комментариев нет)</p></div>';
         TM['empty_comments']=true;
-    }else {
-        if (TM['current_page'] == 'tasks') {
-            get('cloud_' + TM['CID']).innerHTML = '<img src="templates/default/images/dia.png">';
-        }
+    }else{
+        get('cloud_'+TM['CID']).innerHTML='<img src="templates/default/images/dia.png">';
     }
     document.getElementById('comments').innerHTML=source;
     document.getElementById('comments').scrollTop=9999;

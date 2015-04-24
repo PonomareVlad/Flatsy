@@ -20,7 +20,7 @@ if(typeof SERVER !='undefined') {
     localStorage.clear();
 }
 //////////////////////////////////////
-// TESTING LOCAL STORAGE
+/*/ TESTING LOCAL STORAGE
 if(supports_html5_storage()){
     if(localStorage['DB']){
         DB=JSON.parse(localStorage['DB']);
@@ -30,7 +30,7 @@ if(supports_html5_storage()){
         TM['AUID']=false;
     }
 }
-//////////////////////////////////////
+*//////////////////////////////////////
 TM['update_db']=true;
 
 function main(){

@@ -1,7 +1,7 @@
 PAGE=[];
 PART=[];
 
-PART['header']='<header><ul class="menu"><li><a href="javascript:void(0)" onclick="page(\'tasks\');">Главная</a></li><li>' +
+PART['header']='<header><ul class="menu"><li>'+
 '<a href="javascript:void(0)" onclick="page(\'tasks\');">Задачи</a></li><li><a href="javascript:void(0)" onclick="page(\'projects\');">Проекты</a></li><li>' +
 '<a href="javascript:void(0)" onclick="page(\'groups\');">Группы</a></li></ul><div class="user_menu">' +
 '<div class="avatar"><img id="user_pic" src="/templates/default/images/avatar.png"></div><div><span id="user_name">USER_NAME</span></div>' +

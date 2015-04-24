@@ -397,7 +397,7 @@ function show_add_task() {
     //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
     '<p><div class="create" onclick="send_task();">Создать</div>' +
     //' * Отображаются, на данный момент,только те поля, которые, функционально, имеют возможность обрабатываться системой!' +
-    '<a href="javascript:void(0)" onclick="upload_show(\'new\',\'task\')">Прикрепить</a></p></div><div id="ufiles"></div>';
+    '<a href="javascript:void(0)" onclick="upload_show(\'new\',\'task\')">Прикрепить файл</a></p></div><div id="ufiles"></div>';
     document.getElementById('view').innerHTML = source;
     get('name').focus();
     TM['ufiles']=[];
@@ -440,7 +440,7 @@ function edit_task(id){
         //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
     //'<p>Иван иванов, Иван иванов,Иван иванов</p>' +
     '<p><div class="create" onclick="send_edit_task();">Изменить</div>' +
-    '<p><a href="javascript:void(0)" onclick="upload_show('+task['id']+',\'task\')">Прикрепить</a></p>' +
+    '<p><a href="javascript:void(0)" onclick="upload_show('+task['id']+',\'task\')">Прикрепить файл</a></p>' +
     '<div id="ufiles"></div>' +
         //' * Отображаются, на данный момент,только те поля, которые, функционально, имеют возможность обрабатываться системой!' +
     //'<a href="javascript:void(0)">Прикрепить</a>' +
@@ -493,7 +493,7 @@ function edit_project(id) {
         //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
         //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
     '<p><div class="create" onclick="send_edit_proj();">Изменить</div>' +
-    '<p><a href="javascript:void(0)" onclick="upload_show('+project['idproject']+',\'project\')">Прикрепить</a></p><div id="ufiles"></div>' +
+    '<p><a href="javascript:void(0)" onclick="upload_show('+project['idproject']+',\'project\')">Прикрепить файл</a></p><div id="ufiles"></div>' +
         //' * Отображаются, на данный момент,только те поля, которые, функционально, имеют возможность обрабатываться системой!' +
         //'<a href="javascript:void(0)">Прикрепить</a>' +
     '</p></div>';
@@ -681,7 +681,7 @@ function show_add_project() {
     '<div class="search_advice_wrapper" id="prj_wrapp"></div></p><div id="lusers"></div>' +
         //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
         //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
-    '<p><div class="create" onclick="new_project();">Создать</div><a href="javascript:void(0)" onclick="upload_show(\'new\',\'project\');">Прикрепить</a></div></p><div id="ufiles"></div>';
+    '<p><div class="create" onclick="new_project();">Создать</div><a href="javascript:void(0)" onclick="upload_show(\'new\',\'project\');">Прикрепить файл</a></div></p><div id="ufiles"></div>';
     //' * Отображаются, на данный момент,только те поля, которые, функционально, имеют возможность обрабатываться системой!</p>';
     document.getElementById('view').innerHTML = source;
     get('name').focus();
