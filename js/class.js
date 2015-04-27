@@ -157,7 +157,7 @@ function page(name,headgen){
 
 function auth_send(response) {
     if (response) {
-        response = JSON.parse(response);
+        //response = JSON.parse(response);
         if (response['auth'] == false) {
             //document.getElementById('pass').value='';
             //alert('Incorrect');
@@ -190,7 +190,7 @@ function auth_send(response) {
 function load_enter_pic(response){
     document.getElementById('pass').placeholder='Пароль';
     if(response){
-        response = JSON.parse(response);
+        //response = JSON.parse(response);
         if(response['get_user']!=false){
             document.getElementById('pic').innerHTML='<div class="avatar"><img src="'+response['get_user']['photo']+'"></div>';
         }
@@ -204,7 +204,7 @@ function load_enter_pic(response){
 
 function reg_send(response) {
     if (response) {
-        response = JSON.parse(response);
+        //response = JSON.parse(response);
         if (response['reg']) {
             if (response['reg'] == true) {
                 document.getElementById('status').innerHTML = 'Вы успешно зарегистрированы!';
