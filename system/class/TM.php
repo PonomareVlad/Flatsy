@@ -449,7 +449,7 @@ class TM extends DB
             $tfiles=DB::select('files',['*'],'type="task" AND object="'.$task['id'].'"');
             $task['files']=[];
             while($file=mysqli_fetch_assoc($tfiles)){
-                $task['files'][]=['id'=>$file['idfile'],'name'=>$file['namefile']];
+                $task['files'][]=['id'=>$file['idfile'],'name'=>$file['namefile'],'iduser'=>$file['iduser']];
             }
             $task['view']=true;
             $isnew=mysqli_fetch_assoc(DB::select('notifications',['*'],'iduser='.USER_ID.' AND type="new_task" AND value='.$task['id']));
@@ -475,7 +475,7 @@ class TM extends DB
                         $tfiles = DB::select('files', ['*'], 'type="task" AND object="' . $task['id'] . '"');
                         $task['files'] = [];
                         while ($file = mysqli_fetch_assoc($tfiles)) {
-                            $task['files'][] = ['id' => $file['idfile'], 'name' => $file['namefile']];
+                            $task['files'][] = ['id' => $file['idfile'], 'name' => $file['namefile'],'iduser'=>$file['iduser']];
                         }
                         $task['view'] = false;
                         $comms=count(TM::get_comments($task['id'],'task'));
@@ -631,5 +631,12 @@ class TM extends DB
             }
         }
         return false;
+    }
+    public static function pick_file($query){
+        if (DB::update('files', ['object' => $query['object'], 'type' => $query['type']], 'idfile=' . $query['id'])) {
+            return ['id' => $query['id'], 'object' => $query['object'], 'type' => $query['type'], 'name' => (mysqli_fetch_assoc(DB::select('files', ['*'], 'idfile=' . $query['id']))['namefile'])];
+        }else{
+            return false;
+        }
     }
 }

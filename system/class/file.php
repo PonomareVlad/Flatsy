@@ -6,7 +6,7 @@ class FILE extends DB
     {
         $file=mysqli_fetch_assoc(DB::select('files',['*'],'idfile='.$id));
         $file=ROOT.'users/'.$file['iduser'].'/files/'.$file['namefile'];
-        if (DB::delete('files', 'idfile=' . $id)&&unlink($file)) {
+        if (DB::delete('files', 'idfile=' . $id)&&@unlink($file)) {
             return true;
         }else{
             return false;

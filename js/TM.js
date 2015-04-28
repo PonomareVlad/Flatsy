@@ -343,6 +343,21 @@ function handler(response) {
             if (response['del_notify']) {
                 gen_list();
             }
+            if (response['pick_file']){
+                file=response['pick_file'];
+                type=file.type.toUpperCase();
+                for (i in DB[type]) {
+                    if (DB[type][i]['id'] == file.object) {
+                        if (DB[type][i]['files'].length==0) {
+                            get('files').innerHTML = '<span id="file' + file.id + '"><a href="/file.php?id='+file.id+'">'+ file.name +'</a> <a href="javascript:void(0)" onclick="unpick_file(' + file.id + ')"><img src="templates/default/images/close.png"></a></span>';
+                        }else{
+                            get('files').innerHTML += '<span id="file' + file.id + '">, <a href="/file.php?id='+file.id+'">'+ file.name +'</a> <a href="javascript:void(0)" onclick="unpick_file(' + file.id + ')"><img src="templates/default/images/close.png"></a></span>';
+                        }
+                        DB[type][i]['files'][DB[type][i]['files'].length]={'id':file.id,'name':file.name,'iduser':file.iduser};
+                    }
+                }
+                gen_list();
+            }
             // TESTING LOCAL STORAGE
             if(supports_html5_storage()){
                 localStorage['DB'] = JSON.stringify(DB);
@@ -404,6 +419,7 @@ function show_add_task() {
     loadSearch('#executor','#search_advice_wrapper_exe','get_users');
     loadSearch('#idproject','#search_advice_wrapper_prj','get_projects');
     calendar_init();
+    reset_comments();
     return false;
 }
 
@@ -452,6 +468,7 @@ function edit_task(id){
     loadSearch('#executor','#search_advice_wrapper_exe','get_users');
     loadSearch('#idproject','#search_advice_wrapper_prj','get_projects');
     calendar_init();
+    reset_comments()
     TM['ufiles']=[];
     for(i in task['files']){
         pick_file(task['files'][i]['id'],task['files'][i]['name']);
@@ -504,6 +521,7 @@ function edit_project(id) {
     //loadSearch('#executor','#search_advice_wrapper_exe','get_users');
     //loadSearch('#idproject','#search_advice_wrapper_prj','get_projects');
     calendar_init();
+    reset_comments()
     TM['ufiles']=[];
     for(i in project['files']){
         pick_file(project['files'][i]['id'],project['files'][i]['name']);
@@ -650,6 +668,7 @@ function task_del(id){
             break;
         }
     }*/
+    reset_comments();
     io({"action":"del_task","id":id});
 }
 
@@ -661,6 +680,7 @@ function proj_del(id){
             break;
         }
     }*/
+    reset_comments();
     io({"action":"del_project","id":id});
 }
 
@@ -687,6 +707,7 @@ function show_add_project() {
     get('name').focus();
     loadSearch('#executor','#prj_wrapp','get_users_groups','pick_user');
     calendar_init();
+    reset_comments();
     TM['ufiles']=[];
     TM['lusers']=[];
     return false;
@@ -1055,13 +1076,19 @@ function view(id,type){
         if(TM['current_page']=='projects'){
             source+='<div class="task_table"><div>Завершение</div>'+day+' '+month+' '+date.getFullYear()+'</div>';
         }
+        source+='<div class="files">Прикрепленные файлы:<br><span id="files">';
         if (task['files'].length > 0) {
-            source += '<div class="files"><div>Прикрепленные файлы:</div>';
             for(f in task['files']){
-                source+=(f==0?'':', ')+'<a href="/file.php?id='+task['files'][f]['id']+'">'+task['files'][f]['name']+'</a>';
+                source+='<span id="file' + task['files'][f]['id'] + '">'+(f==0?'':', ')+'<a href="/file.php?id='+task['files'][f]['id']+'">'+task['files'][f]['name']+'</a>';
+                if(task['files'][f]['iduser']==TM.UID){
+                    source+=' <a href="javascript:void(0)" onclick="unpick_file(' + task['files'][f]['id'] + ')"><img src="templates/default/images/close.png"></a>';
+                }
+                source+='</span>'
             }
-            source += '</div>';
+        }else{
+            source+='нет обьектов';
         }
+        source += '</span></div>';
         source += '<h4 class="comments_title">Обсуждение</h4><div style="height: 0px" class="comments" id="comments">' + PART['loader'] +
         '</div><textarea id="new_comm" placeholder="Ваш комментарий..."></textarea><p>' +
         '<div class="create" onclick="add_comment()">Отправить</div><a href="javascript:void(0)" onclick="upload_show(\'new\',\'comment\')">Прикрепить</a></p><p id="ufiles"></p></div>';
@@ -1228,20 +1255,42 @@ function view(id,type){
     }
 }
 
-function pick_file(idf,namef){
-    if(TM['upl_window']!=false){TM['upl_window'].window.close();}
-    TM['upl_window']=false;
-    TM['ufiles'][TM['ufiles'].length]=idf;
-    get('ufiles').innerHTML+='<div id="file'+idf+'">'+namef+' <a href="javascript:void(0)" onclick="unpick_file('+idf+')"><img src="templates/default/images/close.png"></a></div>';
+function pick_file(idf,namef) {
+    if (TM['upl_window'] != false) {
+        TM['upl_window'].window.close();
+    }
+    TM['upl_window'] = false;
+    if (TM['CID']) {
+        io({'action':'pick_file','id':idf,'type':TM.comments_loaded,'object':TM.CID});
+    } else {
+        TM['ufiles'][TM['ufiles'].length] = idf;
+        get('ufiles').innerHTML += '<span id="file' + idf + '">' + namef + ' <a href="javascript:void(0)" onclick="unpick_file(' + idf + ')"><img src="templates/default/images/close.png"></a></span> ';
+    }
 }
 
-function unpick_file(idf){
-    for(i in TM['ufiles']){
-        if(TM['ufiles'][i]=idf){
-            io({'action':'del_file','id':idf});
-            get('file'+idf).parentNode.removeChild(get('file'+idf));
-            TM['ufiles'].splice(i,1);
-            break;
+function unpick_file(idf) {
+    if (TM['CID']) {
+        type=TM.comments_loaded.toUpperCase();
+        for (i in DB[type]) {
+            if (DB[type][i]['id'] == TM.CID) {
+                for(f in DB[type][i]['files']){
+                    if(DB[type][i]['files'][f]['id']==idf){
+                        DB[type][i]['files'].splice(f, 1);
+                        io({'action': 'del_file', 'id': idf});
+                    }
+                }
+            }
+        }
+        get('file' + idf).parentNode.removeChild(get('file' + idf));
+        gen_list();
+    }else {
+        for (i in TM['ufiles']) {
+            if (TM['ufiles'][i] = idf) {
+                io({'action': 'del_file', 'id': idf});
+                get('file' + idf).parentNode.removeChild(get('file' + idf));
+                TM['ufiles'].splice(i, 1);
+                break;
+            }
         }
     }
 }
@@ -1253,7 +1302,7 @@ function pick_user(id,name,type){
         }
     }
     TM['lusers'][TM['lusers'].length]={'id':id,'name':name,'type':type};
-    get('lusers').innerHTML+='<div id="'+type+'_'+id+'">'+name+' <a href="javascript:void(0)" onclick="unpick_user('+id+')"><img src="templates/default/images/close.png"></a></div>';
+    get('lusers').innerHTML+='<span id="'+type+'_'+id+'">'+name+' <a href="javascript:void(0)" onclick="unpick_user('+id+')"><img src="templates/default/images/close.png"></a></span> ';
 }
 
 function unpick_user(id){

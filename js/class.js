@@ -64,7 +64,7 @@ function io(array,callback){
                     var jsonObject = JSON.parse(response);
                 } catch (e) {
                     // handle error
-                    alert('ERROR PARSING RESPONSE FROM SERVER [' + callback + '] SOURCE: ' + response);
+                    alert('ERROR PARSING RESPONSE FROM SERVER [' + callback.name + '] SOURCE: ' + response);
                     return false;
                 }
                 TM['OFFLINE'] = false;
