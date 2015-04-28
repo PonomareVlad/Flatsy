@@ -1,5 +1,5 @@
-var FLATSY='0.5.1';
-var VERSION=51;
+var FLATSY='0.5.2';
+var VERSION=52;
 var TM={};
 TM['current_page']=false;
 TM['tasks_mode']='all';

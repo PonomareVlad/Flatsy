@@ -1015,7 +1015,7 @@ function upload_show(id,type){
         '<input type="hidden" name="id" value="'+id+'">' +
         //'<input class="file" type="file" name="f1"></br>' +
         //'<input class="file" type="file" name="f2"><br/>' +
-        '<input class="file" type="file" name="f"><br/><br/><input type="submit" value="Загрузить"></p></form> </div>' +
+        '<input class="file" onchange="document.forms[0].submit();" type="file" name="f"><br/><br/><input type="submit" value="Загрузить"></p></form> </div>' +
         '</body></html>');
     }
     onclick();
