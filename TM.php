@@ -1,6 +1,6 @@
 <?php
 header("Access-Control-Allow-Origin: *");
-echo 'Flatsy v.0.5.2';
+echo 'Flatsy v.0.5.3';
 if($_GET['gen']=='invite') {
     define('ROOT', $_SERVER['DOCUMENT_ROOT'] . '/');
     require_once('system/class/db.php');

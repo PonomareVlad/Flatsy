@@ -118,7 +118,9 @@ function handler(response) {
             if (response['new_comment']) {
                 comment = response['new_comment'];
                 if (comment['idobject'] == TM['CID'] && comment['type'] == TM['comments_loaded']) {
-                    get('cloud_'+TM['CID']).innerHTML='<img src="templates/default/images/dia.png">';
+                    if(get('cloud_'+TM['CID'])){
+                        get('cloud_'+TM['CID']).innerHTML='<img src="templates/default/images/dia.png">';
+                    }
                     source = '';
                     offset = 3600000 * 5;
                     MONTH = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
@@ -144,11 +146,11 @@ function handler(response) {
                 }
             }
             if (response['add_task']) {
-                if (response['add_task'] == 'EMPTY DATA') {
+                if (response['add_task+'] == 'EMPTY DATA') {
                     alert('Некорректное заполнение полей');
                 } else {
                     task = response['add_task'];
-                    if (TM['current_page'] == 'tasks') {
+                    //if (TM['current_page'] == 'tasks') {
                         DB['TASK'][DB['TASK'].length] = task;
                         if (task['idproject'] != 0) {
                             for (p in DB['PROJECT']) {
@@ -159,7 +161,7 @@ function handler(response) {
                         }
                         gen_list();
                         view(task['id'], 'task');
-                    }
+                    //}
                 }
             }
             if (response['add_project']) {
@@ -251,12 +253,13 @@ function handler(response) {
                                 }
                             }
                             DB['TASK'][t] = response['edit_task'];
-                            if (TM['CID'] == response['edit_task']['id']) {
+                            //alert(response['edit_task']);
+                            //if (TM['CID'] == response['edit_task']['id']) {
                                 gen_list();
                                 TM['highlight_day'] = false;
                                 TM['highlight_element'] = false;
                                 view(response['edit_task']['id'], 'task');
-                            }
+                            //}
                         }
                     }
                 }
@@ -277,12 +280,12 @@ function handler(response) {
                                 }
                             }
                             DB['TASK'].splice(t, 1);
-                            if (TM['CID'] == response['del_task']) {
+                            //if (TM['CID'] == response['del_task']) {
                                 reset_comments();
                                 get('view').innerHTML = '';
                                 TM['highlight_day'] = false;
                                 TM['highlight_element'] = false;
-                            }
+                            //}
                         }
                     }
                     gen_list();
@@ -346,8 +349,11 @@ function handler(response) {
             if (response['pick_file']){
                 file=response['pick_file'];
                 type=file.type.toUpperCase();
+                //window.console.log('Search: '+file.object);
                 for (i in DB[type]) {
-                    if (DB[type][i]['id'] == file.object) {
+                    //window.console.log(DB[type][i]['id']);
+                    if (DB[type][i]['id'] == file.object||DB[type][i]['idproject'] == file.object) {
+                        //window.console.log(DB[type][i]);
                         if (DB[type][i]['files'].length==0) {
                             get('files').innerHTML = '<span id="file' + file.id + '"><a href="/file.php?id='+file.id+'">'+ file.name +'</a> <a href="javascript:void(0)" onclick="unpick_file(' + file.id + ')"><img src="templates/default/images/close.png"></a></span>';
                         }else{
@@ -391,7 +397,14 @@ function handler(response) {
     }
 }
 
-function show_add_task() {
+function show_add_task(project) {
+    if(project){
+            for (p in DB['PROJECT']) {
+                if (DB['PROJECT'][p]['idproject'] == project) {
+                    project=DB['PROJECT'][p];
+                }
+            }
+    }
     source = '<div class="task_add"><div class="title">' +
     '<h4>Создание новой задачи</h4></div><p>' +
     '<label for="name">Постановка задачи</label><input type="text" name="task_title" id="name"></p>' +
@@ -403,10 +416,10 @@ function show_add_task() {
     ' Минуты: <input type="number" min="0" max="59" value="00" style="width: 3em;" id="minuts">' +
     '<span id="minical"></span></p>' +
     '<p><label for="project_id">Проект</label>' +
-    '<input type="text" class="livesearch_prj" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его">' +
+    '<input type="text" value="'+(project?project.nameproject:'')+'" class="livesearch_prj" name="project_id" id="idproject" placeholder="Если Ваша задача должна быть включена в проект, укажите его">' +
     '<div class="search_advice_wrapper" id="search_advice_wrapper_prj"></div></p>' +
     '<p><label for="executor">Ответственный</label>' +
-    '<input type="text" class="livesearch_exe" placeholder="Начните набирать имя пользователя" name="main_user" value="" autocomplete="off" id="executor">' +
+    '<input type="text" onclick="select(this);" class="livesearch_exe" placeholder="Начните набирать имя пользователя" name="main_user" value="" autocomplete="off" id="executor">' +
     '<div class="search_advice_wrapper" id="search_advice_wrapper_exe"></div></p>' +
     //'<p><label for="not_main_user">Соисполнители</label><input type="text" name="not_main_user" id="viser"></p>' +
     //'<p>Иван иванов, Иван иванов,Иван иванов</p><p>Прикрепить</p>' +
@@ -418,6 +431,9 @@ function show_add_task() {
     TM['ufiles']=[];
     loadSearch('#executor','#search_advice_wrapper_exe','get_users');
     loadSearch('#idproject','#search_advice_wrapper_prj','get_projects');
+    if(project){
+        LSEARCH['get_projects']['selected_id']=project.idproject;
+    }
     calendar_init();
     reset_comments();
     return false;
@@ -531,9 +547,9 @@ function edit_project(id) {
 
 function send_task(){
 
-    name=document.getElementById('name').value;
-    description=document.getElementById('description').value;
-    executor=LSEARCH['get_users']['selected_id'];//selected_id;
+    name=encodeURIComponent(document.getElementById('name').value);
+    description=encodeURIComponent(document.getElementById('description').value);
+    executor=LSEARCH['get_users']['selected_id']||TM.UID;//selected_id;
     //executor_type=LSEARCH['get_users']['selected_type'];
     project=LSEARCH['get_projects']['selected_id'];
     hours=document.getElementById('hours').value;
@@ -560,15 +576,15 @@ function send_task(){
             "date_finish": date_finish,
             "project":project,
             "files":files
-        });
+        },false,'add_task');
     }
 }
 
 function send_edit_task(){
 
     id=TM['tmp_edit_id'];
-    name=document.getElementById('name').value;
-    description=document.getElementById('description').value;
+    name=encodeURIComponent(document.getElementById('name').value);
+    description=encodeURIComponent(document.getElementById('description').value);
     executor=LSEARCH['get_users']['selected_id']||TM['tmp_edit_executor'];//selected_id;
     project=get('idproject').value==''?'0':(LSEARCH['get_projects']['selected_id']||TM['tmp_edit_idproject']);
     hours=document.getElementById('hours').value;
@@ -599,15 +615,15 @@ function send_edit_task(){
             "date_finish": date_finish,
             "project":project,
             "files":files
-        });
+        },false,'edit_task');
     }
 }
 
 function send_edit_proj(){
 
     id=TM['tmp_edit_id'];
-    name=document.getElementById('name').value;
-    description=document.getElementById('description').value;
+    name=encodeURIComponent(document.getElementById('name').value);
+    description=encodeURIComponent(document.getElementById('description').value);
     //executor=LSEARCH['get_users']['selected_id']||TM['tmp_edit_executor'];//selected_id;
     //project=get('idproject').value==''?'0':(LSEARCH['get_projects']['selected_id']||TM['tmp_edit_idproject']);
     hours=document.getElementById('hours').value;
@@ -628,7 +644,7 @@ function send_edit_proj(){
             //"executor": executor,
             "date_finish": date_finish
             //"project":project
-        });
+        },false,'edit_project');
     //}
 }
 
@@ -646,7 +662,7 @@ function task_end(id){
         }
     }
     value=task['finished']==1?0:1;
-    io({"action":"set_task","param":"finished","value":value,"id":id});
+    io({"action":"set_task","param":"finished","value":value,"id":id},false,'set_task');
 }
 
 function task_viewed(id){
@@ -669,7 +685,7 @@ function task_del(id){
         }
     }*/
     reset_comments();
-    io({"action":"del_task","id":id});
+    io({"action":"del_task","id":id},false,'del_task');
 }
 
 function proj_del(id){
@@ -681,7 +697,7 @@ function proj_del(id){
         }
     }*/
     reset_comments();
-    io({"action":"del_project","id":id});
+    io({"action":"del_project","id":id},false,'del_project');
 }
 
 function show_add_project() {
@@ -714,8 +730,8 @@ function show_add_project() {
 }
 
 function new_project() {
-    name = document.getElementById('name').value;
-    description = document.getElementById('description').value;
+    name = encodeURIComponent(document.getElementById('name').value);
+    description = encodeURIComponent(document.getElementById('description').value);
     //executor = LSEARCH['get_users_groups']['selected_id'];
     //executor_type = LSEARCH['get_users_groups']['selected_type'];
     users=TM['lusers'];
@@ -739,16 +755,16 @@ function new_project() {
         "date_finish": date_finish,
         "users": users,
         "files":files
-    });
+    },false,'add_project');
 
 }
 
 function new_group(){
-    name=document.getElementById('name').value;
+    name=encodeURIComponent(document.getElementById('name').value);
     io({
         "action": "add_group",
         "name": name
-    });
+    },false,'add_group');
 }
 
 function gen_list(){
@@ -999,11 +1015,11 @@ function show_add_group(){
 }
 
 function invite_user_group(id){
-io({"action":"gen_invite_group","id":id});
+io({"action":"gen_invite_group","id":id},false,'gen_invite_group');
 }
 
 function del_user_group(user,group){
-    io({"action":"del_user","id":user,"group":group});
+    io({"action":"del_user","id":user,"group":group},false,'del_user');
 }
 
 function upload_show(id,type){
@@ -1146,7 +1162,8 @@ function view(id,type){
         source+='<div class="project_title"><h4>'+project['nameproject'];
         if(project['initiator']==TM['UID']) {
             source += '<img onclick="proj_del(' + project['idproject'] + ');" src="templates/default/images/trash.png" id="trash">' +
-            '<img onclick="edit_project(' + project['idproject'] + ');" src="templates/default/images/b_pan_hover.png" id="edit_pen">';
+            '<img onclick="edit_project(' + project['idproject'] + ');" src="templates/default/images/b_pan_hover.png" id="edit_pen">' +
+            '<br/><div class="add_task"><a href="javascript:void(0)" onclick="show_add_task('+project.idproject+')">Добавить задачу</a></div>';
         }
         source+='</h4></div><p class="project_description">'+project['description']+'</p><div class="project_time">';
         source+='<div class="date_start">'+date_start+'</div><div class="date_end">'+date_finish+
@@ -1178,13 +1195,26 @@ function view(id,type){
             list+='не назначены';
         }
         source+=list+'</div>';
-        if (project['files'].length > 0) {
+        /*if (project['files'].length > 0) {
             source += '<div class="files"><div>Прикрепленные файлы:</div>';
             for(f in project['files']){
                 source+=(f==0?'':', ')+'<a href="/file.php?id='+project['files'][f]['id']+'">'+project['files'][f]['name']+'</a>';
             }
             source += '</div>';
+        }*/
+        source+='<div class="files">Прикрепленные файлы:<br><span id="files">';
+        if (project['files'].length > 0) {
+            for(f in project['files']){
+                source+='<span id="file' + project['files'][f]['id'] + '">'+(f==0?'':', ')+'<a href="/file.php?id='+project['files'][f]['id']+'">'+project['files'][f]['name']+'</a>';
+                if(project['files'][f]['iduser']==TM.UID){
+                    source+=' <a href="javascript:void(0)" onclick="unpick_file(' + project['files'][f]['id'] + ')"><img src="templates/default/images/close.png"></a>';
+                }
+                source+='</span>'
+            }
+        }else{
+            source+='нет обьектов';
         }
+        source += '</span></div>';
         source+='<h4 class="comments_title">Обсуждение</h4><div style="height: 0px" class="comments" id="comments">'+PART['loader']+
         '</div><textarea id="new_comm" placeholder="Ваш комментарий..."></textarea><p>' +
         '<div class="create" onclick="add_comment()">Отправить</div><a href="javascript:void(0)" onclick="upload_show(\'new\',\'comment\')">Прикрепить</a></p><p id="ufiles"></p></div>';
@@ -1272,7 +1302,7 @@ function unpick_file(idf) {
     if (TM['CID']) {
         type=TM.comments_loaded.toUpperCase();
         for (i in DB[type]) {
-            if (DB[type][i]['id'] == TM.CID) {
+            if (DB[type][i]['id'] == TM.CID||DB[type][i]['idproject'] == TM.CID) {
                 for(f in DB[type][i]['files']){
                     if(DB[type][i]['files'][f]['id']==idf){
                         DB[type][i]['files'].splice(f, 1);
@@ -1282,6 +1312,9 @@ function unpick_file(idf) {
             }
         }
         get('file' + idf).parentNode.removeChild(get('file' + idf));
+        if(get('files').innerHTML==''){
+            get('files').innerHTML='нет обьектов';
+        }
         gen_list();
     }else {
         for (i in TM['ufiles']) {

@@ -98,6 +98,7 @@ function calendar_init() {
     document.all ? document.attachEvent('onclick', checkClick) : document.addEventListener('click', checkClick, false);
 
     prepcalendar('',ccm,ccy);
+    today(get('date_finish'));
 }
 
 function lcs(ielem) {
@@ -246,7 +247,8 @@ function upmonth(s){
     prepcalendar('',ccm,ccy);
 }
 
-function today() {
+function today(elem) {
+    updobj=elem||updobj;
     updobj.value=addnull(now.getDate(),now.getMonth()+1,now.getFullYear());
     getObj('fc').style.display='none';
     prepcalendar('',sccm,sccy);

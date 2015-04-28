@@ -52,31 +52,46 @@ function init_cal(){
     document.getElementById('calendar').innerHTML=cal_view+'</ul>';
 }
 
-function io(array,callback){
-    callback=callback ? callback : handler;
-    query=JSON.stringify(array);
-    var xmlhttp;if (window.XMLHttpRequest){xmlhttp=new XMLHttpRequest();}else{xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");}
-    xmlhttp.onreadystatechange=function() {
-        if (xmlhttp.readyState == 4) {
-            if (xmlhttp.status == 200) {
-                response = xmlhttp.responseText;
-                try {
-                    var jsonObject = JSON.parse(response);
-                } catch (e) {
-                    // handle error
-                    alert('ERROR PARSING RESPONSE FROM SERVER [' + callback.name + '] SOURCE: ' + response);
-                    return false;
+function io(array,callback,busy){
+    if(TM['BUSY']&&busy){
+        // BUILD STACK
+    }else {
+        if(busy){
+            TM['BUSY']=busy;
+        }
+        callback = callback ? callback : handler;
+        query = JSON.stringify(array);
+        var xmlhttp;
+        if (window.XMLHttpRequest) {
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4) {
+                if (xmlhttp.status == 200) {
+                    response = xmlhttp.responseText;
+                    try {
+                        var jsonObject = JSON.parse(response);
+                    } catch (e) {
+                        // handle error
+                        alert('ERROR PARSING RESPONSE FROM SERVER [' + callback.name + '] SOURCE: ' + response);
+                        return false;
+                    }
+                    TM['OFFLINE'] = false;
+                    callback(JSON.parse(response));
+                    if(JSON.parse(response)[TM['BUSY']]) {
+                        TM['BUSY'] = false;
+                    }
+                } else {
+                    TM['OFFLINE'] = true;
+                    callback();
                 }
-                TM['OFFLINE'] = false;
-                callback(JSON.parse(response));
-            }else{
-                TM['OFFLINE'] = true;
-                callback();
             }
         }
+        xmlhttp.open('GET', '/ajax.php?query=' + query + '&ver=' + VERSION + '&rand=' + new Date().getTime(), true);
+        xmlhttp.send();
     }
-    xmlhttp.open('GET','/ajax.php?query='+query+'&ver='+VERSION+'&rand='+new Date().getTime(),true);
-    xmlhttp.send();
 }
 
 function get(objID) {

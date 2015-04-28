@@ -546,7 +546,7 @@ color: #fff;
     margin-left: 36px;
 	margin-top: 2px;
 }
-}
+
 .search_advice_wrapper{
     background-color: rgb(220, 220, 220);
     color: rgb(50, 50, 50);
@@ -562,6 +562,7 @@ color: #fff;
     cursor: pointer;
     padding: 5px;
     text-align: left;
+    background: #ddd;
 }
 .search_advice_wrapper .advice_variant:hover{
     color: #000000;

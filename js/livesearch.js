@@ -56,7 +56,7 @@ function loadSearch(input,wrapper,action,callback) {
 
             default:
                 // производим поиск только при вводе более 2х символов
-                if($(this).val().length>2){
+                //if($(this).val().length>2){
 
                     LSEARCH[action]['input_initial_value'] = $(this).val();
                     if(action=='get_projects'){
@@ -122,6 +122,9 @@ function loadSearch(input,wrapper,action,callback) {
                         if (LSEARCH[action]['suggest_count'] > 0) {
                             $(wrapper).html("").show();
                             for (var i in LSEARCH[action]['list']) {
+                                if(i>9){
+                                    break;
+                                }
                                 if (LSEARCH[action]['list'][i] != '') {
                                     if (callback) {
                                         $(wrapper).append('<div onclick="get(\''+input.substr(1)+'\').value=\'\'; '+callback+'(\''+LSEARCH[action]['list'][i]['id']+'\',\''+LSEARCH[action]['list'][i]['name']+'\',\''+LSEARCH[action]['list'][i]['type']+'\'); clean_search(\''+action+'\');" class="advice_variant">' + LSEARCH[action]['list'][i]['name'] + '</div>');
@@ -132,6 +135,7 @@ function loadSearch(input,wrapper,action,callback) {
                             }
                         }
                     }else{
+                        /*
                         // производим AJAX запрос к /ajax/ajax.php, передаем ему GET query, в который мы помещаем наш запрос
                         $.get('/ajax.php', 'query=' + JSON.stringify({
                             "action": action,
@@ -154,8 +158,9 @@ function loadSearch(input,wrapper,action,callback) {
                                 }
                             }
                         }, 'html');
+                        */
                     }
-                }
+                //}
                 break;
         }
     });

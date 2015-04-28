@@ -350,7 +350,7 @@ class TM extends DB
             $pfiles = DB::select('files', ['*'], 'type="project" AND object="' . $proj['idproject'] . '"');
             $proj['files'] = [];
             while ($file = mysqli_fetch_assoc($pfiles)) {
-                $proj['files'][] = ['id' => $file['idfile'], 'name' => $file['namefile']];
+                $proj['files'][] = ['id' => $file['idfile'], 'name' => $file['namefile'],'iduser'=>$file['iduser']];
             }
             $project[] = $proj;
 
@@ -393,7 +393,7 @@ class TM extends DB
                         $pfiles = DB::select('files', ['*'], 'type="project" AND object="' . $proj['idproject'] . '"');
                         $proj['files'] = [];
                         while ($file = mysqli_fetch_assoc($pfiles)) {
-                            $proj['files'][] = ['id' => $file['idfile'], 'name' => $file['namefile']];
+                            $proj['files'][] = ['id' => $file['idfile'], 'name' => $file['namefile'],'iduser'=>$file['iduser']];
                         }
                         $project[] = $proj;
                     }
@@ -431,7 +431,7 @@ class TM extends DB
                     $pfiles = DB::select('files', ['*'], 'type="project" AND object="' . $proj['idproject'] . '"');
                     $proj['files'] = [];
                     while ($file = mysqli_fetch_assoc($pfiles)) {
-                        $proj['files'][] = ['id' => $file['idfile'], 'name' => $file['namefile']];
+                        $proj['files'][] = ['id' => $file['idfile'], 'name' => $file['namefile'],'iduser'=>$file['iduser']];
                     }
                     $project[] = $proj;
                 }
