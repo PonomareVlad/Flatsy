@@ -327,6 +327,14 @@ function supports_html5_storage() {
     }
 }
 
+function clearnl(text){
+    return text.replace(/(\n(\r)?)/g, ' ');
+}
+
+function dbg(text){
+    window.console.log(text);
+}
+
 var urlParams;
 (window.onpopstate = function () {
     var match,

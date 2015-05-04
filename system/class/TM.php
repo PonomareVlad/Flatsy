@@ -500,6 +500,7 @@ class TM extends DB
             $add=DB::inserti('comments','(idobject, type, numbercom, usercom, comment, datacom) VALUES ('.$id.',"'.$type.'",'.($max['numbercom']+1).','.USER_ID.',"'.$text.'","'.$now.'")');
             if($add==1){
                 $comment=mysqli_fetch_assoc(DB::select('comments',['*'],'idobject='.$id.' AND type="'.$type.'" AND datacom="'.$now.'"'));
+                $comment['datacom']=date_format(date_create($comment['datacom']), 'U')*1000;
                 $comment['usercom_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users', ['firstname', 'lastname'], 'id=' . $comment['usercom'])));
                 $comment['usercom_photo'] = User::get_user($comment['usercom'])['photo'];
                 TM::create_notify('new_comment',$comment['id']);
@@ -523,6 +524,7 @@ class TM extends DB
             while($comment=mysqli_fetch_assoc($array)){
                 $num=count($comms);
                 $comms[$num]=$comment;
+                $comms[$num]['datacom']=date_format(date_create($comms[$num]['datacom']), 'U')*1000;
                 $comms[$num]['usercom_name']=@implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$comment['usercom'])));
                 $comms[$num]['usercom_photo']=User::get_user($comment['usercom'])['photo'];
             }

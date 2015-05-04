@@ -11,26 +11,28 @@ function gen_comments(response){
         get('comments').innerHTML='Оффлайн режим';
         return false;
     }
-    offset=3600000*5;
+    //offset=TM['time_offset'];
     MONTH=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
     source='';
-    date=new Date(new Date().getTime()+offset);
-    now = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+    //date=new Date(TM.now);
     if(response['comments']){
         comm=response['comments'];
         for(i in comm){
-            datacom=comm[i]['datacom'].split(' ');
-            datestring=datacom[0]+'T'+datacom[1];
-            date= new Date(new Date(datestring).getTime()+offset);
-            timecom=[(date.getHours()<10?'0':'')+date.getHours(),(date.getMinutes()<10?'0':'')+date.getMinutes()];
-            datacom=[(date.getDate()<10?'0':'')+date.getDate(),date.getMonth()];
-            datestring=new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+            datacom=comm[i]['datacom'];
+            datestring=parseInt(datacom);
+            tmpdate= new Date(new Date(datestring).getTime());
+            timecom=[(tmpdate.getHours()<10?'0':'')+tmpdate.getHours(),(tmpdate.getMinutes()<10?'0':'')+tmpdate.getMinutes()];
+            datacom=[(tmpdate.getDate()<10?'0':'')+tmpdate.getDate(),tmpdate.getMonth()];
+            datestring=new Date(tmpdate.getFullYear(), tmpdate.getMonth(), tmpdate.getDate()+1).getTime();
             source+='<div class="comment">' +
             '<img src="'+comm[i]['usercom_photo']+'"><div class="info_text">' +
             '<a href="javascript:void(0)" onclick=\'view('+comm[i]['usercom']+',"user")\'><div class="name">'+comm[i]['usercom_name']+'</div></a>' +
-            '<div class="date">'+(now==datestring?('сегодня в '+timecom[0]+':'+timecom[1]):datacom[0]+' '+MONTH[parseInt(datacom[1])])+'</div>' +
+            '<div class="date">'+(TM.today==datestring?('сегодня в '+timecom[0]+':'+timecom[1]):datacom[0]+' '+MONTH[parseInt(datacom[1])])+'</div>' +
             '<p class="text">'+comm[i]['comment']+'</p></div></div>';
+            delete tmpdate;
+            delete datestring;
         }
+        delete comm;
     }
     if(source==''){source='<div class="comment"><p class="text">(Комментариев нет)</p></div>';
         TM['empty_comments']=true;
@@ -45,6 +47,7 @@ function gen_comments(response){
 
 function add_comment(){
     text=document.getElementById('new_comm').value;
+    text=encodeURIComponent(text.replace(/\n$/m,' '));
     document.getElementById('new_comm').value='';
     if(TM['ufiles'].length==0){
         files=false;
@@ -54,7 +57,7 @@ function add_comment(){
             files[i]=TM['ufiles'][i];
         }
     }
-    io({"action":"add_comment","id":TM['CID'],"type":TM['comments_loaded'],"text":text,"files":files});
+    io({"action":"add_comment","id":TM['CID'],"type":TM['comments_loaded'],"text":text});
 }
 
 function reset_comments(){

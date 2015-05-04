@@ -52,6 +52,7 @@ if(defined('USER_ID')) { // Статус авторизации
             } else {
                 $RESPONSE['check'] = false;
             }
+            $RESPONSE['time']=time()+(3600*5);
         }
         if ($QUERY['action'] == 'load_db'){
             $DB=[];

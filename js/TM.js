@@ -85,6 +85,11 @@ function handler(response) {
                         }
                     }
                 }
+                if (response['time']){
+                    secs=parseInt(new Date().getTime().toString().substr(0, 10));
+                    TM['time_offset']=(secs-response['time'])*(-1000);
+                    delete secs;
+                }
             }
             if (response['DB']) {
                 DB = response['DB'];
@@ -122,20 +127,20 @@ function handler(response) {
                         get('cloud_'+TM['CID']).innerHTML='<img src="templates/default/images/dia.png">';
                     }
                     source = '';
-                    offset = 3600000 * 5;
-                    MONTH = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
-                    date = new Date(new Date().getTime() + offset);
-                    now = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
-                    datacom = comment['datacom'].split(' ');
-                    datestring = datacom[0] + 'T' + datacom[1];
-                    date = new Date(new Date(datestring).getTime() + offset);
-                    timecom = [(date.getHours() < 10 ? '0' : '') + date.getHours(), (date.getMinutes() < 10 ? '0' : '') + date.getMinutes()];
-                    datacom = [(date.getDate() < 10 ? '0' : '') + date.getDate(), date.getMonth()];
-                    datestring = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+                    //offset = 3600000 * 5;
+                    //MONTH = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+                    //date = new Date(new Date().getTime() + offset);
+                    //now = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+                    datacom = comment['datacom'];//.split(' ');
+                    datestring = parseInt(datacom);//[0] + 'T' + datacom[1];
+                    tmpdate = new Date(new Date(datestring).getTime());
+                    timecom = [(tmpdate.getHours() < 10 ? '0' : '') + tmpdate.getHours(), (tmpdate.getMinutes() < 10 ? '0' : '') + tmpdate.getMinutes()];
+                    datacom = [(tmpdate.getDate() < 10 ? '0' : '') + tmpdate.getDate(), tmpdate.getMonth()];
+                    datestring = new Date(tmpdate.getFullYear(), tmpdate.getMonth(), tmpdate.getDate()+1).getTime();
                     source += '<div class="comment">' +
                     '<img src="' + comment['usercom_photo'] + '"><div class="info_text">' +
                     '<a href="javascript:void(0)" onclick=\'view(' + comment['usercom'] + ',"user")\'><div class="name">' + comment['usercom_name'] + '</div></a>' +
-                    '<div class="date">' + (now == datestring ? ('сегодня в ' + timecom[0] + ':' + timecom[1]) : datacom[0] + ' ' + MONTH[parseInt(datacom[1])]) + '</div>' +
+                    '<div class="date">' + (TM.today == datestring ? ('сегодня в ' + timecom[0] + ':' + timecom[1]) : datacom[0] + ' ' + MONTH[parseInt(datacom[1])]) + '</div>' +
                     '<p class="text">' + comment['comment'] + '</p></div></div>';
                     if (TM['empty_comments']) {
                         TM['empty_comments'] = false;
@@ -388,7 +393,7 @@ function handler(response) {
                 TM['projects_mode'] = 'all';
                 TM['update_db'] = false;
                 TM['apic_loaded'] = false;
-                TM['time_offset'] = 3600000 * 5;
+                TM['time_offset'] = 0;
                 TM['months'] = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
                 TM['now'] = new Date(new Date().getTime() + TM['time_offset']).getTime();
                 //document.getElementById('main').className='noblur';
@@ -547,8 +552,12 @@ function edit_project(id) {
 
 function send_task(){
 
-    name=encodeURIComponent(document.getElementById('name').value);
+    name=encodeURIComponent(clearnl(document.getElementById('name').value));
     description=encodeURIComponent(document.getElementById('description').value);
+    if(name==''||description==''){
+        alert('Введите информацию о задаче');
+        return false;
+    }
     executor=LSEARCH['get_users']['selected_id']||TM.UID;//selected_id;
     //executor_type=LSEARCH['get_users']['selected_type'];
     project=LSEARCH['get_projects']['selected_id'];
@@ -565,7 +574,6 @@ function send_task(){
             files[i]=TM['ufiles'][i];
         }
     }
-
     if(executor!=false) {
         io({
             "action": "add_task",
@@ -730,8 +738,12 @@ function show_add_project() {
 }
 
 function new_project() {
-    name = encodeURIComponent(document.getElementById('name').value);
+    name = encodeURIComponent(clearnl(document.getElementById('name').value));
     description = encodeURIComponent(document.getElementById('description').value);
+    if(name==''||description==''){
+        alert('Введите информацию о проекте');
+        return false;
+    }
     //executor = LSEARCH['get_users_groups']['selected_id'];
     //executor_type = LSEARCH['get_users_groups']['selected_type'];
     users=TM['lusers'];
@@ -760,7 +772,11 @@ function new_project() {
 }
 
 function new_group(){
-    name=encodeURIComponent(document.getElementById('name').value);
+    name=encodeURIComponent(clearnl(document.getElementById('name').value));
+    if(name==''){
+        alert('Введите название группы');
+        return false;
+    }
     io({
         "action": "add_group",
         "name": name
@@ -1163,7 +1179,7 @@ function view(id,type){
         if(project['initiator']==TM['UID']) {
             source += '<img onclick="proj_del(' + project['idproject'] + ');" src="templates/default/images/trash.png" id="trash">' +
             '<img onclick="edit_project(' + project['idproject'] + ');" src="templates/default/images/b_pan_hover.png" id="edit_pen">' +
-            '<br/><div class="add_task"><a href="javascript:void(0)" onclick="show_add_task('+project.idproject+')">Добавить задачу</a></div>';
+            '<br/><div class="add_task"><a href="javascript:void(0)" onclick="show_add_task('+project.idproject+')">Добавить задачу</a></div><br/>';
         }
         source+='</h4></div><p class="project_description">'+project['description']+'</p><div class="project_time">';
         source+='<div class="date_start">'+date_start+'</div><div class="date_end">'+date_finish+

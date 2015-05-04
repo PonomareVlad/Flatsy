@@ -1,16 +1,23 @@
-var FLATSY='0.5.3';
-var VERSION=53;
+var FLATSY='0.5.4';
+var VERSION=54;
 var TM={};
 TM['current_page']=false;
 TM['tasks_mode']='all';
 TM['projects_mode']='all';
 TM['update_db']=false;
 TM['apic_loaded']=false;
-TM['time_offset']=3600000*5;
+TM['time_offset']=18000000;
 TM['param_send']=false;
 TM['months']=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
-TM['now'] = new Date(new Date().getTime()+TM['time_offset']).getTime();
+//TM['now'] = new Date(new Date().getTime()+TM['time_offset']).getTime();
+TM['today']= TM.now;
 TM['upl_window']=false;
+
+tmpdate=new Date(new Date().getTime()+TM['time_offset']);
+TM['now']=tmpdate.getTime();
+TM['today']=new Date(tmpdate.getFullYear(), tmpdate.getMonth(), tmpdate.getDate()).getTime();
+delete tmpdate;
+
 if(typeof SERVER !='undefined') {
     TM['UID'] = SERVER['ID'];
     TM['USER_NAME'] = SERVER['NAME'];
@@ -35,7 +42,11 @@ TM['update_db']=true;
 
 function main(){
     io({"action":"check"});
-    TM['now'] = new Date(new Date().getTime()+TM['time_offset']).getTime();
+    //TM['now'] = new Date(new Date().getTime()+TM['time_offset']).getTime();
+    tmpdate=new Date(new Date().getTime()+TM['time_offset']);
+    TM['now']=tmpdate.getTime();
+    TM['today']=new Date(tmpdate.getFullYear(), tmpdate.getMonth(), tmpdate.getDate()).getTime();
+    delete tmpdate;
 }
 
 function sizing() {
