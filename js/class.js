@@ -327,12 +327,26 @@ function supports_html5_storage() {
     }
 }
 
-function clearnl(text){
-    return text.replace(/(\n(\r)?)/g, ' ');
+function clearnl(text,separator){
+    return text.replace(/(\n(\r)?)/g, (separator?'<br>':' '));
 }
 
 function dbg(text){
     window.console.log(text);
+}
+
+function str_replace(search, replace, subject) {
+    return subject.split(search).join(replace);
+}
+
+function parseHash(text){
+    words = text.split(' ');
+    for(i in words){
+        if(words[i][0]=='#'){
+            words[i]='<a href="javascript:void(0)" onclick="">'+words[i]+'</a>';
+        }
+    }
+    return words.join(' ');
 }
 
 var urlParams;

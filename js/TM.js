@@ -553,7 +553,8 @@ function edit_project(id) {
 function send_task(){
 
     name=encodeURIComponent(clearnl(document.getElementById('name').value));
-    description=encodeURIComponent(document.getElementById('description').value);
+    description=encodeURIComponent(get('description').value);
+    dbg(description);
     if(name==''||description==''){
         alert('Введите информацию о задаче');
         return false;
@@ -1095,7 +1096,7 @@ function view(id,type){
             source += '<img onclick="task_del(' + task['id'] + ');" src="templates/default/images/trash.png" id="trash"><img onclick="edit_task(' + task['id'] + ');" src="templates/default/images/b_pan_hover.png" id="edit_pen">';
         }
         source += '</h4></div>';
-        source += '<p class="task_description">' + task['description'] + '</p>';
+        source += '<p class="task_description">' + parseHash(task['description']) + '</p>';
         source += '<div class="info_task">';
         if (task['idproject'] != 0) {
             source += '<div class="task_table"><div>Проект</div>' +
