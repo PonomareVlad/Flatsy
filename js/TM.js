@@ -1005,6 +1005,7 @@ function gen_list(){
         }
         document.getElementById('groups').innerHTML=source;
     }
+    init_cal();
 }
 
 function groups_query(){
@@ -1063,6 +1064,10 @@ function view(id,type){
                 break;
             }
         }
+        if(!task){
+            dbg('view('+id+',"'+type+'"): Bad ID!');
+            return false;
+        }
         TM['view_type'] = type;
         TM['view_id'] = id;
         if (TM['upl_window'] != false) {
@@ -1072,11 +1077,11 @@ function view(id,type){
         date = new Date();
         now = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
         if (TM['highlight_day']) {
-            document.getElementById(TM['highlight_day']).className = 'task_day';
+            if(get(TM['highlight_day'])){document.getElementById(TM['highlight_day']).className = 'task_day';}
             TM['highlight_day'] = false;
         }
         if (TM['highlight_element']) {
-            document.getElementById(TM['highlight_element']).className = 'task_info';
+            if(get(TM['highlight_element'])){document.getElementById(TM['highlight_element']).className = 'task_info';}
             TM['highlight_element'] = false;
         }
         date_finish = task['date_finish'].split(' ');
@@ -1089,7 +1094,7 @@ function view(id,type){
         TM['highlight_day'] = TM['current_page'] == 'tasks' ? time : 'prj' + task['idproject'];
         TM['highlight_element'] = task['id'];
         if(get(TM['highlight_day'])){get(TM['highlight_day']).className = 'task_day active_day';};
-        if(get(TM['highlight_element'])){get(TM['highlight_element']).className = 'task_info task_active';}else{return false;}
+        if(get(TM['highlight_element'])){get(TM['highlight_element']).className = 'task_info task_active';}//else{return false;} // CHECK EXCEPTION
         source += '<div class="task_title"><h4>' + task['name']
         if (task['initiator'] == TM['UID']) {
             source += '<img onclick="task_del(' + task['id'] + ');" src="templates/default/images/trash.png" id="trash"><img onclick="edit_task(' + task['id'] + ');" src="templates/default/images/b_pan_hover.png" id="edit_pen">';
@@ -1136,7 +1141,7 @@ function view(id,type){
         TM['ufiles'] = [];
     }
     if(type=='project'){
-        var project=false;
+        project=false;
         ID=id;
         for(p in DB['PROJECT']){ // Поиск запрошенного проекта в БД
             if(DB['PROJECT'][p]['idproject']==id){
@@ -1144,6 +1149,10 @@ function view(id,type){
                 id=p;
                 break;
             }
+        }
+        if(!project){
+            dbg('view('+id+',"'+type+'"): Bad ID!');
+            return false;
         }
         TM['view_type']=type;
         TM['view_id']=ID;
@@ -1255,6 +1264,10 @@ function view(id,type){
                     }
                 }
             }
+        }
+        if(!group){
+            dbg('view('+id+',"'+type+'"): Bad ID!');
+            return false;
         }
         TM['view_type']=type;
         TM['view_id']=id;

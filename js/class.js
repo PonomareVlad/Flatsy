@@ -45,9 +45,32 @@ function init_cal(){
         }
     }
     for(i in array) {
-        cal_view+='<li><span class="month">'+array[i][2]+'</span><br>' +
-        '<span class="day">'+array[i][0]+'</span><br>' +
-        '<span class="week_day">'+array[i][1]+'</span></li>';
+        link=false;
+        for(t in DB['TASK']) {
+            if(link){
+                break;
+            }
+            task = DB['TASK'][t];
+            if(task['finished'] == 0&&task['view'] == true){
+                date_finish = task['date_finish'].split(' ');
+                date_finish = date_finish[0].split('-');
+                if(parseInt(date_finish[1])==D1.getMonth()+1){
+                    if(date_finish[2]==array[i][0]){
+                        link=task['id'];//new Date(date_finish[0], date_finish[1] - 1, date_finish[2]).getTime();
+                    }
+                }
+            }
+        }
+        if(link){
+            cal_view+='<a href="javascript:void(0)" onclick="view('+link+',\'task\')">' +
+            '<li class="calendar_task'+(current_day==i?' calendar_active':'')+'"><span class="month">'+array[i][2]+'</span><br>' +
+            '<span class="day">'+array[i][0]+'</span><br>' +
+            '<span class="week_day">'+array[i][1]+'</span></li></a>';
+        }else{
+            cal_view+='<li class="'+(current_day==i?' calendar_active':'')+'"><span class="month">'+array[i][2]+'</span><br>' +
+            '<span class="day">'+array[i][0]+'</span><br>' +
+            '<span class="week_day">'+array[i][1]+'</span></li>';
+        }
     }
     document.getElementById('calendar').innerHTML=cal_view+'</ul>';
 }

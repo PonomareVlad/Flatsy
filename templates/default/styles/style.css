@@ -270,6 +270,7 @@ header{
     width: 38px;
     top: 75px;
     left: 0;
+    cursor: pointer;
 }
 #next{
     background: url("../images/next.png");
@@ -278,11 +279,13 @@ header{
     width: 38px;
     top: 75px;
     right: 0;
+    cursor: pointer;
 }
 
 #calendar{
     overflow-y: hidden;
     overflow-x: scroll;
+    cursor: default;
 }
 #calendar ul {
     padding-left: 0;
@@ -296,10 +299,10 @@ header{
     list-style: none;
     text-align: center;
     padding: 10px 14px;
-    cursor: default;
 	
 }
 .calendar_task{
+    cursor: pointer;
     background: #EEEEEE;
 }
 .calendar_active{
