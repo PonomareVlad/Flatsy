@@ -48,6 +48,10 @@ function gen_comments(response){
 function add_comment(){
     text=document.getElementById('new_comm').value;
     text=encodeURIComponent(text.replace(/\n$/m,' '));
+    if(text==''||text=='%20'){
+        get('new_comm').value='';
+        return false;
+    }
     document.getElementById('new_comm').value='';
     if(TM['ufiles'].length==0){
         files=false;
