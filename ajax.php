@@ -129,6 +129,9 @@ if(defined('USER_ID')) { // Статус авторизации
         if ($QUERY['action'] == 'del_file') {
             $RESPONSE['del_file'] = FILE::del_file($QUERY['id']);
         }
+        if ($QUERY['action'] == 'crop') {
+            $RESPONSE['crop'] = FILE::crop($QUERY['crop']);
+        }
     }
 }else {
     $RESPONSE['auth'] = false;

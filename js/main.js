@@ -1,5 +1,4 @@
-var FLATSY='0.5.4';
-var VERSION=54;
+var VERSION=60;
 var TM={};
 TM['current_page']=false;
 TM['tasks_mode']='all';
@@ -17,6 +16,13 @@ tmpdate=new Date(new Date().getTime()+TM['time_offset']);
 TM['now']=tmpdate.getTime();
 TM['today']=new Date(tmpdate.getFullYear(), tmpdate.getMonth(), tmpdate.getDate()).getTime();
 delete tmpdate;
+
+tmpver=VERSION.toString();
+FLATSY=tmpver.length<3?'0.':'';
+for(i in tmpver){
+    FLATSY+=(i==0?'':'.')+tmpver[i];
+}
+delete tmpver;
 
 if(typeof SERVER !='undefined') {
     TM['UID'] = SERVER['ID'];

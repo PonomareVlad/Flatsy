@@ -98,7 +98,7 @@ function io(array,callback,busy){
                         var jsonObject = JSON.parse(response);
                     } catch (e) {
                         // handle error
-                        alert('ERROR PARSING RESPONSE FROM SERVER [' + callback.name + '] SOURCE: ' + response);
+                        dbg('ERROR PARSING RESPONSE FROM SERVER [' + callback.name + '] SOURCE: ' + response);
                         return false;
                     }
                     TM['OFFLINE'] = false;
@@ -147,6 +147,7 @@ function page(name,headgen){
                     document.getElementById('user_name').innerHTML = TM['USER_NAME'];
                     document.getElementById('user_pic').src = TM['USER_PIC'];
                     TM['upl_window']=false;
+                    document.getElementById('main').className='noblur';
                 }
             }
             TM['highlight_day']=false;
@@ -356,6 +357,47 @@ function clearnl(text){
 
 function dbg(text){
     window.console.log(text);
+}
+
+function upload_pic_show(){
+    if(!TM['upl_window']) {
+        TM['upl_window']=window.open('','upload_pic',"width=420,height=230,menubar=no,location=no,resizable=no,scrollbars=yes,status=no");
+        TM['upl_window'].document.write('<!DOCTYPE html><html><head><meta charset="utf-8"></head>' +
+        '<body onunload="window.opener.TM[\'upl_window\']=false;"><div id="files"><form enctype="multipart/form-data" action="/upl.php" method="post"><p>' +
+        '<input type="hidden" name="type" value="userpic">Загрузка нового аватара:<br/><br/>' +
+        '<input class="file" onchange="document.forms[0].submit();" type="file" name="f"><br/><br/><input type="submit" value="Загрузить"></p></form> </div>' +
+        '</body></html>');
+    }
+    onclick();
+}
+
+function crop(img){
+    TM['crop_window']=window.open('/js/ext/crop.html?'+img,'crop_pic',"width=800,height=600,menubar=no,location=no,resizable=no,scrollbars=yes,status=no");
+    /*TM['crop_window'].document.write('<html><head>' +
+    '<link href="/templates/default/styles/style.css" rel="stylesheet" type="text/css" />' +
+    '</head><body onload="init_crop()"><div id="page"><div class="block rounded">' +
+    '<h1>How to crop an image using jQuery and PHP</h1></div>' +
+    '<div class="block_main rounded"><h2>Crop</h2><p>Drag on the larger image to select crop area.</p>' +
+    '<p><img id="photo" src="'+img+'" alt="" title="" style="margin: 0 0 0 10px;" /></p>' +
+    '<input type="button" onclick="crop();" value="Обрезать и Сохранить" /></div></div>' +
+    '<script type="text/javascript" src="/js/jQuery_min.js"></script>' +
+    '<script type="text/javascript" src="/js/ext/jquery.imgareaselect.pack.js"></script>' +
+    '<script type="text/javascript" src="/js/ext/crop.js"></script></body></html>');*/
+    /*TM['crop_window'].document.write('<html><head>' +
+    '<link rel="stylesheet" href="/js/ext/jquery.Jcrop.css" type="text/css" media="screen" charset="utf-8"/>' +
+    '<link rel="stylesheet" href="/js/ext/lightbox.css" type="text/css" media="screen" charset="utf-8"/>' +
+    '<script src="/js/ext/jquery-1.7.1.min.js"></script>' +
+    '<script src="/js/ext/jquery.Jcrop.min.js"></script>' +
+    '<script src="/js/ext/crop.js"></script>' +
+    '</head><body onload="init_crop()">' +
+    '<div id="container"><div id="crop"><img id="pic" src="'+img+'"/>' +
+    '<p><img id="photo" src="'+img+'" alt="" title="" style="margin: 0 0 0 10px;" /></p><br/>' +
+    '<br/><input type="button" value="crop"/></div></div></body></html>');*/
+    TM['crop_window'].window.image=img;
+}
+
+function crop_save(crop){
+    io({'action':'crop','crop':crop});
 }
 
 var urlParams;

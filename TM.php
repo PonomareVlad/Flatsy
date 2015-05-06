@@ -1,7 +1,14 @@
 <?php
 header("Access-Control-Allow-Origin: *");
-echo 'Flatsy v.0.5.4';
-if($_GET['gen']=='invite') {
+define('CORE','VERSION');
+require_once('system/core.php');
+$ver=str_split(VERSION);
+$version='Flatsy v.0';
+for($i=0;$i<count($ver);$i++){
+    $version=$version.'.'.$ver[$i];
+}
+echo $version;
+if(isset($_GET['gen'])&&$_GET['gen']=='invite') {
     define('ROOT', $_SERVER['DOCUMENT_ROOT'] . '/');
     require_once('system/class/db.php');
     require_once('system/func.php');

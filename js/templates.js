@@ -4,7 +4,7 @@ PART=[];
 PART['header']='<header><ul class="menu"><li>'+
 '<a href="javascript:void(0)" onclick="page(\'tasks\');">Задачи</a></li><li><a href="javascript:void(0)" onclick="page(\'projects\');">Проекты</a></li><li>' +
 '<a href="javascript:void(0)" onclick="page(\'groups\');">Группы</a></li></ul><div class="user_menu">' +
-'<div class="avatar"><img id="user_pic" src="/templates/default/images/avatar.png"></div><div><span id="user_name">USER_NAME</span></div>' +
+'<div onclick="upload_pic_show()" class="avatar"><img id="user_pic" src="/templates/default/images/avatar.png"></div><div><span id="user_name">USER_NAME</span></div>' +
 '<div class="arrow"></div><ul>' +
 //'<li><a>Мои данные</a></li><li onclick="page(\'lk\',true);"><a>Настройки</a></li>' +
 '<li onclick="logout();"><a>Выход</a></li></ul></div>' +
@@ -101,4 +101,5 @@ PAGE['lk']['source']='<div id="lk"><div id="types"><div id="profile_settings" cl
 '<p><label for="rep_pass">Повтор пароля</label><input type="text" id="rep_pass" placeholder="Повтор пароля"></p>' +
 '<div class="create">Сохранить</div></div></div><div class="groups">' +
 '<div>Название группы</div><div>Название группы</div><div>Название группы</div></div></div></div>';
+
 

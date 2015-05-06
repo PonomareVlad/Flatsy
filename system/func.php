@@ -22,8 +22,11 @@ function head(){ // Фунция генерации основных элеме�
     // Подключение скриптов
     $js_dir = scandir(ROOT.'/js');
     for ($i = 2; $i < count($js_dir); $i++){
-        if (explode('.', $js_dir[$i])[count($js_dir[$i])] == 'js'){
-            $scripts.='<script src="/js/'.$js_dir[$i].'"></script>';
+        $tjs=explode('.', $js_dir[$i]);
+        if(isset($tjs[count($js_dir[$i])])) {
+            if ($tjs[count($js_dir[$i])] == 'js') {
+                $scripts .= '<script src="/js/' . $js_dir[$i] . '"></script>';
+            }
         }
     }
     return '<title>' . $title . '</title><meta charset="utf-8" />'.$scripts;

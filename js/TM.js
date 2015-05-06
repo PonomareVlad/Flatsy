@@ -369,6 +369,11 @@ function handler(response) {
                 }
                 gen_list();
             }
+            if (response['crop']){
+                TM['USER_PIC']=response['crop'];
+                location.reload();
+                //page(TM['current_page'],true);
+            }
             // TESTING LOCAL STORAGE
             if(supports_html5_storage()){
                 localStorage['DB'] = JSON.stringify(DB);
@@ -433,6 +438,7 @@ function show_add_task(project) {
     '<a href="javascript:void(0)" onclick="upload_show(\'new\',\'task\')">Прикрепить файл</a></p></div><div id="ufiles"></div>';
     document.getElementById('view').innerHTML = source;
     get('name').focus();
+    TM.BUSY=false;
     TM['ufiles']=[];
     loadSearch('#executor','#search_advice_wrapper_exe','get_users');
     loadSearch('#idproject','#search_advice_wrapper_prj','get_projects');
@@ -491,6 +497,7 @@ function edit_task(id){
     calendar_init();
     reset_comments()
     TM['ufiles']=[];
+    TM.BUSY=false;
     for(i in task['files']){
         pick_file(task['files'][i]['id'],task['files'][i]['name']);
     }
@@ -544,6 +551,7 @@ function edit_project(id) {
     calendar_init();
     reset_comments()
     TM['ufiles']=[];
+    TM.BUSY=false;
     for(i in project['files']){
         pick_file(project['files'][i]['id'],project['files'][i]['name']);
     }
@@ -553,8 +561,8 @@ function edit_project(id) {
 function send_task(){
 
     name=encodeURIComponent(clearnl(document.getElementById('name').value));
-    description=encodeURIComponent(document.getElementById('description').value);
-    if(name==''||description==''){
+    description=(document.getElementById('description').value);
+    if(name==''){
         alert('Введите информацию о задаче');
         return false;
     }
@@ -592,7 +600,7 @@ function send_edit_task(){
 
     id=TM['tmp_edit_id'];
     name=encodeURIComponent(document.getElementById('name').value);
-    description=encodeURIComponent(document.getElementById('description').value);
+    description=(document.getElementById('description').value);
     executor=LSEARCH['get_users']['selected_id']||TM['tmp_edit_executor'];//selected_id;
     project=get('idproject').value==''?'0':(LSEARCH['get_projects']['selected_id']||TM['tmp_edit_idproject']);
     hours=document.getElementById('hours').value;
@@ -631,7 +639,7 @@ function send_edit_proj(){
 
     id=TM['tmp_edit_id'];
     name=encodeURIComponent(document.getElementById('name').value);
-    description=encodeURIComponent(document.getElementById('description').value);
+    description=(document.getElementById('description').value);
     //executor=LSEARCH['get_users']['selected_id']||TM['tmp_edit_executor'];//selected_id;
     //project=get('idproject').value==''?'0':(LSEARCH['get_projects']['selected_id']||TM['tmp_edit_idproject']);
     hours=document.getElementById('hours').value;
@@ -732,6 +740,7 @@ function show_add_project() {
     loadSearch('#executor','#prj_wrapp','get_users_groups','pick_user');
     calendar_init();
     reset_comments();
+    TM.BUSY=false;
     TM['ufiles']=[];
     TM['lusers']=[];
     return false;
@@ -739,8 +748,8 @@ function show_add_project() {
 
 function new_project() {
     name = encodeURIComponent(clearnl(document.getElementById('name').value));
-    description = encodeURIComponent(document.getElementById('description').value);
-    if(name==''||description==''){
+    description = (document.getElementById('description').value);
+    if(name==''){
         alert('Введите информацию о проекте');
         return false;
     }
@@ -1027,7 +1036,7 @@ function show_add_group(){
         TM['tmp_group_add_line']=true;
         get('name').focus();
     }
-    //
+    TM.BUSY=false;
     return false;
 }
 
@@ -1056,6 +1065,7 @@ function upload_show(id,type){
 
 function view(id,type){
     source='';
+    TM.BUSY=false;
     if(type=='task') {
         task = false;
         for (t in DB['TASK']) { // Поиск запрошенной задачи в БД

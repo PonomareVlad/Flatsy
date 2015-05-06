@@ -94,6 +94,8 @@ class TM extends DB
         if($task['initiator']==USER_ID){
             $set=DB::delete('task','task.id = '.$task['id']);
             if($set==1){
+                DB::delete('comments','idobject='.$task['id'].' AND type="task"');
+                DB::delete('files','object='.$task['id'].' AND type="task"');
                 return $task['id'];
             }else{
                 return false;
@@ -109,6 +111,8 @@ class TM extends DB
                 while ($taska = mysqli_fetch_assoc($tasks)) {
                     $res=DB::update('task',["idproject"=>0],'id = ' . $taska['id']);
                 }
+                DB::delete('comments','idobject='.$project['idproject'].' AND type="project"');
+                DB::delete('files','object='.$project['idproject'].' AND type="project"');
                 return $project['idproject'];
             }else{
                 return false;

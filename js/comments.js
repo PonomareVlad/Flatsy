@@ -38,7 +38,7 @@ function gen_comments(response){
         TM['empty_comments']=true;
     }else{
         if (TM['current_page'] == 'tasks') {
-            get('cloud_' + TM['CID']).innerHTML = '<img src="templates/default/images/dia.png">';
+            if(get('cloud_' + TM['CID'])){get('cloud_' + TM['CID']).innerHTML = '<img src="templates/default/images/dia.png">';}
         }
     }
     document.getElementById('comments').innerHTML=source;
