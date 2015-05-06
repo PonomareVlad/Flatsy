@@ -181,7 +181,7 @@ header{
     border-radius: 99px;
     margin: 10px 10px -10px 0;
     width: 37px;
-
+    cursor: pointer;
 }
 .user_menu div, .notifications div{
     float: left;
