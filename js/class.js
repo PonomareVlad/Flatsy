@@ -30,17 +30,28 @@ function Ajax(method,url,callback){
 }
 
 function init_cal(){
+    get('calendar').innerHTML='<ul id="calend">'+gen_cal(-1)+gen_cal(0)+gen_cal(1)+'</ul>';
+    if(!TM['calendar_scroll']){TM['calendar_scroll']=get('calendar_today').offsetLeft-((window.innerWidth-60)/2);}
+    get('calendar').scrollLeft=TM['calendar_scroll'];
+    get('calendar').onscroll=function(){TM['calendar_scroll']=get('calendar').scrollLeft};
+}
+
+function gen_cal(offset){
     // Calendar generation
+    if(!offset){
+        offset=0;
+    }
     D1 = new Date();
-    D1last = new Date(D1.getFullYear(),D1.getMonth()+1,0).getDate(); // последний день месяца
+    D1last = new Date(D1.getFullYear(),D1.getMonth()+offset+1,0).getDate(); // последний день месяца
     month=["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"]; // название месяца, вместо цифр 0-11
     days=['вс','пн','вт','ср','чт','пт','сб'];
     array=[];
-    cal_view='<ul id="calend">';
+    cal_view='';
+    current_day=100;
     for(var  i = 1; i <= D1last; i++) {
         tmp=array.length;
-        array[tmp]=[i,days[new Date(D1.getFullYear(),D1.getMonth(),i).getDay()],month[D1.getMonth()]];
-        if (i == D1.getDate()) {
+        array[tmp]=[i,days[new Date(D1.getFullYear(),D1.getMonth()+offset,i).getDay()],month[D1.getMonth()+offset]];
+        if (offset==0&&i == D1.getDate()) {
             current_day=tmp;
         }
     }
@@ -54,7 +65,7 @@ function init_cal(){
             if(task['finished'] == 0&&task['view'] == true){
                 date_finish = task['date_finish'].split(' ');
                 date_finish = date_finish[0].split('-');
-                if(parseInt(date_finish[1])==D1.getMonth()+1){
+                if(parseInt(date_finish[1])==D1.getMonth()+offset+1){
                     if(date_finish[2]==array[i][0]){
                         link=task['id'];//new Date(date_finish[0], date_finish[1] - 1, date_finish[2]).getTime();
                     }
@@ -63,16 +74,16 @@ function init_cal(){
         }
         if(link){
             cal_view+='<a href="javascript:void(0)" onclick="view('+link+',\'task\')">' +
-            '<li class="calendar_task'+(current_day==i?' calendar_active':'')+'"><span class="month">'+array[i][2]+'</span><br>' +
+            '<li class="calendar_task'+(current_day==i?' calendar_active" id="calendar_today"':'"')+'><span class="month">'+array[i][2]+'</span><br>' +
             '<span class="day">'+array[i][0]+'</span><br>' +
             '<span class="week_day">'+array[i][1]+'</span></li></a>';
         }else{
-            cal_view+='<li class="'+(current_day==i?' calendar_active':'')+'"><span class="month">'+array[i][2]+'</span><br>' +
+            cal_view+='<li class="'+(current_day==i?' calendar_active" id="calendar_today"':'"')+'><span class="month">'+array[i][2]+'</span><br>' +
             '<span class="day">'+array[i][0]+'</span><br>' +
             '<span class="week_day">'+array[i][1]+'</span></li>';
         }
     }
-    document.getElementById('calendar').innerHTML=cal_view+'</ul>';
+    return(cal_view);
 }
 
 function io(array,callback,busy){
@@ -373,26 +384,6 @@ function upload_pic_show(){
 
 function crop(img){
     TM['crop_window']=window.open('/js/ext/crop.html?'+img,'crop_pic',"width=800,height=600,menubar=no,location=no,resizable=no,scrollbars=yes,status=no");
-    /*TM['crop_window'].document.write('<html><head>' +
-    '<link href="/templates/default/styles/style.css" rel="stylesheet" type="text/css" />' +
-    '</head><body onload="init_crop()"><div id="page"><div class="block rounded">' +
-    '<h1>How to crop an image using jQuery and PHP</h1></div>' +
-    '<div class="block_main rounded"><h2>Crop</h2><p>Drag on the larger image to select crop area.</p>' +
-    '<p><img id="photo" src="'+img+'" alt="" title="" style="margin: 0 0 0 10px;" /></p>' +
-    '<input type="button" onclick="crop();" value="Обрезать и Сохранить" /></div></div>' +
-    '<script type="text/javascript" src="/js/jQuery_min.js"></script>' +
-    '<script type="text/javascript" src="/js/ext/jquery.imgareaselect.pack.js"></script>' +
-    '<script type="text/javascript" src="/js/ext/crop.js"></script></body></html>');*/
-    /*TM['crop_window'].document.write('<html><head>' +
-    '<link rel="stylesheet" href="/js/ext/jquery.Jcrop.css" type="text/css" media="screen" charset="utf-8"/>' +
-    '<link rel="stylesheet" href="/js/ext/lightbox.css" type="text/css" media="screen" charset="utf-8"/>' +
-    '<script src="/js/ext/jquery-1.7.1.min.js"></script>' +
-    '<script src="/js/ext/jquery.Jcrop.min.js"></script>' +
-    '<script src="/js/ext/crop.js"></script>' +
-    '</head><body onload="init_crop()">' +
-    '<div id="container"><div id="crop"><img id="pic" src="'+img+'"/>' +
-    '<p><img id="photo" src="'+img+'" alt="" title="" style="margin: 0 0 0 10px;" /></p><br/>' +
-    '<br/><input type="button" value="crop"/></div></div></body></html>');*/
     TM['crop_window'].window.image=img;
 }
 
