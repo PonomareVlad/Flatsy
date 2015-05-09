@@ -28,7 +28,7 @@ function gen_comments(response){
             '<img src="'+comm[i]['usercom_photo']+'"><div class="info_text">' +
             '<a href="javascript:void(0)" onclick=\'view('+comm[i]['usercom']+',"user")\'><div class="name">'+comm[i]['usercom_name']+'</div></a>' +
             '<div class="date">'+(TM.today==datestring?('сегодня в '+timecom[0]+':'+timecom[1]):datacom[0]+' '+MONTH[parseInt(datacom[1])])+'</div>' +
-            '<p class="text">'+comm[i]['comment']+'</p></div></div>';
+            '<p class="text">'+parseHash(comm[i]['comment'])+'</p></div></div>';
             delete tmpdate;
             delete datestring;
         }
@@ -46,21 +46,21 @@ function gen_comments(response){
 }
 
 function add_comment(){
-    text=document.getElementById('new_comm').value;
-    text=encodeURIComponent(text.replace(/\n$/m,' '));
+    text=get('new_comm').value;
+    text=encodeURIComponent(str_replace('#','?HASH?',text.replace(/\n$/m,' ')));
     if(text==''||text=='%20'){
         get('new_comm').value='';
         return false;
     }
-    document.getElementById('new_comm').value='';
-    if(TM['ufiles'].length==0){
+    get('new_comm').value='';
+    /*if(TM['ufiles'].length==0){
         files=false;
     }else{
         files={};
         for(i in TM['ufiles']){
             files[i]=TM['ufiles'][i];
         }
-    }
+    }*/
     io({"action":"add_comment","id":TM['CID'],"type":TM['comments_loaded'],"text":text});
 }
 

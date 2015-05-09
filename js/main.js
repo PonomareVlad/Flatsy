@@ -1,4 +1,4 @@
-var VERSION=60;
+var VERSION=61;
 var TM={};
 TM['current_page']=false;
 TM['tasks_mode']='all';

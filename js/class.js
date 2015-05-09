@@ -397,8 +397,9 @@ function str_replace(search, replace, subject) {
 function parseHash(text){
     words = text.split(' ');
     for(i in words){
-        if(words[i][0]=='#'){
-            words[i]='<a href="javascript:void(0)" onclick="">'+words[i]+'</a>';
+        word=words[i];
+        if(word.indexOf('?HASH?')>-1){
+            words[i]='<a href="javascript:void(0)" onclick="">'+str_replace('?HASH?','#',words[i])+'</a>';
         }
     }
     return words.join(' ');

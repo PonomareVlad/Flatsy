@@ -71,7 +71,7 @@ function handler(response) {
                                 '<img src="' + comment['usercom_photo'] + '"><div class="info_text">' +
                                 '<a href="javascript:void(0)" onclick=\'view(' + comment['usercom'] + ',"user")\'><div class="name">' + comment['usercom_name'] + '</div></a>' +
                                 '<div class="date">' + (now == datestring ? ('сегодня в ' + timecom[0] + ':' + timecom[1]) : datacom[0] + ' ' + MONTH[parseInt(datacom[1])]) + '</div>' +
-                                '<p class="text">' + comment['comment'] + '</p></div></div>';
+                                '<p class="text">' + parseHash(comment['comment']) + '</p></div></div>';
                                 if (TM['empty_comments']) {
                                     document.getElementById('comments').innerHTML = '';
                                     TM['empty_comments'] = false;
@@ -141,7 +141,7 @@ function handler(response) {
                     '<img src="' + comment['usercom_photo'] + '"><div class="info_text">' +
                     '<a href="javascript:void(0)" onclick=\'view(' + comment['usercom'] + ',"user")\'><div class="name">' + comment['usercom_name'] + '</div></a>' +
                     '<div class="date">' + (TM.today == datestring ? ('сегодня в ' + timecom[0] + ':' + timecom[1]) : datacom[0] + ' ' + MONTH[parseInt(datacom[1])]) + '</div>' +
-                    '<p class="text">' + comment['comment'] + '</p></div></div>';
+                    '<p class="text">' + parseHash(comment['comment']) + '</p></div></div>';
                     if (TM['empty_comments']) {
                         TM['empty_comments'] = false;
                         document.getElementById('comments').innerHTML = '';
@@ -468,7 +468,7 @@ function edit_task(id){
     '<h4>Редактирование задачи</h4></div><p>' +
     '<label for="name">Постановка задачи</label><input type="text" name="task_title" value="'+task['name']+'" id="name"></p>' +
     '<p><label for="description">Описание</label>' +
-    '<textarea type="text" name="task_description" id="description">'+task['description'].split('<br>').join('\r\n')+'</textarea></p>' +
+    '<textarea type="text" name="task_description" id="description">'+str_replace('?HASH?','#',str_replace('<br>','\r\n',task['description']))+'</textarea></p>' +
     '<p><label for="date_finish">Дата завершения:</label>' +
     '<input value="'+task['date']+'" onfocus="this.select();lcs(this);position_calen();" onclick="event.cancelBubble=true;this.select();lcs(this);position_calen()" style="width: 5em;" type="text" name="date_final" id="date_finish">' +
     ' Часы: <input type="number" min="0" max="23" value="'+task['hour']+'" style="width: 3em;" id="hours">' +
@@ -523,7 +523,7 @@ function edit_project(id) {
     '<h4>Редактирование проекта</h4></div><p>' +
     '<label for="name">Название</label><input type="text" name="task_title" value="'+project['nameproject']+'" id="name"></p>' +
     '<p><label for="description">Описание</label>' +
-    '<textarea type="text" name="task_description" id="description">'+project['description']+'</textarea></p>' +
+    '<textarea type="text" name="task_description" id="description">'+str_replace('?HASH?','#',str_replace('<br>','\r\n',project['description']))+'</textarea></p>' +
     '<p><label for="date_finish">Дата завершения:</label>' +
     '<input value="'+project['date']+'" onfocus="this.select();lcs(this);position_calen();" onclick="event.cancelBubble=true;this.select();lcs(this);position_calen()" style="width: 5em;" type="text" name="date_final" id="date_finish">' +
     ' Часы: <input type="number" min="0" max="23" value="'+project['hour']+'" style="width: 3em;" id="hours">' +
@@ -560,8 +560,8 @@ function edit_project(id) {
 
 function send_task(){
 
-    name=encodeURIComponent(clearnl(document.getElementById('name').value));
-    description=(get('description').value);
+    name=encodeURIComponent(clearnl(get('name').value));
+    description=str_replace('#','?HASH?',get('description').value);
     if(name==''){
         alert('Введите информацию о задаче');
         return false;
@@ -599,8 +599,8 @@ function send_task(){
 function send_edit_task(){
 
     id=TM['tmp_edit_id'];
-    name=encodeURIComponent(document.getElementById('name').value);
-    description=document.getElementById('description').value;
+    name=encodeURIComponent(clearnl(get('name').value));
+    description=str_replace('#','?HASH?',get('description').value);
     executor=LSEARCH['get_users']['selected_id']||TM['tmp_edit_executor'];//selected_id;
     project=get('idproject').value==''?'0':(LSEARCH['get_projects']['selected_id']||TM['tmp_edit_idproject']);
     hours=document.getElementById('hours').value;
@@ -638,8 +638,8 @@ function send_edit_task(){
 function send_edit_proj(){
 
     id=TM['tmp_edit_id'];
-    name=encodeURIComponent(document.getElementById('name').value);
-    description=document.getElementById('description').value;
+    name=encodeURIComponent(clearnl(get('name').value));
+    description=str_replace('#','?HASH?',get('description').value);
     //executor=LSEARCH['get_users']['selected_id']||TM['tmp_edit_executor'];//selected_id;
     //project=get('idproject').value==''?'0':(LSEARCH['get_projects']['selected_id']||TM['tmp_edit_idproject']);
     hours=document.getElementById('hours').value;
@@ -748,7 +748,7 @@ function show_add_project() {
 
 function new_project() {
     name = encodeURIComponent(clearnl(document.getElementById('name').value));
-    description = get('description').value;
+    description = str_replace('#','?HASH?',get('description').value);
     if(name==''){
         alert('Введите информацию о проекте');
         return false;
@@ -1200,7 +1200,7 @@ function view(id,type){
             '<img onclick="edit_project(' + project['idproject'] + ');" src="templates/default/images/b_pan_hover.png" id="edit_pen">' +
             '<br/><div class="add_task"><a href="javascript:void(0)" onclick="show_add_task('+project.idproject+')">Добавить задачу</a></div><br/>';
         }
-        source+='</h4></div><p class="project_description">'+project['description']+'</p><div class="project_time">';
+        source+='</h4></div><p class="project_description">'+parseHash(project['description'])+'</p><div class="project_time">';
         source+='<div class="date_start">'+date_start+'</div><div class="date_end">'+date_finish+
         '</div><div class="project_time_all">';
         source+='<div class="countpercent">'+project['percent_view']+'</div><div class="project_rime_cur" style="width: '+project['percent']+'%"></div></div></div>';
