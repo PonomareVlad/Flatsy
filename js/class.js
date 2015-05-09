@@ -394,12 +394,27 @@ function str_replace(search, replace, subject) {
     return subject.split(search).join(replace);
 }
 
+function str_insert(into,insert,position) {
+    return into.slice(0,position)+insert+into.slice(position);
+}
+
 function parseHash(text){
-    words = text.split(' ');
+    lines=text.split('<br>');
+    words=[];
+    for(l in lines){
+        if(l!=0){
+            words[words.length]='<br>';
+        }
+        l_words=lines[l].split(' ');
+        for(w in l_words) {
+            words[words.length]=l_words[w];
+        }
+    }
     for(i in words){
         word=words[i];
-        if(word.indexOf('?HASH?')>-1){
-            words[i]='<a href="javascript:void(0)" onclick="">'+str_replace('?HASH?','#',words[i])+'</a>';
+        word=str_replace('%23','#',word);
+        if (word.indexOf('#') == 0) {
+            words[i] = '<a href="http://vk.com/feed?section=search&q=' + encodeURIComponent(word) + '" target="_blank">' + word + '</a>';
         }
     }
     return words.join(' ');

@@ -47,7 +47,7 @@ function gen_comments(response){
 
 function add_comment(){
     text=get('new_comm').value;
-    text=encodeURIComponent(str_replace('#','?HASH?',text.replace(/\n$/m,' ')));
+    text=encodeURIComponent(str_replace('#','%23',text.replace(/\n$/m,' ')));
     if(text==''||text=='%20'){
         get('new_comm').value='';
         return false;

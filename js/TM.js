@@ -468,7 +468,7 @@ function edit_task(id){
     '<h4>Редактирование задачи</h4></div><p>' +
     '<label for="name">Постановка задачи</label><input type="text" name="task_title" value="'+task['name']+'" id="name"></p>' +
     '<p><label for="description">Описание</label>' +
-    '<textarea type="text" name="task_description" id="description">'+str_replace('?HASH?','#',str_replace('<br>','\r\n',task['description']))+'</textarea></p>' +
+    '<textarea type="text" name="task_description" id="description">'+str_replace('%23','#',str_replace('<br>','\r\n',task['description']))+'</textarea></p>' +
     '<p><label for="date_finish">Дата завершения:</label>' +
     '<input value="'+task['date']+'" onfocus="this.select();lcs(this);position_calen();" onclick="event.cancelBubble=true;this.select();lcs(this);position_calen()" style="width: 5em;" type="text" name="date_final" id="date_finish">' +
     ' Часы: <input type="number" min="0" max="23" value="'+task['hour']+'" style="width: 3em;" id="hours">' +
@@ -523,7 +523,7 @@ function edit_project(id) {
     '<h4>Редактирование проекта</h4></div><p>' +
     '<label for="name">Название</label><input type="text" name="task_title" value="'+project['nameproject']+'" id="name"></p>' +
     '<p><label for="description">Описание</label>' +
-    '<textarea type="text" name="task_description" id="description">'+str_replace('?HASH?','#',str_replace('<br>','\r\n',project['description']))+'</textarea></p>' +
+    '<textarea type="text" name="task_description" id="description">'+str_replace('%23','#',str_replace('<br>','\r\n',project['description']))+'</textarea></p>' +
     '<p><label for="date_finish">Дата завершения:</label>' +
     '<input value="'+project['date']+'" onfocus="this.select();lcs(this);position_calen();" onclick="event.cancelBubble=true;this.select();lcs(this);position_calen()" style="width: 5em;" type="text" name="date_final" id="date_finish">' +
     ' Часы: <input type="number" min="0" max="23" value="'+project['hour']+'" style="width: 3em;" id="hours">' +
@@ -561,7 +561,7 @@ function edit_project(id) {
 function send_task(){
 
     name=encodeURIComponent(clearnl(get('name').value));
-    description=str_replace('#','?HASH?',get('description').value);
+    description=str_replace('#','%23',get('description').value);
     if(name==''){
         alert('Введите информацию о задаче');
         return false;
@@ -600,7 +600,7 @@ function send_edit_task(){
 
     id=TM['tmp_edit_id'];
     name=encodeURIComponent(clearnl(get('name').value));
-    description=str_replace('#','?HASH?',get('description').value);
+    description=str_replace('#','%23',get('description').value);
     executor=LSEARCH['get_users']['selected_id']||TM['tmp_edit_executor'];//selected_id;
     project=get('idproject').value==''?'0':(LSEARCH['get_projects']['selected_id']||TM['tmp_edit_idproject']);
     hours=document.getElementById('hours').value;
@@ -639,7 +639,7 @@ function send_edit_proj(){
 
     id=TM['tmp_edit_id'];
     name=encodeURIComponent(clearnl(get('name').value));
-    description=str_replace('#','?HASH?',get('description').value);
+    description=str_replace('#','%23',get('description').value);
     //executor=LSEARCH['get_users']['selected_id']||TM['tmp_edit_executor'];//selected_id;
     //project=get('idproject').value==''?'0':(LSEARCH['get_projects']['selected_id']||TM['tmp_edit_idproject']);
     hours=document.getElementById('hours').value;
@@ -748,7 +748,7 @@ function show_add_project() {
 
 function new_project() {
     name = encodeURIComponent(clearnl(document.getElementById('name').value));
-    description = str_replace('#','?HASH?',get('description').value);
+    description = str_replace('#','%23',get('description').value);
     if(name==''){
         alert('Введите информацию о проекте');
         return false;
@@ -910,7 +910,7 @@ function gen_list(){
             newtasks='<div class="task_day'+(highlight&&TM['highlight_day']=='new'?' active_day':'')+'" id="new"><div class="task_name">Новые</div>';
             overdue='<div class="task_day'+(highlight&&TM['highlight_day']=='overdue'?' active_day':'')+'" id="overdue"><div class="task_name">Просрочено</div>';
             if(TM['tasks_mode']=='finished'){
-                overdue='<div class="task_day'+(highlight&&TM['highlight_day']=='overdue'?' active_day':'')+'" id="overdue"><div class="task_name">Завершено</div>';
+                overdue='<div class="task_day'+(highlight&&TM['highlight_day']=='overdue'?' active_day':'')+'" id="overdue"><div class="task_name">Прошедшие</div>';
             }
             overdue_view=false;
             for(d in DAY) {
