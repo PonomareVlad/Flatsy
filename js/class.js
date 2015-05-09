@@ -327,8 +327,8 @@ function supports_html5_storage() {
     }
 }
 
-function clearnl(text,separator){
-    return text.replace(/(\n(\r)?)/g, (separator?'<br>':' '));
+function clearnl(text,br){
+    return text.replace(/(\n(\r)?)/g, (br?'<br>':' '));
 }
 
 function dbg(text){

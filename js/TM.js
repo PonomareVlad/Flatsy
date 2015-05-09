@@ -553,8 +553,7 @@ function edit_project(id) {
 function send_task(){
 
     name=encodeURIComponent(clearnl(document.getElementById('name').value));
-    description=encodeURIComponent(get('description').value);
-    dbg(description);
+    description=get('description').value;
     if(name==''||description==''){
         alert('Введите информацию о задаче');
         return false;
