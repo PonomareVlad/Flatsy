@@ -58,9 +58,6 @@ function gen_cal(offset){
     for(i in array) {
         link=false;
         for(t in DB['TASK']) {
-            if(link){
-                break;
-            }
             task = DB['TASK'][t];
             if(task['finished'] == 0&&task['view'] == true){
                 date_finish = task['date_finish'].split(' ');
@@ -68,15 +65,17 @@ function gen_cal(offset){
                 if(parseInt(date_finish[1])==D1.getMonth()+offset+1){
                     if(date_finish[2]==array[i][0]){
                         link=task['id'];//new Date(date_finish[0], date_finish[1] - 1, date_finish[2]).getTime();
+                        break;
                     }
                 }
             }
         }
         if(link){
-            cal_view+='<a href="javascript:void(0)" onclick="view('+link+',\'task\')">' +
-            '<li class="calendar_task'+(current_day==i?' calendar_active" id="calendar_today"':'"')+'><span class="month">'+array[i][2]+'</span><br>' +
+            cal_view+='<li class="calendar_task'+(current_day==i?' calendar_active" id="calendar_today"':'"')+'>' +
+            '<a href="javascript:void(0)" onclick="view('+link+',\'task\')">' +
+            '<span class="month">'+array[i][2]+'</span><br>' +
             '<span class="day">'+array[i][0]+'</span><br>' +
-            '<span class="week_day">'+array[i][1]+'</span></li></a>';
+            '<span class="week_day">'+array[i][1]+'</span></a></li>';
         }else{
             cal_view+='<li class="'+(current_day==i?' calendar_active" id="calendar_today"':'"')+'><span class="month">'+array[i][2]+'</span><br>' +
             '<span class="day">'+array[i][0]+'</span><br>' +
