@@ -891,3 +891,12 @@ h4{
     color: #FFFFFF;
     transition-duration: 200ms;
 }
+
+.about{
+    font-family: Tahoma,Geneva,sans-serif;
+    font-size:12px;
+    color: #747474;
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+}

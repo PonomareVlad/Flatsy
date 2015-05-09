@@ -147,17 +147,17 @@ function set_vmode(mode){
 function page(name,headgen){
     if(typeof PAGE[name]!='undefined') {
         if ((TM['current_page'] != name) || headgen) {
-            document.getElementById('main').className='blur';
+            get('main').className='blur';
             if (name == 'auth'||name == 'reg') {
-                document.getElementById('header').innerHTML = '';
+                get('header').innerHTML = '';
                 TM['upl_window']=false;
             } else {
                 if ((TM['current_page'] == 'auth'||TM['current_page'] == 'reg') || headgen) {
-                    document.getElementById('header').innerHTML=PART['header'];//name=='lk'?PART['header_slim']:PART['header'];
-                    document.getElementById('user_name').innerHTML = TM['USER_NAME'];
-                    document.getElementById('user_pic').src = TM['USER_PIC'];
+                    get('header').innerHTML=PART['header'];//name=='lk'?PART['header_slim']:PART['header'];
+                    get('user_name').innerHTML = TM['USER_NAME'];
+                    get('user_pic').src = TM['USER_PIC'];
                     TM['upl_window']=false;
-                    document.getElementById('main').className='noblur';
+                    get('main').className='noblur';
                 }
             }
             TM['highlight_day']=false;
@@ -170,19 +170,22 @@ function page(name,headgen){
             TM['upl_window']=false;
             document.title = PAGE[name]['title'] + ' | Flatsy';
             history.pushState(null,null,name);
-            document.getElementById('page').innerHTML = PAGE[name]['source'];
+            get('page').innerHTML = PAGE[name]['source'];
             TM['current_page'] = name;
-            if (document.getElementById('currentv')) {
-                document.getElementById('currentv').innerHTML = document.getElementById(TM[TM['current_page'] + '_mode']).innerHTML;
+            if (get('currentv')) {
+                get('currentv').innerHTML = get(TM[TM['current_page'] + '_mode']).innerHTML;
             }
-            if (document.getElementById('email')) {
-                document.getElementById('email').focus();
+            if (get('email')) {
+                get('email').focus();
             }
-            if (document.getElementById('calendar')&&page!='lk') {
+            if (get('calendar')&&page!='lk') {
                 init_cal();
             }
-            if (document.getElementById('load_pic')) {
-                document.getElementById('load_pic').style = "display:none";
+            if (get('load_pic')) {
+                get('load_pic').style = "display:none";
+            }
+            if (get('about')) {
+                get('about').innerHTML='FLATSY v.'+FLATSY;
             }
             if(name=='tasks'||name=='projects'||name=='groups'){
                 gen_list();
@@ -194,8 +197,8 @@ function page(name,headgen){
             if(supports_html5_storage()){
                 localStorage['TM']=JSON.stringify(TM);
             }
-            //setTimeout(document.getElementById('main').className='noblur',2000);
-            document.getElementById('main').className='noblur';
+            //setTimeout(get('main').className='noblur',2000);
+            get('main').className='noblur';
             //alert(name);
         }
         onclick();
