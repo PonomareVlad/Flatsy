@@ -32,6 +32,13 @@ class FILE extends DB
         $current_image = imagecreatefromjpeg($filename);
         imagecopyresampled($new, $current_image, 0, 0, $x1, $y1, $crop_width, $crop_height, $w, $h);
         imagejpeg($new, $new_filename, 95);
+        @unlink($filename);
+        $old_image=mysqli_fetch_assoc(DB::select('users',['photo'],'id='.USER_ID));
+        if($old_image['photo']!=''){
+            $old_image=explode('/',$old_image['photo']);
+            $old_image=ROOT.'users/avatars/'.$old_image[count($old_image)-1];
+            @unlink($old_image);
+        }
         DB::update('users',['photo'=>'/users/avatars/'.$new_name],'id='.USER_ID);
         return '/users/avatars/'.$new_name;
     }
