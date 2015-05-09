@@ -71,13 +71,13 @@ function gen_cal(offset){
             }
         }
         if(link){
-            cal_view+='<li class="calendar_task'+(current_day==i?' calendar_active" id="calendar_today"':'"')+'>' +
-            '<a href="javascript:void(0)" onclick="view('+link+',\'task\')">' +
+            cal_view+='<li onclick="view('+link+',\'task\')" class="calendar_task'+(current_day==i?' calendar_active" id="calendar_today"':'"')+'>' +
             '<span class="month">'+array[i][2]+'</span><br>' +
             '<span class="day">'+array[i][0]+'</span><br>' +
-            '<span class="week_day">'+array[i][1]+'</span></a></li>';
+            '<span class="week_day">'+array[i][1]+'</span></li>';
         }else{
-            cal_view+='<li class="'+(current_day==i?' calendar_active" id="calendar_today"':'"')+'><span class="month">'+array[i][2]+'</span><br>' +
+            cal_view+='<li class="'+(current_day==i?' calendar_active" id="calendar_today"':'"')+'>' +
+            '<span class="month">'+array[i][2]+'</span><br>' +
             '<span class="day">'+array[i][0]+'</span><br>' +
             '<span class="week_day">'+array[i][1]+'</span></li>';
         }
