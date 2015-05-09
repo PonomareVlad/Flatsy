@@ -561,7 +561,7 @@ function edit_project(id) {
 function send_task(){
 
     name=encodeURIComponent(clearnl(document.getElementById('name').value));
-    description=(document.getElementById('description').value);
+    description=(get('description').value);
     if(name==''){
         alert('Введите информацию о задаче');
         return false;
@@ -600,7 +600,7 @@ function send_edit_task(){
 
     id=TM['tmp_edit_id'];
     name=encodeURIComponent(document.getElementById('name').value);
-    description=(document.getElementById('description').value);
+    description=document.getElementById('description').value;
     executor=LSEARCH['get_users']['selected_id']||TM['tmp_edit_executor'];//selected_id;
     project=get('idproject').value==''?'0':(LSEARCH['get_projects']['selected_id']||TM['tmp_edit_idproject']);
     hours=document.getElementById('hours').value;
@@ -639,7 +639,7 @@ function send_edit_proj(){
 
     id=TM['tmp_edit_id'];
     name=encodeURIComponent(document.getElementById('name').value);
-    description=(document.getElementById('description').value);
+    description=document.getElementById('description').value;
     //executor=LSEARCH['get_users']['selected_id']||TM['tmp_edit_executor'];//selected_id;
     //project=get('idproject').value==''?'0':(LSEARCH['get_projects']['selected_id']||TM['tmp_edit_idproject']);
     hours=document.getElementById('hours').value;
@@ -748,7 +748,7 @@ function show_add_project() {
 
 function new_project() {
     name = encodeURIComponent(clearnl(document.getElementById('name').value));
-    description = (document.getElementById('description').value);
+    description = get('description').value;
     if(name==''){
         alert('Введите информацию о проекте');
         return false;
@@ -1110,7 +1110,7 @@ function view(id,type){
             source += '<img onclick="task_del(' + task['id'] + ');" src="templates/default/images/trash.png" id="trash"><img onclick="edit_task(' + task['id'] + ');" src="templates/default/images/b_pan_hover.png" id="edit_pen">';
         }
         source += '</h4></div>';
-        source += '<p class="task_description">' + task['description'] + '</p>';
+        source += '<p class="task_description">' + parseHash(task['description']) + '</p>';
         source += '<div class="info_task">';
         if (task['idproject'] != 0) {
             source += '<div class="task_table"><div>Проект</div>' +

@@ -361,8 +361,8 @@ function supports_html5_storage() {
     }
 }
 
-function clearnl(text){
-    return text.replace(/(\n(\r)?)/g, ' ');
+function clearnl(text,br){
+    return text.replace(/(\n(\r)?)/g, (br?'<br>':' '));
 }
 
 function dbg(text){
@@ -388,6 +388,20 @@ function crop(img){
 
 function crop_save(crop){
     io({'action':'crop','crop':crop});
+}
+
+function str_replace(search, replace, subject) {
+    return subject.split(search).join(replace);
+}
+
+function parseHash(text){
+    words = text.split(' ');
+    for(i in words){
+        if(words[i][0]=='#'){
+            words[i]='<a href="javascript:void(0)" onclick="">'+words[i]+'</a>';
+        }
+    }
+    return words.join(' ');
 }
 
 var urlParams;
