@@ -47,8 +47,8 @@ PAGE['projects']['source']='<div class="left_bar"><div class="action_bar"><a hre
 PAGE['groups']=[];
 PAGE['groups']['title']='Группы';
 PAGE['groups']['source']='<div class="left_bar groupflag"><div class="action_bar"><div id="add_line" onclick="show_add_group();" class="add_group">' +
-'<div class="plus"><div id="p1"></div><div id="p2"></div><div id="p3"></div><div id="p4"></div></div>Добавить группу</div>' +
-'<div onclick="groups_query();"><img src="templates/default/images/zaprosy.png"></div></div>' +
+'<div class="plus"><div id="p1"></div><div id="p2"></div><div id="p3"></div><div id="p4"></div></div>Добавить группу</div></div>' +
+//'<div onclick="groups_query();"><img src="templates/default/images/zaprosy.png"></div></div>' +
 '<div class="group_list" id="groups"></div></div><div class="center group_center" id="view"></div>';
 
 PAGE['auth']=[];
