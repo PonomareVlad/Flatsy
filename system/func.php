@@ -70,3 +70,17 @@ function objectToArray($d){
         return $d;
     }
 }
+
+function dbg($text){
+    if (USER_ID == 1) {
+        $text = $text . '
+';
+        $old = file(ROOT . 'errlog.txt');
+        if ($old && $old[count($old) - 1] == $text) {
+            return true;
+        }
+        $file = fopen(ROOT . 'errlog.txt', 'a');
+        fwrite($file, $text);
+        fclose($file);
+    }
+}

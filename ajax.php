@@ -29,11 +29,15 @@ if(defined('USER_ID')) { // Статус авторизации
                 while ($notify = mysqli_fetch_assoc($get)) {
                     if ($notify['type'] == 'new_task') {
                         $task = TM::get_task($notify['value']);
+                        if($task){
                         $task['new']=true;
                         if (!isset($NEW['TASK'])) {
                             $NEW['TASK'] = [];
                         }
                         $NEW['TASK'][] = $task;
+                        }else{
+                            DB::delete('notifications','idnotification='.$notify['idnotification']);
+                        }
                     }
                     if ($notify['type'] == 'new_comment') {
                         $comment = DB::select('comments', ['*'], 'id=' . $notify['value']);

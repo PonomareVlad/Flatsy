@@ -49,6 +49,9 @@ class TM extends DB
     public static function get_task($id){
         $arr=DB::select('task',['*'],'id='.$id);
         $task=mysqli_fetch_assoc($arr);
+        if($task['id']==''){
+            return false;
+        }
         $task['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$task['initiator'])));
         $task['executor_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$task['executor'])));
         $task['projectname'] = mysqli_fetch_assoc(DB::select('project',['nameproject'],'idproject='.$task['idproject']))['nameproject'];

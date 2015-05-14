@@ -11,9 +11,7 @@ mysqli_query($MYSQL_CONNECTION,"set character_set_results=utf8;");
 
 class DB {
 
-    public function __construct(){
-
-    }
+    /*public function __construct(){}*/
 
     public static function select($table_name, $fields, $where = "", $order = "", $up = true, $limit = ""){
         global $MYSQL_CONNECTION;
@@ -32,7 +30,7 @@ class DB {
         if ($limit) $limit = "LIMIT $limit";
         if ($where) $query = "SELECT $fields FROM $table_name WHERE $where $order $limit";
         else $query = "SELECT $fields FROM $table_name $order $limit";
-        $res = mysqli_query($MYSQL_CONNECTION,$query) or die(mysqli_error($MYSQL_CONNECTION));
+        $res = mysqli_query($MYSQL_CONNECTION,$query) or dbg('ERROR IN QUERY [SELECT, '.$table_name.', '.$where.'] RESPONSE: '.mysqli_error($MYSQL_CONNECTION));
         return $res;
     }
 
@@ -43,7 +41,7 @@ class DB {
         $query = substr($query, 0, -1);
         if ($where){
             $query .= " WHERE $where";
-            $res = mysqli_query($MYSQL_CONNECTION,$query) or die(mysqli_error($MYSQL_CONNECTION));
+            $res = mysqli_query($MYSQL_CONNECTION,$query) or dbg('ERROR IN QUERY [UPDATE, '.$table_name.', '.$where.'] RESPONSE: '.mysqli_error($MYSQL_CONNECTION));
             return $res;
         }
         else return false;
@@ -59,7 +57,7 @@ class DB {
         foreach ($new_value as $value) $query .= "'".addslashes($value)."',";
         $query = substr($query, 0, -1);
         $query .= ")";
-        $res = mysqli_query($MYSQL_CONNECTION,$query) or die(mysqli_error($MYSQL_CONNECTION));
+        $res = mysqli_query($MYSQL_CONNECTION,$query) or dbg('ERROR IN QUERY [INSERT, '.$table_name.'] RESPONSE: '.mysqli_error($MYSQL_CONNECTION));
         return $res;
     }
 
@@ -74,7 +72,7 @@ class DB {
         //foreach ($new_value as $value) $query .= "'".addslashes($value)."',";
         //$query = substr($query, 0, -1);
         //$query .= ")";
-        $res = mysqli_query($MYSQL_CONNECTION,$query) or die(mysqli_error($MYSQL_CONNECTION));
+        $res = mysqli_query($MYSQL_CONNECTION,$query) or dbg('ERROR IN QUERY [INSERT, '.$table_name.', '.$new_values.'] RESPONSE: '.mysqli_error($MYSQL_CONNECTION));
         return $res;
     }
 
@@ -84,7 +82,7 @@ class DB {
         global $MYSQL_CONNECTION;
         if ($where){
             $query = "DELETE FROM $table_name WHERE $where";
-            $res = mysqli_query($MYSQL_CONNECTION,$query) or die(mysqli_error($MYSQL_CONNECTION));
+            $res = mysqli_query($MYSQL_CONNECTION,$query) or dbg('ERROR IN QUERY [DELETE, '.$table_name.', '.$where.'] RESPONSE: '.mysqli_error($MYSQL_CONNECTION));
             return $res;
         }
         else return false;
