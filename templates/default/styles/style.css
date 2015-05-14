@@ -707,7 +707,7 @@ h4{
 }
 
 .groupflag .action_bar{
-    height: 80px;
+    height: 70px;
     width: 200px !important;
 }
 .groupflag .action_bar div{
@@ -809,6 +809,7 @@ h4{
     height: 50px;
     line-height: 50px;
     margin-bottom: 5px;
+	
 }
 #types div{
     float: left;
@@ -868,12 +869,15 @@ h4{
     color: #8F8F8F;
     cursor: pointer;
 }
+#add_line{
+	margin: 10px 0px 0px 50px;
+}
 #add_line input{
-    margin-left: -35px;
+    margin-left: -45px;
     width: 140px;
 }
 #add_line .create{
-    margin: 8px -35px 0 0;
+    margin: 8px -80px 0 0;
 }
 
 #invite .plus div{
