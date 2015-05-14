@@ -54,18 +54,19 @@ PAGE['groups']['source']='<div class="left_bar groupflag"><div class="action_bar
 PAGE['auth']=[];
 PAGE['auth']['title']='Авторизация';
 PAGE['auth']['source']='<div style="display:none" id="load_pic"></div>' +
-'<div class="authbody wrapperautreg" id="wrapper"><div class="formauth"><span class="Au1">Авторизация</span>' +
+'<div class="authbody wrapperautreg" id="wrapper"><div id="authbox" class="formauth"><span class="Au1">Авторизация</span>' +
 '<form name="auth"><div class="auth" id="E"><div id="pic" style="height: 41px"></div>' +
 '<input type="login" id="email" name="email" class="Au2" onfocus="TM[\'apic_loaded\']=false;document.getElementById(\'pic\').innerHTML=\'\';" autofocus placeholder="E-mail">' +
 '</div><div class="auth">' +
 '<input name="pass" id="pass" type="password" class="Au2" onfocus="load_enter_pic();" placeholder="Пароль">' +
 '</div><div class="auth" id="In">' +
 '<a href="javascript:void(0)" onclick=\'auth_send();\' class="button box-shadow-outset"><div class="authregbtn">Войти</div></a></div></form>' +
-'<a href="javascript:void(0)" onclick="page(\'reg\');"><div class="authregbtn" >Регистрация</div></a></div><span id="about" class="about">FLATSY</span></div>';
+'<a href="javascript:void(0)" onclick="page(\'reg\');"><div class="authregbtn" >Регистрация</div></a></div><span id="about" class="about">FLATSY</span>' +
+'<span onclick="location.href=\'http://flatsy.ru/info/index.html\'" id="faq" class="faq">Справочник</span></div>';
 
 PAGE['reg']=[];
 PAGE['reg']['title']='Регистрация';
-PAGE['reg']['source']='<div class="regbody wrapperautreg" id="wrapper"><div class="formreg">' +
+PAGE['reg']['source']='<div class="regbody wrapperautreg" id="wrapper"><div id="authbox" class="formreg">' +
 '<span class="Au1">Регистрация</span><form name="reg"><div class="auth">' +
 '<input class="Au2" id="email" type="email" name="email" placeholder="E-mail"></div><div class="auth">' +
 '<input class="Au2" id="repeat_email" onkeyup="reg_check(\'email\')" type="email" name="repeat_email" placeholder="Повторите e-mail"></div><div class="auth">' +
@@ -77,7 +78,8 @@ PAGE['reg']['source']='<div class="regbody wrapperautreg" id="wrapper"><div clas
 '<div class="auth"><input class="Au2" id="code" type="text" name="code" placeholder="Инвайт-код"></div>' +
 '<div class="auth"><div onclick="reg_send()" class="authregbtn">Зарегистрироваться</div>' +
 '<div onclick="page(\'auth\');" class="authregbtn">Вернуться к авторизации</div></div>' +
-'</form><div id="status"></div></div><span id="about" class="about">FLATSY</span></div>';
+'</form><div id="status"></div></div><span id="about" class="about">FLATSY</span>' +
+'<span onclick="location.href=\'http://flatsy.ru/info/index.html\'" id="faq" class="faq">Справочник</span></div>';
 
 PAGE['lk']=[];
 PAGE['lk']['title']='Настройки';

@@ -904,3 +904,13 @@ h4{
     left: 10px;
     bottom: 10px;
 }
+
+.faq{
+    font-family: Tahoma,Geneva,sans-serif;
+    font-size:16px;
+    color: #747474;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    cursor: pointer;
+}

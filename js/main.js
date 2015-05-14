@@ -71,10 +71,14 @@ function sizing() {
         document.getElementById('comments').style.height = window.innerHeight - document.getElementById('comments').offsetTop - document.getElementById('new_comm').scrollHeight-57 + "px"
     }
     if(TM['current_page']=='auth'){
-        document.getElementById('wrapper').style.height = window.innerHeight-240+'px'
+        document.getElementById('wrapper').style.height = window.innerHeight-240+'px';
+        get('faq').style.right=window.innerWidth-get('authbox').offsetWidth-get('authbox').offsetLeft+5+'px';
+        get('faq').style.bottom=window.innerHeight-get('authbox').offsetHeight-get('authbox').offsetTop+15+'px';
     }
     if(TM['current_page']=='reg'){
-        document.getElementById('wrapper').style.height = window.innerHeight-100+'px'
+        document.getElementById('wrapper').style.height = window.innerHeight-100+'px';
+        get('faq').style.right=window.innerWidth-get('authbox').offsetWidth-get('authbox').offsetLeft+5+'px';
+        get('faq').style.bottom=window.innerHeight-get('authbox').offsetHeight-get('authbox').offsetTop+15+'px';
     }
 }
 
