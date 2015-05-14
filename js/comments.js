@@ -3,7 +3,11 @@ function init_comments(id,type){
     TM['CID']=id;
     TM['empty_comments']=false;
     get('new_comm').focus();
-    io({"action":"get_comments","id":id,"type":type},gen_comments);
+    if(!TM['need_restart']) {
+        io({"action": "get_comments", "id": id, "type": type}, gen_comments);
+    }else{
+        get('comments').innerHTML='Оффлайн режим';
+    }
 }
 
 function gen_comments(response){

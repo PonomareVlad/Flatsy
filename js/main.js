@@ -47,7 +47,9 @@ if(supports_html5_storage()){
 TM['update_db']=true;
 
 function main(){
-    io({"action":"check"});
+    if(!TM['need_restart']) {
+        io({"action": "check"});
+    }
     //TM['now'] = new Date(new Date().getTime()+TM['time_offset']).getTime();
     tmpdate=new Date(new Date().getTime()+TM['time_offset']);
     TM['now']=tmpdate.getTime();

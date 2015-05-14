@@ -12,7 +12,6 @@ if(!isset($_GET['query'])OR!isset($_GET['ver'])){
 $QUERY=json_decode($_GET['query']); // Запрос
 $QUERY=objectToArray($QUERY); // Трансформируем из Object в Array
 $RESPONSE=array();
-
 if($_GET['ver']<VERSION){
     $RESPONSE['old_version']=true;
     exit(json_encode($RESPONSE));
@@ -20,7 +19,6 @@ if($_GET['ver']<VERSION){
 
 if(defined('USER_ID')) { // Статус авторизации
     $RESPONSE['auth'] = true;
-
     if (isset($QUERY['action'])) {
         if ($QUERY['action'] == 'check') {
             $NEW = [];
@@ -139,7 +137,6 @@ if(defined('USER_ID')) { // Статус авторизации
     }
 }else {
     $RESPONSE['auth'] = false;
-
     if (isset($QUERY['action'])) {
         if($QUERY['action']=='check'){
             $RESPONSE['check'] = false;

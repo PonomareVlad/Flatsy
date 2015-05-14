@@ -86,6 +86,10 @@ function gen_cal(offset){
 }
 
 function io(array,callback,busy){
+    if(TM['need_restart']){
+        if(confirm('Система обновилась, для продолжения работы, необходимо обновить страницу!')){location.reload();}
+        return false;
+    }
     if(TM['BUSY']&&busy){
         // BUILD STACK
     }else {
