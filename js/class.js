@@ -381,6 +381,10 @@ function dbg(text){
 }
 
 function upload_pic_show(){
+    if(TM['need_restart']){
+        if(confirm('Система обновилась, для продолжения работы, необходимо обновить страницу!')){location.reload();}
+        return false;
+    }
     if(!TM['upl_window']) {
         TM['upl_window']=window.open('','upload_pic',"width=420,height=230,menubar=no,location=no,resizable=no,scrollbars=yes,status=no");
         TM['upl_window'].document.write('<!DOCTYPE html><html><head><meta charset="utf-8"></head>' +

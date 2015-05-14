@@ -408,6 +408,10 @@ function handler(response) {
 }
 
 function show_add_task(project) {
+    if(TM['need_restart']){
+        if(confirm('Система обновилась, для продолжения работы, необходимо обновить страницу!')){location.reload();}
+        return false;
+    }
     if(project){
             for (p in DB['PROJECT']) {
                 if (DB['PROJECT'][p]['idproject'] == project) {
@@ -451,6 +455,10 @@ function show_add_task(project) {
 }
 
 function edit_task(id){
+    if(TM['need_restart']){
+        if(confirm('Система обновилась, для продолжения работы, необходимо обновить страницу!')){location.reload();}
+        return false;
+    }
     task=false;
     for(t in DB['TASK']){ // Поиск запрошенной задачи в БД
         if(DB['TASK'][t]['id']==id){
@@ -505,6 +513,10 @@ function edit_task(id){
 }
 
 function edit_project(id) {
+    if(TM['need_restart']){
+        if(confirm('Система обновилась, для продолжения работы, необходимо обновить страницу!')){location.reload();}
+        return false;
+    }
     project=false;
     for(p in DB['PROJECT']){ // Поиск запрошенной задачи в БД
         if(DB['PROJECT'][p]['idproject']==id){
@@ -689,7 +701,7 @@ function task_viewed(id){
             break;
         }
     }
-    io({"action":"del_notify","type":"new_task","id":id});
+    if(!TM['need_restart']){io({"action":"del_notify","type":"new_task","id":id});}
 }
 
 function task_del(id){
@@ -717,6 +729,10 @@ function proj_del(id){
 }
 
 function show_add_project() {
+    if(TM['need_restart']){
+        if(confirm('Система обновилась, для продолжения работы, необходимо обновить страницу!')){location.reload();}
+        return false;
+    }
     source = '<div class="task_add"><div class="title"><h4>Создание нового проекта</h4></div><p>' +
     '<label for="name">Название</label><input type="text" name="task_title" id="name"></p>' +
     '<p><label for="description">Описание</label>' +
@@ -1049,6 +1065,10 @@ function del_user_group(user,group){
 }
 
 function upload_show(id,type){
+    if(TM['need_restart']){
+        if(confirm('Система обновилась, для продолжения работы, необходимо обновить страницу!')){location.reload();}
+        return false;
+    }
     if(!TM['upl_window']) {
         TM['upl_window']=window.open('','upl_'+type+'_'+id,"width=420,height=230,menubar=no,location=no,resizable=no,scrollbars=yes,status=no");
         TM['upl_window'].document.write('<!DOCTYPE html><html><head><meta charset="utf-8"></head>' +
