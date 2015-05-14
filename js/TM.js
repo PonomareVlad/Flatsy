@@ -1198,10 +1198,10 @@ function view(id,type){
         source+='<div class="project_title"><h4>'+project['nameproject'];
         if(project['initiator']==TM['UID']) {
             source += '<img onclick="proj_del(' + project['idproject'] + ');" src="templates/default/images/trash.png" id="trash">' +
-            '<img onclick="edit_project(' + project['idproject'] + ');" src="templates/default/images/b_pan_hover.png" id="edit_pen">' +
-            '<br/><div class="add_task"><a href="javascript:void(0)" onclick="show_add_task('+project.idproject+')">Добавить задачу</a></div><br/>';
+            '<img onclick="edit_project(' + project['idproject'] + ');" src="templates/default/images/b_pan_hover.png" id="edit_pen">';
         }
-        source+='</h4></div><p class="project_description">'+parseHash(project['description'])+'</p><div class="project_time">';
+        source+='<br/><div class="add_task"><a href="javascript:void(0)" onclick="show_add_task('+project.idproject+')">Добавить задачу</a></div><br/>' +
+        '</h4></div><p class="project_description">'+parseHash(project['description'])+'</p><div class="project_time">';
         source+='<div class="date_start">'+date_start+'</div><div class="date_end">'+date_finish+
         '</div><div class="project_time_all">';
         source+='<div class="countpercent">'+project['percent_view']+'</div><div class="project_rime_cur" style="width: '+project['percent']+'%"></div></div></div>';
