@@ -3,7 +3,7 @@
 header("HTTP/1.0 200 OK"); // Возвращаем успешное состояние при любых запросах
 header("Access-Control-Allow-Origin: *"); // Разрешаем CORS
 
-define('VERSION',61);
+define('VERSION',62);
 
 if(!defined('CORE')) {
 
