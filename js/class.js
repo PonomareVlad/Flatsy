@@ -144,7 +144,7 @@ function set_vmode(mode){
     gen_list();
 }
 
-function page(name,headgen){
+function page(name,headgen,viewid){
     if(typeof PAGE[name]!='undefined') {
         if ((TM['current_page'] != name) || headgen) {
             get('main').className='blur';
@@ -191,6 +191,10 @@ function page(name,headgen){
                 gen_list();
                 if(!TM['AUID']) {
                     TM['AUID'] = setInterval('main()', 1000);
+                }
+                if(viewid){
+                    type=name=='tasks'?'task':(name=='projects'?'project':'group');
+                    view(viewid,type);
                 }
             }
             // TESTING LOCAL STORAGE

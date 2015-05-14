@@ -804,7 +804,7 @@ function gen_list(){
         if(!DB['TASK']){
             TM['update_db']=true;
         }else{
-            current_in_list=TM['view_type']=='task'?false:true;
+            current_in_list=TM['view_type']!='task';
             source='';
             empty_list=true;
             //highlightd=false;
@@ -955,7 +955,7 @@ function gen_list(){
                 TM['highlight_day']=false;
                 TM['highlight_element']=false;
             }
-            document.getElementById('tasks').innerHTML=empty_list?'Нет задач':source; // BUILD WRITE
+            document.getElementById('tasks').innerHTML=empty_list?'':source; // BUILD WRITE
             if(current_in_list==false){
                 get('view').innerHTML='';
             }
@@ -1078,6 +1078,7 @@ function view(id,type){
             dbg('view('+id+',"'+type+'"): Bad ID!');
             return false;
         }
+        if(TM['current_page']=='tasks'||TM['current_page']=='projects'){}else{page('tasks',false,id);return false}
         TM['view_type'] = type;
         TM['view_id'] = id;
         if (TM['upl_window'] != false) {
