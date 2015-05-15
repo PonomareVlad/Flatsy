@@ -68,7 +68,7 @@ function handler(response) {
                                 datacom = [(date.getDate() < 10 ? '0' : '') + date.getDate(), date.getMonth()];
                                 datestring = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
                                 source += '<div class="comment">' +
-                                '<img src="' + comment['usercom_photo'] + '"><div class="info_text">' +
+                                '<img src="'+(TM['LOCAL']?'http://flatsy.ru':'') + comment['usercom_photo'] + '"><div class="info_text">' +
                                 '<a href="javascript:void(0)" onclick=\'view(' + comment['usercom'] + ',"user")\'><div class="name">' + comment['usercom_name'] + '</div></a>' +
                                 '<div class="date">' + (now == datestring ? ('сегодня в ' + timecom[0] + ':' + timecom[1]) : datacom[0] + ' ' + MONTH[parseInt(datacom[1])]) + '</div>' +
                                 '<p class="text">' + parseHash(comment['comment']) + '</p></div></div>';
@@ -138,7 +138,7 @@ function handler(response) {
                     datacom = [(tmpdate.getDate() < 10 ? '0' : '') + tmpdate.getDate(), tmpdate.getMonth()];
                     datestring = new Date(tmpdate.getFullYear(), tmpdate.getMonth(), tmpdate.getDate()+1).getTime();
                     source += '<div class="comment">' +
-                    '<img src="' + comment['usercom_photo'] + '"><div class="info_text">' +
+                    '<img src="' +(TM['LOCAL']?'http://flatsy.ru':'')+ comment['usercom_photo'] + '"><div class="info_text">' +
                     '<a href="javascript:void(0)" onclick=\'view(' + comment['usercom'] + ',"user")\'><div class="name">' + comment['usercom_name'] + '</div></a>' +
                     '<div class="date">' + (TM.today == datestring ? ('сегодня в ' + timecom[0] + ':' + timecom[1]) : datacom[0] + ' ' + MONTH[parseInt(datacom[1])]) + '</div>' +
                     '<p class="text">' + parseHash(comment['comment']) + '</p></div></div>';
