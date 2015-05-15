@@ -1,9 +1,10 @@
 var CROP={};
 var image=image||location.search.substr(1);
-function crop(){
-        CROP['filename']=image;
-        window.opener.crop_save(CROP);
-        window.close();
+function crop() {
+    CROP['filename'] = image;
+    //window.opener.crop_save(CROP);
+    window.opener.postMessage({'function': 'crop_save', 'crop': CROP}, '*');
+    window.close();
 }
 function init_crop() {
     window.resizeTo(document.getElementById('mofat').clientWidth+40,document.getElementById('mofat').clientHeight+130);

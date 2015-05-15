@@ -72,7 +72,7 @@ function objectToArray($d){
 }
 
 function dbg($text){
-    if (USER_ID == 1) {
+    if (@USER_ID == 1) {
         $text = $text . '
 ';
         $old = file(ROOT . 'errlog.txt');

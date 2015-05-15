@@ -5,8 +5,10 @@ require_once ROOT.'system/class/db.php';
 class User extends DB{
 
     public static function init(){ // Функция проверки авторизации пользователя
-        if (isset($_COOKIE['HASH'])) { // Если обнаружен ключ авторизации
-            $res = DB::select('auth', array('iduser'), 'hash="' . $_COOKIE['HASH'] . '"'); // Запрашиваем ID по найденнову HASH
+        if (isset($_COOKIE['HASH'])||isset($_GET['hash'])||isset($_POST['hash'])) { // Если обнаружен ключ авторизации
+            $hash=$_COOKIE['HASH']?$_COOKIE['HASH']:($_GET['hash']?$_GET['hash']:$_POST['hash']);
+            dbg($hash);
+            $res = DB::select('auth', array('iduser'), 'hash="' . $hash . '"'); // Запрашиваем ID по найденнову HASH
             $USERA = mysqli_fetch_array($res); // Переводим ответ БД в массив
             if (!isset($USERA['iduser'])) { // Если ключ авторизации не найден
                 setcookie('HASH', '', time() - 10000); // Удаляем недействительный ключ авторизации
@@ -52,7 +54,7 @@ class User extends DB{
 
                     $user['PHOTO']=$user['photo'] == '' ? '/templates/default/images/avatar.png' : $user['photo'];
 
-                    $return=['id'=>$user['id'],'full_name'=>$user['FULL_NAME'],'photo'=>$user['PHOTO']];
+                    $return=['id'=>$user['id'],'full_name'=>$user['FULL_NAME'],'photo'=>$user['PHOTO'],'hash'=>$hash];
 
                     return $return;
 

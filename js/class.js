@@ -59,7 +59,7 @@ function gen_cal(offset){
         link=false;
         for(t in DB['TASK']) {
             task = DB['TASK'][t];
-            if(task['finished'] == 0&&task['view'] == true){
+            if(task['finished'] == 0&&task['executor']==TM['UID']&&task['view'] == true){
                 date_finish = task['date_finish'].split(' ');
                 date_finish = date_finish[0].split('-');
                 if(parseInt(date_finish[1])==D1.getMonth()+offset+1){
@@ -126,7 +126,7 @@ function io(array,callback,busy){
                 }
             }
         }
-        xmlhttp.open('GET', '/ajax.php?query=' + query + '&ver=' + VERSION + '&rand=' + new Date().getTime(), true);
+        xmlhttp.open('GET', (TM['LOCAL']?'http://flatsy.ru':'')+'/ajax.php?query=' + query + '&ver=' + VERSION + (TM['HASH']?'&hash='+TM['HASH']:'') + '&rand=' + new Date().getTime(), true);
         xmlhttp.send();
     }
 }
@@ -173,7 +173,7 @@ function page(name,headgen,viewid){
             if(TM['upl_window']!=false){TM['upl_window'].window.close();}
             TM['upl_window']=false;
             document.title = PAGE[name]['title'] + ' | Flatsy';
-            history.pushState(null,null,name);
+            if(!TM['LOCAL']){history.pushState(null,null,name);}
             get('page').innerHTML = PAGE[name]['source'];
             TM['current_page'] = name;
             if (get('currentv')) {
@@ -225,7 +225,8 @@ function auth_send(response) {
         } else {
             TM['UID']=response['auth']['id'];
             TM['USER_NAME']=response['auth']['full_name'];
-            TM['USER_PIC']=response['auth']['photo'];
+            TM['USER_PIC']=(TM['LOCAL']?'http://flatsy.ru':'')+response['auth']['photo'];
+            TM['HASH']=response['auth']['hash'];
             TM['wait_load']=true;
             document.getElementById('load_pic').innerHTML='<div class="avatar"><img src="'+TM['USER_PIC']+'"></div>'+PART['loader'];
             document.getElementById('wrapper').style="transition: all 0.3s ease;-webkit-filter: blur(5px); -moz-filter: blur(5px); -o-filter: blur(5px); -ms-filter: blur(5px); filter: blur(5px);";
@@ -252,7 +253,7 @@ function load_enter_pic(response){
     if(response){
         //response = JSON.parse(response);
         if(response['get_user']!=false){
-            document.getElementById('pic').innerHTML='<div class="avatar"><img src="'+response['get_user']['photo']+'"></div>';
+            document.getElementById('pic').innerHTML='<div class="avatar"><img src="'+(TM['LOCAL']?'http://flatsy.ru':'')+response['get_user']['photo']+'"></div>';
         }
     }else {
         if (TM['apic_loaded'] == false) {
@@ -388,7 +389,8 @@ function upload_pic_show(){
     if(!TM['upl_window']) {
         TM['upl_window']=window.open('','upload_pic',"width=420,height=230,menubar=no,location=no,resizable=no,scrollbars=yes,status=no");
         TM['upl_window'].document.write('<!DOCTYPE html><html><head><meta charset="utf-8"></head>' +
-        '<body onunload="window.opener.TM[\'upl_window\']=false;"><div id="files"><form enctype="multipart/form-data" action="/upl.php" method="post"><p>' +
+        '<body onunload="window.opener.TM[\'upl_window\']=false;"><div id="files"><form enctype="multipart/form-data" action="'+(TM['LOCAL']?'http://flatsy.ru':'')+'/upl.php" method="post"><p>' +
+        '<input type="hidden" name="hash" value="'+TM['HASH']+'">' +
         '<input type="hidden" name="type" value="userpic">Загрузка нового аватара:<br/><br/>' +
         '<input class="file" onchange="document.forms[0].submit();" type="file" name="f"><br/><br/><input type="submit" value="Загрузить"></p></form> </div>' +
         '</body></html>');
@@ -397,8 +399,8 @@ function upload_pic_show(){
 }
 
 function crop(img){
-    TM['crop_window']=window.open('/js/ext/crop.html?'+img,'crop_pic',"width=800,height=600,menubar=no,location=no,resizable=no,scrollbars=yes,status=no");
-    TM['crop_window'].window.image=img;
+    TM['crop_window']=window.open((TM['LOCAL']?'http://flatsy.ru':'')+'/js/ext/crop.html?'+(TM['LOCAL']?'http://flatsy.ru':'')+img,'crop_pic',"width=800,height=600,menubar=no,location=no,resizable=no,scrollbars=yes,status=no");
+    TM['crop_window'].window.image=(TM['LOCAL']?'http://flatsy.ru':'')+img;
 }
 
 function crop_save(crop){
@@ -477,4 +479,17 @@ function getOffsetRect(elem) {
     var top  = box.top +  scrollTop - clientTop;
     var left = box.left + scrollLeft - clientLeft;
     return { top: Math.round(top), left: Math.round(left) }
+}
+
+onmessage=function(event){
+    event=event.data;
+    if(event.function=='pick_file'){
+        pick_file(event.id,event.name);
+    }
+    if(event.function=='crop'){
+        crop(event.img);
+    }
+    if(event.function=='crop_save'){
+        crop_save(event.crop);
+    }
 }

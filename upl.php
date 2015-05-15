@@ -105,7 +105,7 @@ if(isset($_POST['id'])&&$_POST['id']=='new'){
         if (move_uploaded_file($_FILES['f']['tmp_name'], $uploadfile)) {
             $name = resize($uploadfile,$_FILES['f']['type']);
             echo('<html><head><title>Файл загружен</title><script>
-function save(){window.opener.crop("/users/'.USER_ID.'/files/'.$uplname.'");window.close();}
+function save(){window.opener.postMessage({\'function\':\'crop\',\'img\':\'/users/'.USER_ID.'/files/'.$uplname.'\'},\'*\');window.close();}
 </script></head><body onload="save();">Файл загружен, для продолжения нажмите кнопку:<br/><button onclick="save();" value="Прикрепить">Обрезать</button></body></html>');
         } else {
             echo "Ошибка загрузки";
@@ -122,7 +122,7 @@ if (move_uploaded_file($_FILES['f']['tmp_name'], $uploadfile)) {
     DB::insert('files',['iduser'=>USER_ID,'namefile'=>Checkdata($_FILES['f']['name']),'path'=>$uploadfile,'timeload'=>$date,'type'=>$_POST['type'],'object'=>$object]);
     $file=mysqli_fetch_assoc(DB::select('files',['*'],'namefile="'.$_FILES['f']['name'].'" AND timeload="'.$date.'"'));
     echo('<html><head><title>Файл загружен</title><script>
-function save(){window.opener.pick_file('.$file['idfile'].',"'.$file['namefile'].'");window.close();}
+function save(){window.opener.postMessage({\'function\':\'pick_file\',\'id\':\''.$file['idfile'].'\',\'name\':\''.$file['namefile'].'\'},\'*\');window.close();}
 </script></head><body onload="save();">Файл '.$file['namefile'].' загружен, для продолжения нажмите кнопку:<br/><button onclick="save();" value="Прикрепить">Прикрепить</button></body></html>');
 } else {
     echo "Ошибка загрузки";

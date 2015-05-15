@@ -4,7 +4,7 @@ PART=[];
 PART['header']='<header><ul class="menu"><li>'+
 '<a href="javascript:void(0)" onclick="page(\'tasks\');">Задачи</a></li><li><a href="javascript:void(0)" onclick="page(\'projects\');">Проекты</a></li><li>' +
 '<a href="javascript:void(0)" onclick="page(\'groups\');">Группы</a></li></ul><div class="user_menu">' +
-'<div onclick="upload_pic_show()" class="avatar"><img id="user_pic" src="/templates/default/images/avatar.png"></div><div><span id="user_name">USER_NAME</span></div>' +
+'<div id="avatar" onclick="upload_pic_show()" class="avatar"><img id="user_pic" src="/templates/default/images/avatar.png"></div><div><span id="user_name">USER_NAME</span></div>' +
 '<div class="arrow"></div><ul>' +
 //'<li><a>Мои данные</a></li><li onclick="page(\'lk\',true);"><a>Настройки</a></li>' +
 '<li onclick="logout();"><a>Выход</a></li></ul></div>' +

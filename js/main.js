@@ -32,6 +32,9 @@ if(typeof SERVER !='undefined') {
 }else{
     localStorage.clear();
 }
+if(location.protocol=='file:'){
+    TM['LOCAL']=true;
+}
 //////////////////////////////////////
 /*/ TESTING LOCAL STORAGE
 if(supports_html5_storage()){

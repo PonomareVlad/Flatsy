@@ -354,15 +354,12 @@ function handler(response) {
             if (response['pick_file']){
                 file=response['pick_file'];
                 type=file.type.toUpperCase();
-                //window.console.log('Search: '+file.object);
                 for (i in DB[type]) {
-                    //window.console.log(DB[type][i]['id']);
                     if (DB[type][i]['id'] == file.object||DB[type][i]['idproject'] == file.object) {
-                        //window.console.log(DB[type][i]);
                         if (DB[type][i]['files'].length==0) {
-                            get('files').innerHTML = '<span id="file' + file.id + '"><a href="/file.php?id='+file.id+'">'+ file.name +'</a> <a href="javascript:void(0)" onclick="unpick_file(' + file.id + ')"><img src="templates/default/images/close.png"></a></span>';
+                            get('files').innerHTML = '<span id="file' + file.id + '"><a href="'+(TM['LOCAL']?'http://flatsy.ru':'')+'/file.php?id='+file.id+'">'+ file.name +'</a> <a href="javascript:void(0)" onclick="unpick_file(' + file.id + ')"><img src="templates/default/images/close.png"></a></span>';
                         }else{
-                            get('files').innerHTML += '<span id="file' + file.id + '">, <a href="/file.php?id='+file.id+'">'+ file.name +'</a> <a href="javascript:void(0)" onclick="unpick_file(' + file.id + ')"><img src="templates/default/images/close.png"></a></span>';
+                            get('files').innerHTML += '<span id="file' + file.id + '">, <a href="'+(TM['LOCAL']?'http://flatsy.ru':'')+'/file.php?id='+file.id+'">'+ file.name +'</a> <a href="javascript:void(0)" onclick="unpick_file(' + file.id + ')"><img src="templates/default/images/close.png"></a></span>';
                         }
                         DB[type][i]['files'][DB[type][i]['files'].length]={'id':file.id,'name':file.name,'iduser':file.iduser};
                     }
@@ -370,8 +367,9 @@ function handler(response) {
                 gen_list();
             }
             if (response['crop']){
-                TM['USER_PIC']=response['crop'];
-                location.reload();
+                TM['USER_PIC']=(TM['LOCAL']?'http://flatsy.ru':'')+response['crop'];
+                get('avatar').innerHTML = '<img id="user_pic" src="'+TM['USER_PIC']+'">';
+                //location.reload();
                 //page(TM['current_page'],true);
             }
             // TESTING LOCAL STORAGE
@@ -402,6 +400,9 @@ function handler(response) {
                 TM['months'] = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
                 TM['now'] = new Date(new Date().getTime() + TM['time_offset']).getTime();
                 //document.getElementById('main').className='noblur';
+                if(location.protocol=='file:'){
+                    TM['LOCAL']=true;
+                }
             }
         }
     }
@@ -1072,9 +1073,10 @@ function upload_show(id,type){
     if(!TM['upl_window']) {
         TM['upl_window']=window.open('','upl_'+type+'_'+id,"width=420,height=230,menubar=no,location=no,resizable=no,scrollbars=yes,status=no");
         TM['upl_window'].document.write('<!DOCTYPE html><html><head><meta charset="utf-8"></head>' +
-        '<body onunload="window.opener.TM[\'upl_window\']=false;"><div id="files"><form enctype="multipart/form-data" action="/upl.php" method="post"><p>' +
+        '<body onunload="window.opener.TM[\'upl_window\']=false;"><div id="files"><form enctype="multipart/form-data" action="'+(TM['LOCAL']?'http://flatsy.ru':'')+'/upl.php" method="post"><p>' +
         '<input type="hidden" name="type" value="'+type+'">' +
         '<input type="hidden" name="id" value="'+id+'">' +
+        '<input type="hidden" name="hash" value="'+TM['HASH']+'">' +
         //'<input class="file" type="file" name="f1"></br>' +
         //'<input class="file" type="file" name="f2"><br/>' +
         '<input class="file" onchange="document.forms[0].submit();" type="file" name="f"><br/><br/><input type="submit" value="Загрузить"></p></form> </div>' +
@@ -1147,7 +1149,7 @@ function view(id,type){
         source+='<div class="files">Прикрепленные файлы:<br><span id="files">';
         if (task['files'].length > 0) {
             for(f in task['files']){
-                source+='<span id="file' + task['files'][f]['id'] + '">'+(f==0?'':', ')+'<a href="/file.php?id='+task['files'][f]['id']+'">'+task['files'][f]['name']+'</a>';
+                source+='<span id="file' + task['files'][f]['id'] + '">'+(f==0?'':', ')+'<a href="'+(TM['LOCAL']?'http://flatsy.ru':'')+'/file.php?id='+task['files'][f]['id']+'">'+task['files'][f]['name']+'</a>';
                 if(task['files'][f]['iduser']==TM.UID){
                     source+=' <a href="javascript:void(0)" onclick="unpick_file(' + task['files'][f]['id'] + ')"><img src="templates/default/images/close.png"></a>';
                 }
@@ -1261,7 +1263,7 @@ function view(id,type){
         source+='<div class="files">Прикрепленные файлы:<br><span id="files">';
         if (project['files'].length > 0) {
             for(f in project['files']){
-                source+='<span id="file' + project['files'][f]['id'] + '">'+(f==0?'':', ')+'<a href="/file.php?id='+project['files'][f]['id']+'">'+project['files'][f]['name']+'</a>';
+                source+='<span id="file' + project['files'][f]['id'] + '">'+(f==0?'':', ')+'<a href="'+(TM['LOCAL']?'http://flatsy.ru':'')+'/file.php?id='+project['files'][f]['id']+'">'+project['files'][f]['name']+'</a>';
                 if(project['files'][f]['iduser']==TM.UID){
                     source+=' <a href="javascript:void(0)" onclick="unpick_file(' + project['files'][f]['id'] + ')"><img src="templates/default/images/close.png"></a>';
                 }
