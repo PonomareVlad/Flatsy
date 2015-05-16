@@ -51,6 +51,7 @@ TM['update_db']=true;
 
 function main(){
     if(!TM['need_restart']) {
+        if(getCookie('invite_hash')) {io({"action": "parse_hash", "hash": getCookie('invite_hash')});deleteCookie('invite_hash');}
         io({"action": "check"});
     }
     //TM['now'] = new Date(new Date().getTime()+TM['time_offset']).getTime();
@@ -89,32 +90,13 @@ function sizing() {
 
 function init(arg) {
     TM['GET_PARAM']=urlParams;
+    if(TM['GET_PARAM']['invite_hash']) {
+        setCookie('invite_hash', TM['GET_PARAM']['invite_hash']);
+        delete TM['GET_PARAM']['hash'];
+    }
     if (TM['UID']) {
         TM['current_page']=(TM['current_page']=='auth'||TM['current_page']=='reg')?'tasks':TM['current_page'];
         TM['current_page']=PAGE[TM['current_page']]?TM['current_page']:'tasks';
-        if(TM['GET_PARAM']['hash']){
-            if(TM['param_send']==true){
-                if(arg){
-                    arg=JSON.parse(arg);
-                    if(!arg['parse_hash']) {
-                        alert('Не удалось зарегистрировать ключ');
-                        //alert(arg);
-                    }
-                    TM['current_page']='groups';
-                }
-                TM['wait_load']=true;
-                TM['GET_PARAM']['hash']=false;
-                io({'action':'load_db'});
-            }else {
-                document.getElementById('main').className = "blur";
-                if (TM['update_db'] == false) {
-                    page(TM['current_page'] == false ? 'tasks' : TM['current_page'], true);
-                }
-                TM['param_send']=true;
-                io({"action": "parse_hash", "hash": TM['GET_PARAM']['hash']}, init);
-            }
-            return;
-        }
         if(TM['update_db']==true){
             TM['wait_load']=true;
             document.getElementById('main').className="blur";
@@ -122,6 +104,7 @@ function init(arg) {
         }else{
             page(TM['current_page']==false?'tasks':TM['current_page'],true);
         }
+        main();
     }else{
         page('auth',false);
     }

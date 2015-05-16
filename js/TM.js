@@ -345,7 +345,7 @@ function handler(response) {
             }
             if (response['gen_invite_group']) {
                 if (response['gen_invite_group'] != false) {
-                    get('invite_text').innerHTML = 'Перейдя по ссылке пользователь попадет в вашу группу: <input onclick="select(this);" type="text" value="http://' + location.host + '/?hash=' + response['gen_invite_group'] + '" size="60" id="name"/>';
+                    get('invite_text').innerHTML = 'Перейдя по ссылке пользователь попадет в вашу группу: <input onclick="select(this);" type="text" value="http://' + location.host + '/?invite_hash=' + response['gen_invite_group'] + '" size="60" id="name"/>';
                 }
             }
             if (response['del_notify']) {
@@ -371,6 +371,11 @@ function handler(response) {
                 get('avatar').innerHTML = '<img id="user_pic" src="'+TM['USER_PIC']+'">';
                 //location.reload();
                 //page(TM['current_page'],true);
+            }
+            if (response['parse_hash']) {
+                page('groups');
+                TM['tmp_rebuild_lists']=true;
+                io({'action': 'load_db'});
             }
             // TESTING LOCAL STORAGE
             if(supports_html5_storage()){
