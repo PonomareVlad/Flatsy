@@ -1,23 +1,8 @@
 <?php
 
 function head(){ // Фунция генерации основных элементов тега HEAD
-    //$title = $GLOBALS['title_page'] == "" ? "EasyTM" : $GLOBALS['title_page'] . ' | EasyTM'; // Устанавливаем заголовок
     $title='Flatsy';
     $scripts='';
-    if (defined('USER_ID')) { // Если пользователь авторизован
-        $scripts.='<script>';
-        $scripts.='SERVER=[];';
-        $scripts.='SERVER["ID"]='.USER_ID.';';
-        $scripts.='SERVER["NAME"]="'.USER_NAME.'";';
-        $scripts.='SERVER["PIC"]="'.USER_PIC.'";';
-        if(defined('PAGE')){
-            $scripts.='SERVER["PAGE"]="'.PAGE.'";';
-        }
-        $DB=[];
-        $DB['TASK']=TM::get_tasks();
-        //$scripts.='var DB='.json_encode($DB).';';
-        $scripts.='</script>';
-    }
 
     // Подключение скриптов
     $js_dir = scandir(ROOT.'/js');

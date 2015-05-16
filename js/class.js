@@ -242,8 +242,6 @@ function auth_send(response) {
             "pass": document.getElementById('pass').value
         };
         document.getElementById('pass').value='';
-        //query = JSON.stringify(send);
-        //Ajax('GET', '/ajax.php?query=' + query + '&rand=' + new Date().getTime(), 'authi');
         io(send,auth_send);
     }
 };

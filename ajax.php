@@ -134,6 +134,16 @@ if(defined('USER_ID')) { // Статус авторизации
         if ($QUERY['action'] == 'crop') {
             $RESPONSE['crop'] = FILE::crop($QUERY['crop']);
         }
+        if ($QUERY['action'] == 'init') {
+            $RESPONSE['ID'] = USER_ID;
+            $RESPONSE['NAME'] = USER_NAME;
+            $RESPONSE['PIC'] = USER_PIC;
+            /*$DB=[];
+            $DB['GROUP']=User::get_groups();
+            $DB['PROJECT']=TM::get_projects($DB['GROUP']);
+            $DB['TASK']=TM::get_tasks($DB['PROJECT']);
+            $RESPONSE['DB']=$DB;*/
+        }
     }
 }else {
     $RESPONSE['auth'] = false;

@@ -1,4 +1,4 @@
-var VERSION=62;
+var VERSION=63;
 var TM={};
 TM['current_page']=false;
 TM['tasks_mode']='all';
@@ -24,14 +24,14 @@ for(i in tmpver){
 }
 delete tmpver;
 
-if(typeof SERVER !='undefined') {
+/*if(typeof SERVER !='undefined') {
     TM['UID'] = SERVER['ID'];
     TM['USER_NAME'] = SERVER['NAME'];
     TM['USER_PIC'] = SERVER['PIC'];
     TM['current_page'] = SERVER['PAGE']?SERVER['PAGE']:false;
 }else{
     localStorage.clear();
-}
+}*/
 if(location.protocol=='file:'){
     TM['LOCAL']=true;
 }
@@ -47,7 +47,7 @@ if(supports_html5_storage()){
     }
 }
 *//////////////////////////////////////
-TM['update_db']=true;
+//TM['update_db']=true;
 
 function main(){
     if(!TM['need_restart']) {
@@ -88,25 +88,12 @@ function sizing() {
     }
 }
 
-function init(arg) {
-    TM['GET_PARAM']=urlParams;
-    if(TM['GET_PARAM']['invite_hash']) {
+function init() {
+    io({'action': 'init'});
+    TM['GET_PARAM'] = urlParams;
+    if (TM['GET_PARAM']['invite_hash']) {
         setCookie('invite_hash', TM['GET_PARAM']['invite_hash']);
         delete TM['GET_PARAM']['hash'];
-    }
-    if (TM['UID']) {
-        TM['current_page']=(TM['current_page']=='auth'||TM['current_page']=='reg')?'tasks':TM['current_page'];
-        TM['current_page']=PAGE[TM['current_page']]?TM['current_page']:'tasks';
-        if(TM['update_db']==true){
-            TM['wait_load']=true;
-            document.getElementById('main').className="blur";
-            io({'action':'load_db'});
-        }else{
-            page(TM['current_page']==false?'tasks':TM['current_page'],true);
-        }
-        main();
-    }else{
-        page('auth',false);
     }
 }
 

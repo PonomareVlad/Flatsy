@@ -96,12 +96,8 @@ function handler(response) {
                 TM['update_db'] = false;
                 if (TM['wait_load']) {
                     TM['wait_load'] = false;
-                    //alert('load page..');
                     TM['current_page'] = (TM['current_page'] == 'auth' || TM['current_page'] == 'reg') ? 'tasks' : TM['current_page'];
-                    //TM['current_page']=PAGE[TM['current_page']]?TM['current_page']:'tasks';
-                    //document.getElementById('main').className='blur';
                     page(TM['current_page'] == false ? 'tasks' : TM['current_page'], true);
-                    //alert('loaded');
                 }
                 if (TM['tmp_rebuild_lists']) {
                     TM['highlight_day'] = false;
@@ -117,8 +113,6 @@ function handler(response) {
                     TM['tmp_view_upd'] = false;
                 }
                 document.getElementById('main').className = 'noblur';
-                // BUILD REFRESH VIEW
-                //gen_list();
             }
             if (response['new_comment']) {
                 comment = response['new_comment'];
@@ -377,13 +371,25 @@ function handler(response) {
                 TM['tmp_rebuild_lists']=true;
                 io({'action': 'load_db'});
             }
-            // TESTING LOCAL STORAGE
-            if(supports_html5_storage()){
-                localStorage['DB'] = JSON.stringify(DB);
+            if (response['ID']&&response['NAME']&&response['PIC']) {
+                TM['UID'] = response['ID'];
+                TM['USER_NAME'] = response['NAME'];
+                TM['USER_PIC'] = response['PIC'];
+                TM['HASH']=getCookie('HASH');
+                TM['current_page'] = (TM['current_page'] == 'auth' || TM['current_page'] == 'reg') ? 'tasks' : TM['current_page'];
+                TM['current_page'] = PAGE[TM['current_page']] ? TM['current_page'] : 'tasks';
+                TM['wait_load'] = true;
+                document.getElementById('main').className = "blur";
+                io({'action': 'load_db'});
+                main();
             }
+            // TESTING LOCAL STORAGE
+            //if(supports_html5_storage()&&!TM['wait_load']){
+            //    localStorage['DB'] = JSON.stringify(DB);
+            //}
         } else {
             if (TM['UID']) {
-                localStorage.clear();
+                //localStorage.clear();
                 DB = false;
                 offline();
                 page('auth');
@@ -409,6 +415,10 @@ function handler(response) {
                     TM['LOCAL']=true;
                 }
             }
+            localStorage.clear();
+        }
+        if(!TM['UID']&&!TM['wait_load']){
+            page('auth', false);
         }
     }
 }
