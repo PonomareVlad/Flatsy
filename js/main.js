@@ -28,10 +28,12 @@ delete tmpver;
     TM['UID'] = SERVER['ID'];
     TM['USER_NAME'] = SERVER['NAME'];
     TM['USER_PIC'] = SERVER['PIC'];
-    TM['current_page'] = SERVER['PAGE']?SERVER['PAGE']:false;
 }else{
     localStorage.clear();
 }*/
+
+TM['current_page'] = location.pathname.substr(1)!=''?location.pathname.substr(1):false;
+
 if(location.protocol=='file:'){
     TM['LOCAL']=true;
 }
