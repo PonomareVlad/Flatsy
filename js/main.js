@@ -95,7 +95,11 @@ function init() {
     TM['GET_PARAM'] = urlParams;
     if (TM['GET_PARAM']['invite_hash']) {
         setCookie('invite_hash', TM['GET_PARAM']['invite_hash']);
+        if(!TM['LOCAL']){history.replaceState(null,null,TM['current_page']||'/');}
         delete TM['GET_PARAM']['hash'];
+    }else{
+        TM['QUERY']=location.search;
+        if(!TM['LOCAL']){history.replaceState(null,null,TM['current_page']||'/');}
     }
 }
 

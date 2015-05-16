@@ -173,7 +173,7 @@ function page(name,headgen,viewid){
             if(TM['upl_window']!=false){TM['upl_window'].window.close();}
             TM['upl_window']=false;
             document.title = PAGE[name]['title'] + ' | Flatsy';
-            if(!TM['LOCAL']){history.pushState(null,null,name);}
+            if(!TM['LOCAL']){history.pushState(null,document.title,name);}
             get('page').innerHTML = PAGE[name]['source'];
             TM['current_page'] = name;
             if (get('currentv')) {
@@ -199,6 +199,13 @@ function page(name,headgen,viewid){
                 if(viewid){
                     type=name=='tasks'?'task':(name=='projects'?'project':'group');
                     view(viewid,type);
+                }else{
+                    TM['QUERY']=TM['QUERY']||location.search;
+                    if(TM['QUERY'].substr(1).indexOf('=')>-1) {
+                        query = TM['QUERY'].substr(1).split('=');
+                        view(query[1], query[0]);
+                    }
+                    delete TM['QUERY'];
                 }
             }
             // TESTING LOCAL STORAGE

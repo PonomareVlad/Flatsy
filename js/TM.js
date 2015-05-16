@@ -1180,6 +1180,8 @@ function view(id,type){
         document.getElementById('view').innerHTML = source;
         document.getElementById('spinner').style.position = 'relative';
         document.getElementById('overlay').style.marginTop = '0px';
+        document.title = task['name'] + ' | Flatsy';
+        if(!TM['LOCAL']){history.pushState(null,document.title,TM['current_page']+'?task='+task['id']);}
         init_comments(task['id'], type);
         sizing();
         if(task['new']){
@@ -1294,6 +1296,8 @@ function view(id,type){
         document.getElementById('view').innerHTML=source;
         document.getElementById('spinner').style.position='relative';
         document.getElementById('overlay').style.marginTop='0px';
+        document.title = project['name'] + ' | Flatsy';
+        if(!TM['LOCAL']){history.pushState(null,document.title,TM['current_page']+'?project='+project['idproject']);}
         init_comments(project['idproject'],type);
         sizing();
         TM['ufiles']=[];
@@ -1354,6 +1358,8 @@ function view(id,type){
         }
         //source+='</div><div class="item_title">Подгруппы ('+(group['subgroup'].length)+')</div>';
         get('view').innerHTML=source;
+        document.title = group['name'] + ' | Flatsy';
+        if(!TM['LOCAL']){history.pushState(null,document.title,TM['current_page']+'?group='+group['idgroup']);}
     }
     onclick();
     // TESTING LOCAL STORAGE
