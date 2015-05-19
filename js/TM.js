@@ -1296,7 +1296,7 @@ function view(id,type){
         document.getElementById('view').innerHTML=source;
         document.getElementById('spinner').style.position='relative';
         document.getElementById('overlay').style.marginTop='0px';
-        document.title = project['name'] + ' | Flatsy';
+        document.title = project['nameproject'] + ' | Flatsy';
         if(!TM['LOCAL']){history.pushState(null,document.title,TM['current_page']+'?project='+project['idproject']);}
         init_comments(project['idproject'],type);
         sizing();
@@ -1358,7 +1358,7 @@ function view(id,type){
         }
         //source+='</div><div class="item_title">Подгруппы ('+(group['subgroup'].length)+')</div>';
         get('view').innerHTML=source;
-        document.title = group['name'] + ' | Flatsy';
+        document.title = group['namegroup'] + ' | Flatsy';
         if(!TM['LOCAL']){history.pushState(null,document.title,TM['current_page']+'?group='+group['idgroup']);}
     }
     onclick();
