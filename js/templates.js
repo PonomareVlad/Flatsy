@@ -2,8 +2,8 @@ PAGE=[];
 PART=[];
 
 PART['header']='<header><ul class="menu"><li>'+
-'<a href="javascript:void(0)" onclick="page(\'tasks\');">Задачи</a></li><li><a href="javascript:void(0)" onclick="page(\'projects\');">Проекты</a></li><li>' +
-'<a href="javascript:void(0)" onclick="page(\'groups\');">Группы</a></li></ul><div class="user_menu">' +
+'<a href="javascript:void(0)" onclick="page(\'tasks\');" id="btn_tasks">Задачи</a></li><li><a href="javascript:void(0)" onclick="page(\'projects\');" id="btn_projects">Проекты</a></li><li>' +
+'<a href="javascript:void(0)" onclick="page(\'groups\');" id="btn_groups">Группы</a></li></ul><div class="user_menu">' +
 '<div id="avatar" onclick="upload_pic_show()" class="avatar"><img id="user_pic" src="/templates/default/images/avatar.png"></div><div><span id="user_name">USER_NAME</span></div>' +
 '<div class="arrow"></div><ul>' +
 //'<li><a>Мои данные</a></li><li onclick="page(\'lk\',true);"><a>Настройки</a></li>' +
@@ -12,16 +12,6 @@ PART['header']='<header><ul class="menu"><li>'+
 //'<li><a>Уведомлениие 2<img src="templates/default/images/cancel_hover.png"></a></li>' +
 //'<li><a>Уведомле 3<img src="templates/default/images/cancel_hover.png"></a></li></ul></div>' +
 '</header><div class="arrow-top"></div><div class="calendar" onselectstart="return false" onmousedown="return false"><div id="prev" onclick="get(\'calendar\').scrollLeft-=56*3;"></div><div id="calendar"></div><div id="next" onclick="get(\'calendar\').scrollLeft+=56*3;"></div></div>';
-
-/*PART['header_slim']='<header><ul class="menu"><li><a href="javascript:void(0)" onclick="page(\'tasks\',true);">Главная</a></li><li>' +
-'<a href="javascript:void(0)" onclick="page(\'tasks\',true);">Задачи</a></li><li><a href="javascript:void(0)" onclick="page(\'projects\',true);">Проекты</a></li><li>' +
-'<a href="javascript:void(0)" onclick="page(\'groups\',true);">Группы</a></li></ul><div class="user_menu">' +
-'<div class="avatar"><img id="user_pic" src="/templates/default/images/avatar.png"></div><div><span id="user_name">USER_NAME</span></div>' +
-'<div class="arrow"></div><ul><li><a>Мои данные</a></li><li onclick="page(\'lk\',true);"><a>Настройки</a></li><li onclick="logout();"><a>Выход</a>' +
-'</li></ul></div><div class="notifications"><div>Уведомления(2)</div><ul><li><a>Уведомлениие 1<img src="templates/default/images/cancel_hover.png"></a> ' +
-'</li><li><a>Уведомлениие 2<img src="templates/default/images/cancel_hover.png"></a></li><li>' +
-'<a>Уведомле 3<img src="templates/default/images/cancel_hover.png"></a></li></ul>' +
-'</div></header><div class="arrow-top"></div>';*/
 
 PART['loader']='<div id="overlay" class="overlay"><div id="spinner" class="spinner center"><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div></div></div>'
 

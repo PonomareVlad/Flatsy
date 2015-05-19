@@ -101,6 +101,26 @@ function init() {
         TM['QUERY']=location.search;
         if(!TM['LOCAL']){history.replaceState(null,null,TM['current_page']||'/');}
     }
+    document.onkeyup = function (e) {
+        e = e || window.event;
+        //alert(e.keyCode);
+        if(TM['current_page']=='auth') {
+            if (e.keyCode === 13) {
+                if (document.getElementById('pass').value != '') {
+                    auth_send();
+                }
+            }
+        }
+        if(TM['CID']) {
+            if(e.keyCode==10||(e.ctrlKey&&e.keyCode==13)) {
+                document.getElementById('new_comm').value+='\r\n';
+            }
+            if (e.keyCode == 13&&!e.ctrlKey) {
+                add_comment();
+            }
+        }
+        return false;
+    }
 }
 
 function onclick(){
@@ -108,25 +128,4 @@ function onclick(){
         TM['tmp_group_add_line']=false;
         get('add_line').innerHTML='<div class="plus"><div id="p1"></div><div id="p2"></div><div id="p3"></div><div id="p4"></div></div>Добавить группу';
     }
-}
-
-document.onkeyup = function (e) {
-    e = e || window.event;
-    //alert(e.keyCode);
-    if(TM['current_page']=='auth') {
-        if (e.keyCode === 13) {
-            if (document.getElementById('pass').value != '') {
-                auth_send();
-            }
-        }
-    }
-    if(TM['CID']) {
-        if(e.keyCode==10||(e.ctrlKey&&e.keyCode==13)) {
-            document.getElementById('new_comm').value+='\r\n';
-        }
-        if (e.keyCode == 13&&!e.ctrlKey) {
-            add_comment();
-        }
-    }
-    return false;
 }

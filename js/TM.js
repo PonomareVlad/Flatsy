@@ -418,6 +418,7 @@ function handler(response) {
             localStorage.clear();
         }
         if(!TM['UID']&&!TM['wait_load']){
+            TM['current_page']=false;
             page('auth', false);
         }
     }

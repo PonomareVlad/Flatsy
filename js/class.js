@@ -172,6 +172,7 @@ function page(name,headgen,viewid){
             TM['tmp_group_add_line']=false;
             if(TM['upl_window']!=false){TM['upl_window'].window.close();}
             TM['upl_window']=false;
+            old_page_name=TM['current_page'];
             document.title = PAGE[name]['title'] + ' | Flatsy';
             if(!TM['LOCAL']){history.pushState(null,document.title,name);}
             get('page').innerHTML = PAGE[name]['source'];
@@ -192,6 +193,7 @@ function page(name,headgen,viewid){
                 get('about').innerHTML='FLATSY v.'+FLATSY;
             }
             if(name=='tasks'||name=='projects'||name=='groups'){
+                //set_btn(name,old_page_name);
                 gen_list();
                 if(!TM['AUID']) {
                     TM['AUID'] = setInterval('main()', 1000);
@@ -215,9 +217,9 @@ function page(name,headgen,viewid){
             //setTimeout(get('main').className='noblur',2000);
             get('main').className='noblur';
             //alert(name);
+            sizing();
         }
         onclick();
-        sizing();
     }
     return false;
 }
@@ -410,6 +412,14 @@ function crop(img){
 
 function crop_save(crop){
     io({'action':'crop','crop':crop});
+}
+
+function set_btn(active,deactive){
+    if(get('btn_'+deactive)){get('btn_'+deactive).style='';}
+    if(get('btn_'+active)) {
+        get('btn_' + active).style.color = '#fff';
+        get('btn_' + active).style.backgroundColor = '#bbb';
+    }
 }
 
 function str_replace(search, replace, subject) {
