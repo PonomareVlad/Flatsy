@@ -193,7 +193,7 @@ function page(name,headgen,viewid){
                 get('about').innerHTML='FLATSY v.'+FLATSY;
             }
             if(name=='tasks'||name=='projects'||name=='groups'){
-                //set_btn(name,old_page_name);
+                set_btn(name,old_page_name);
                 gen_list();
                 if(!TM['AUID']) {
                     TM['AUID'] = setInterval('main()', 1000);
