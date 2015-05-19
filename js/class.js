@@ -174,7 +174,7 @@ function page(name,headgen,viewid){
             TM['upl_window']=false;
             old_page_name=TM['current_page'];
             document.title = PAGE[name]['title'] + ' | Flatsy';
-            if(!TM['LOCAL']){history.pushState(null,document.title,name);}
+            if(!TM['LOCAL']){history.pushState(name,document.title,name);}
             get('page').innerHTML = PAGE[name]['source'];
             TM['current_page'] = name;
             if (get('currentv')) {
@@ -452,18 +452,23 @@ function parseHash(text){
     return words.join(' ');
 }
 
-var urlParams;
-(window.onpopstate = function () {
+function parseParams () {
     var match,
         pl     = /\+/g,  // Regex for replacing addition symbol with a space
         search = /([^&=]+)=?([^&]*)/g,
         decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
         query  = window.location.search.substring(1);
 
-    urlParams = {};
+    TM['GET_PARAM'] = {};
     while (match = search.exec(query))
-        urlParams[decode(match[1])] = decode(match[2]);
-})();
+        TM['GET_PARAM'][decode(match[1])] = decode(match[2]);
+}
+
+function historyNav(){
+    if(TM['current_page']!=window.history.state){
+        page(window.history.state);
+    }
+}
 
 function getOffset(elem) {
     if (elem.getBoundingClientRect) {

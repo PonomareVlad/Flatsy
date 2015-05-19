@@ -51,6 +51,9 @@ if(supports_html5_storage()){
 *//////////////////////////////////////
 //TM['update_db']=true;
 
+parseParams();
+window.onpopstate=function(){historyNav();};
+
 function main(){
     if(!TM['need_restart']) {
         if(getCookie('invite_hash')) {io({"action": "parse_hash", "hash": getCookie('invite_hash')});deleteCookie('invite_hash');}
@@ -92,7 +95,6 @@ function sizing() {
 
 function init() {
     io({'action': 'init'});
-    TM['GET_PARAM'] = urlParams;
     if (TM['GET_PARAM']['invite_hash']) {
         setCookie('invite_hash', TM['GET_PARAM']['invite_hash']);
         if(!TM['LOCAL']){history.replaceState(null,null,TM['current_page']||'/');}

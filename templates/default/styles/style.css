@@ -152,6 +152,7 @@ header{
     padding: 22px 30px;
     text-decoration: none;
     transition-duration: 150ms;
+    outline: none;
 }
 .menu li a:hover{
     color: #ffffff;
