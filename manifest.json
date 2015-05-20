@@ -1,0 +1,20 @@
+{
+  "app": {
+    "background": {
+      "scripts": ["js/Chrome.js"]
+    }
+  },
+  "manifest_version": 2,
+  "name": "Flatsy",
+  "version": "0.6.3",
+
+  "default_locale": "ru",
+  "description": "Tasks manager",
+  "icons": {
+    "48": "icon/48.png",
+    "128": "icon/128.png"
+  },
+
+  "offline_enabled": true,
+  "author": "Владислав Пономарев (sys.system@mail.ru)"
+}
