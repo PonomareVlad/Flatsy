@@ -32,6 +32,9 @@ delete tmpver;
     localStorage.clear();
 }*/
 
+window.onload=init;
+window.onresize=sizing;
+
 TM['current_page'] = location.pathname.substr(1)!=''?location.pathname.substr(1):false;
 
 if(location.protocol=='file:'){
