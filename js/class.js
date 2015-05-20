@@ -415,7 +415,10 @@ function crop_save(crop){
 }
 
 function set_btn(active,deactive){
-    if(get('btn_'+deactive)){get('btn_'+deactive).style='';}
+    if(get('btn_'+deactive)){
+        get('btn_'+deactive).style.color='';
+        get('btn_'+deactive).style.backgroundColor='';
+    }
     if(get('btn_'+active)) {
         get('btn_' + active).style.color = '#fff';
         get('btn_' + active).style.backgroundColor = '#bbb';

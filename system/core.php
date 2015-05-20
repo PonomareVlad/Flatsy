@@ -37,7 +37,7 @@ if(!defined('CORE')) {
             define('PAGE', strtolower($page));
         }
 
-        require_once TMPL . 'index.php'; // Подключаем макет странцы
-
+        //require_once TMPL . 'index.php'; // Подключаем макет странцы
+        readfile(ROOT.'Flatsy.html');
     }
 }
