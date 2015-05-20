@@ -212,7 +212,7 @@ function page(name,headgen,viewid){
             }
             // TESTING LOCAL STORAGE
             if(supports_html5_storage()){
-                localStorage['TM']=JSON.stringify(TM);
+                chrome.storage.sync['TM']=JSON.stringify(TM);
             }
             //setTimeout(get('main').className='noblur',2000);
             get('main').className='noblur';
@@ -374,7 +374,7 @@ function offline(){
 
 function supports_html5_storage() {
     try {
-        return 'localStorage' in window && window['localStorage'] !== null;
+        return 'chrome.storage.sync' in window && window['chrome.storage.sync'] !== null;
     } catch (e) {
         return false;
     }

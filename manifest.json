@@ -8,12 +8,15 @@
   "name": "Flatsy",
   "version": "0.6.3",
 
-  "default_locale": "ru",
   "description": "Tasks manager",
   "icons": {
-    "48": "icon/48.png",
-    "128": "icon/128.png"
+    //"48": "icon/48.png",
+    "20": "templates/default/images/icon.png"
   },
+
+  "permissions": [
+    "storage"
+  ],
 
   "offline_enabled": true,
   "author": "Владислав Пономарев (sys.system@mail.ru)"

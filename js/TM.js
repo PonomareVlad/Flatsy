@@ -385,11 +385,11 @@ function handler(response) {
             }
             // TESTING LOCAL STORAGE
             //if(supports_html5_storage()&&!TM['wait_load']){
-            //    localStorage['DB'] = JSON.stringify(DB);
+            //    chrome.storage.sync['DB'] = JSON.stringify(DB);
             //}
         } else {
             if (TM['UID']) {
-                //localStorage.clear();
+                //chrome.storage.sync.clear();
                 DB = false;
                 offline();
                 page('auth');
@@ -415,7 +415,7 @@ function handler(response) {
                     TM['LOCAL']=true;
                 }
             }
-            localStorage.clear();
+            chrome.storage.sync.clear();
         }
         if(!TM['UID']&&!TM['wait_load']){
             TM['current_page']=false;
@@ -1365,7 +1365,7 @@ function view(id,type){
     onclick();
     // TESTING LOCAL STORAGE
     if(supports_html5_storage()){
-        localStorage['TM']=JSON.stringify(TM);
+        chrome.storage.sync['TM']=JSON.stringify(TM);
     }
 }
 

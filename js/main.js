@@ -29,27 +29,30 @@ delete tmpver;
     TM['USER_NAME'] = SERVER['NAME'];
     TM['USER_PIC'] = SERVER['PIC'];
 }else{
-    localStorage.clear();
+    chrome.storage.sync.clear();
 }*/
 
 TM['current_page'] = location.pathname.substr(1)!=''?location.pathname.substr(1):false;
 
-if(location.protocol=='file:'){
+if(location.protocol=='file:'||chrome){
     TM['LOCAL']=true;
 }
 //////////////////////////////////////
 /*/ TESTING LOCAL STORAGE
 if(supports_html5_storage()){
-    if(localStorage['DB']){
-        DB=JSON.parse(localStorage['DB']);
+    if(chrome.storage.sync['DB']){
+        DB=JSON.parse(chrome.storage.sync['DB']);
     }
-    if(localStorage['TM']){
-        TM=JSON.parse(localStorage['TM']);
+    if(chrome.storage.sync['TM']){
+        TM=JSON.parse(chrome.storage.sync['TM']);
         TM['AUID']=false;
     }
 }
 *//////////////////////////////////////
 //TM['update_db']=true;
+
+window.onload=init;
+window.onresize=sizing;
 
 parseParams();
 window.onpopstate=function(){historyNav();};
