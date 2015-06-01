@@ -1159,9 +1159,9 @@ function view(id,type){
         '<a href="javascript:void(0)" onclick=\'view(' + task['initiator'] + ',"user")\'>' + task['initiator_name'] + '</a></div>';
         source += '<div class="task_table"><div>Исполнитель</div>' +
         '<a href="javascript:void(0)" onclick=\'view(' + task['executor'] + ',"user")\'>' + task['executor_name'] + '</a></div>';
-        if(TM['current_page']=='projects'){
+        //if(TM['current_page']=='projects'){
             source+='<div class="task_table"><div>Завершение</div>'+day+' '+month+' '+date.getFullYear()+'</div>';
-        }
+        //}
         source+='<div class="files">Прикрепленные файлы:<br><span id="files">';
         if (task['files'].length > 0) {
             for(f in task['files']){
