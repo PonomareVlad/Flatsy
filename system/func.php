@@ -69,3 +69,21 @@ function dbg($text){
         fclose($file);
     }
 }
+
+function sendNotify($to,$title,$body){
+    $mail = new PHPMailer;
+    $mail->isSMTP();
+    $mail->Host = 'smtp.flatsy.ru';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'info@flatsy.ru';
+    $mail->Password = 'j9br7tYwNMHU';
+    $mail->Port = '25';
+    $mail->CharSet = 'UTF-8';
+    $mail->From = 'info@flatsy.ru';
+    $mail->FromName = 'Уведомления Flatsy';
+    $mail->addAddress($to);
+    $mail->isHTML(true);
+    $mail->Subject = $title;
+    $mail->Body = $body;
+    $mail->send();
+}
