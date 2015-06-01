@@ -7,7 +7,7 @@ class User extends DB{
     public static function init(){ // Функция проверки авторизации пользователя
         if (isset($_COOKIE['HASH'])||isset($_GET['hash'])||isset($_POST['hash'])) { // Если обнаружен ключ авторизации
             $hash=$_COOKIE['HASH']?$_COOKIE['HASH']:($_GET['hash']?$_GET['hash']:$_POST['hash']);
-            dbg($hash);
+            //dbg($hash);
             $res = DB::select('auth', array('iduser'), 'hash="' . $hash . '"'); // Запрашиваем ID по найденнову HASH
             $USERA = mysqli_fetch_array($res); // Переводим ответ БД в массив
             if (!isset($USERA['iduser'])) { // Если ключ авторизации не найден

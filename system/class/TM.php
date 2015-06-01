@@ -570,6 +570,12 @@ class TM extends DB
             $task = mysqli_fetch_assoc(DB::select('task', ['*'], 'id=' . $id));
             if (USER_ID != $task['executor']) {
                 $notify[] = $task['executor'];
+                $task['initiator_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$task['initiator'])));
+                $task['executor_name'] = @implode(' ', mysqli_fetch_assoc(DB::select('users',['firstname','lastname'],'id='.$task['executor'])));
+                $task['executor_email'] = mysqli_fetch_assoc(DB::select('users',['mail'],'id='.$task['executor']));
+                $task['view_date']=getdate(strtotime($task['date_finish']));
+                $task['view_date']=$task['view_date']['mday']+' '+$MONTHS[$task['view_date']['mon']-1]+' '+$task['view_date']['year'];
+                $message=['title'=>'[Flatsy] Новая задача','mail'=>$task['executor_email']['mail'],'body'=>'На вас была назначена новая задача: <a href="http://flatsy.ru/tasks?task='.$id.'">'.$task['name'].'</a><br>Инициатор: '.$task['initiator_name'].'<br>Исполнитель: '.$task['executor_name'].'<br>Завершить к '.$task['view_date']];
             }
         }
         if ($type == 'new_project') {
@@ -611,6 +617,9 @@ class TM extends DB
         if (is_array($notify)) {
             for ($i = 0; $i < count($notify); $i++) {
                 DB::insert('notifications', ['iduser' => $notify[$i], 'type' => $type, 'value' => $id]);
+                if(isset($message)){
+                    sendNotify($message['mail'],$message['title'],$message['body']);
+                }
             }
         }
     }

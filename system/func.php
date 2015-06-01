@@ -57,7 +57,7 @@ function objectToArray($d){
 }
 
 function dbg($text){
-    if (@USER_ID == 1) {
+    //if (!defined('USER_ID')||USER_ID == 1) {
         $text = $text . '
 ';
         $old = file(ROOT . 'errlog.txt');
@@ -67,10 +67,11 @@ function dbg($text){
         $file = fopen(ROOT . 'errlog.txt', 'a');
         fwrite($file, $text);
         fclose($file);
-    }
+    //}
 }
 
 function sendNotify($to,$title,$body){
+    require_once(ROOT . '/system/class/PHPMailer.php');
     $mail = new PHPMailer;
     $mail->isSMTP();
     $mail->Host = 'smtp.flatsy.ru';
@@ -85,5 +86,7 @@ function sendNotify($to,$title,$body){
     $mail->isHTML(true);
     $mail->Subject = $title;
     $mail->Body = $body;
-    $mail->send();
+    $mail->send() or dbg($mail->ErrorInfo);
 }
+
+$MONTHS=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
