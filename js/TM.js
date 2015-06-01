@@ -1138,7 +1138,9 @@ function view(id,type){
         time = new Date(date_finish[0], date_finish[1] - 1, date_finish[2]).getTime();
         time = time < now ? 'overdue' : time;
         date = new Date(new Date(new Date(task['date_finish'].replace(' ', 'T')).getTime()+TM['time_offset']).getTime());
-        day = (date.getDate() < 10 ? '0' : '') + date.getDate();month = TM['months'][date.getMonth()];
+        day = (date.getDate() < 10 ? '0' : '') + date.getDate();month = TM['months'][date.getMonth()];year=date.getFullYear();
+        date = new Date(new Date(new Date(task['date_start'].replace(' ', 'T')).getTime()+TM['time_offset']).getTime());
+        sday = (date.getDate() < 10 ? '0' : '') + date.getDate();smonth = TM['months'][date.getMonth()];syear=date.getFullYear();
         if(task['new']){time='new'}
         TM['highlight_day'] = TM['current_page'] == 'tasks' ? time : 'prj' + task['idproject'];
         TM['highlight_element'] = task['id'];
@@ -1160,7 +1162,8 @@ function view(id,type){
         source += '<div class="task_table"><div>Исполнитель</div>' +
         '<a href="javascript:void(0)" onclick=\'view(' + task['executor'] + ',"user")\'>' + task['executor_name'] + '</a></div>';
         //if(TM['current_page']=='projects'){
-            source+='<div class="task_table"><div>Завершение</div>'+day+' '+month+' '+date.getFullYear()+'</div>';
+        source+='<div class="task_table"><div>Создано</div>'+sday+' '+smonth+' '+syear+'</div>';
+        source+='<div class="task_table"><div>Завершить</div>'+day+' '+month+' '+year+'</div>';
         //}
         source+='<div class="files">Прикрепленные файлы:<br><span id="files">';
         if (task['files'].length > 0) {
