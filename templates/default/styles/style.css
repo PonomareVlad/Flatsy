@@ -589,7 +589,7 @@ color: #fff;
     background: #FF9C00;
     color: #fff;
     text-align: center;
-    line-height: 25px;
+   /* line-height: 25px;*/
     cursor: pointer;
 }
 .create+div{
@@ -914,3 +914,8 @@ h4{
     bottom: 10px;
     cursor: pointer;
 }
+
+/* Buttons */
+.w8-button { display: table; border: none; font-size: 13px; font-weight: bold; cursor: pointer; opacity: 0.9; height: 30px;}
+.w8-button:hover{ opacity: 1; }	
+.w8-button:active{ color: white !important; background-color: #808080 !important; }
