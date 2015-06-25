@@ -1,4 +1,4 @@
-var VERSION=63;
+var VERSION=64;
 var TM={};
 TM['current_page']=false;
 TM['tasks_mode']='all';
@@ -37,7 +37,7 @@ window.onresize=sizing;
 
 TM['current_page'] = location.pathname.substr(1)!=''?location.pathname.substr(1):false;
 
-if(location.protocol=='file:'){
+if(location.protocol=='file:'||location.host=='localhost'){
     TM['LOCAL']=true;
 }
 //////////////////////////////////////
@@ -97,6 +97,11 @@ function sizing() {
 }
 
 function init() {
+    if(TM['GET_PARAM']['reset_pass']){
+        deleteCookie('HASH');
+        change_pass();
+        delete TM['GET_PARAM']['reset_pass'];
+    }
     io({'action': 'init'});
     if (TM['GET_PARAM']['invite_hash']) {
         setCookie('invite_hash', TM['GET_PARAM']['invite_hash']);

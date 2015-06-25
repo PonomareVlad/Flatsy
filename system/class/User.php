@@ -7,7 +7,6 @@ class User extends DB{
     public static function init(){ // Функция проверки авторизации пользователя
         if (isset($_COOKIE['HASH'])||isset($_GET['hash'])||isset($_POST['hash'])) { // Если обнаружен ключ авторизации
             $hash=$_COOKIE['HASH']?$_COOKIE['HASH']:($_GET['hash']?$_GET['hash']:$_POST['hash']);
-            //dbg($hash);
             $res = DB::select('auth', array('iduser'), 'hash="' . $hash . '"'); // Запрашиваем ID по найденнову HASH
             $USERA = mysqli_fetch_array($res); // Переводим ответ БД в массив
             if (!isset($USERA['iduser'])) { // Если ключ авторизации не найден
@@ -167,19 +166,19 @@ class User extends DB{
     {
         if ($private == true && !is_numeric($id)) {
             $mail = strtolower(Checkdata($id));
-            $user = DB::select('users', ['photo'], 'mail="' . $mail . '"');
+            $user = DB::select('users', ['id','photo'], 'mail="' . $mail . '"');
         } else {
             $user = DB::select('users', ['id', 'lastname', 'firstname', 'patronymic', 'last_act', 'photo'], 'id=' . $id);
         }
         $user = mysqli_fetch_assoc($user);
         if (isset($user['photo'])) {
             $user['photo'] = $user['photo'] == '' ? '/templates/default/images/avatar.png' : $user['photo'];
-            if ($private == true) {
-                $return = ['photo' => $user['photo']];
-            }else{
-                $return = $user;
-            }
-            return $return;
+            //if ($private == true) {
+            //    $return = ['photo' => $user['photo']];
+            //}else{
+            //    $return = $user;
+            //}
+            return $user;
         } else {
             return false;
         }
@@ -245,6 +244,31 @@ class User extends DB{
                 return false;
             }
         }
+    }
+
+    public static function reset_pass($email){
+        $user = User::get_user($email,true);
+        if($user) {
+            $hash = genHash();
+            if (DB::insert('notifications', ["iduser" => $user['id'], "type" => "reset_pass", "value" => $hash])) {
+                sendNotify(strtolower(Checkdata($email)), '[Flatsy] Password change request', 'You have change password by this link <a href="http://flatsy.ru/?reset_pass=' . $hash . '">http://flatsy.ru/?reset_pass=' . $hash . '</a>');
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static function change_pass($hash,$pass){
+        $get = DB::select('notifications', ['*'], 'type="reset_pass" AND value="' . $hash.'"');
+        if ($get) {
+            $notify = mysqli_fetch_assoc($get);
+            $password = Checkdata($pass, true);
+            $password = md5(strtolower($password));
+            if(DB::update('users',['password'=>$password],'id='.$notify['iduser'])){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

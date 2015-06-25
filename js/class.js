@@ -261,6 +261,7 @@ function load_enter_pic(response){
         //response = JSON.parse(response);
         if(response['get_user']!=false){
             document.getElementById('pic').innerHTML='<div class="avatar"><img src="'+(TM['LOCAL']?'http://flatsy.ru':'')+response['get_user']['photo']+'"></div>';
+            document.getElementById('reset_pass').innerHTML='<a onclick="request_pass()" href="javascript:void(0)">Забыли пароль?</a>';
         }
     }else {
         if (TM['apic_loaded'] == false) {
@@ -557,4 +558,21 @@ function deleteCookie(name) {
     setCookie(name, "", {
         expires: -1
     })
+}
+
+function request_pass(){
+    io({'action':'reset_pass','email':document.getElementById('email').value});
+}
+
+function change_pass(){
+    new_pass=prompt('Введите новый пароль:');
+    if((new_pass!=null&&new_pass!='')&&new_pass==prompt('Повторите пароль:')){
+        io({'action':'change_pass','hash':TM['GET_PARAM']['reset_pass'],'pass':new_pass});
+        return true;
+    }else{
+        if(confirm('Пароли не совпадают или пустой пароль, повторить?')){
+            return change_pass();
+        }
+    }
+    return false;
 }

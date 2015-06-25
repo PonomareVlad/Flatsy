@@ -416,6 +416,12 @@ function handler(response) {
                 }
             }
             localStorage.clear();
+            if (response['reset_pass']){
+                alert('Для продолжения перейдите по ссылке, отправленной вам на указанный адрес');
+            }
+            if (response['change_pass']){
+                alert('Пароль сохранен');
+            }
         }
         if(!TM['UID']&&!TM['wait_load']){
             TM['current_page']=false;

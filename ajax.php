@@ -3,6 +3,10 @@
 define('ROOT',$_SERVER['DOCUMENT_ROOT'].'/'); // Установка корневой директории
 define('AJAX','CORE'); // Блокируем маршрутизацию
 
+if($_SERVER['HTTP_HOST']=='localhost'){
+    exit;
+}
+
 require_once ROOT.'system/core.php'; // Инициация запуска системы
 
 if(!isset($_GET['query'])OR!isset($_GET['ver'])){
@@ -161,6 +165,12 @@ if(defined('USER_ID')) { // Статус авторизации
         }
         if ($QUERY['action'] == 'get_user') {
             $RESPONSE['get_user'] = User::get_user($QUERY['email'], true);
+        }
+        if ($QUERY['action'] == 'reset_pass') {
+            $RESPONSE['reset_pass'] = User::reset_pass($QUERY['email']);
+        }
+        if($QUERY['action']=='change_pass'){
+            $RESPONSE['change_pass']=User::change_pass($QUERY['hash'],$QUERY['pass']);
         }
     }
 }

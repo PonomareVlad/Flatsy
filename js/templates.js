@@ -51,7 +51,7 @@ PAGE['auth']['source']='<div style="display:none" id="load_pic"></div>' +
 '<input name="pass" id="pass" type="password" class="Au2" onfocus="load_enter_pic();" placeholder="Пароль">' +
 '</div><div class="auth" id="In">' +
 '<a href="javascript:void(0)" onclick=\'auth_send();\' class="button box-shadow-outset"><div class="authregbtn">Войти</div></a></div></form>' +
-'<a href="javascript:void(0)" onclick="page(\'reg\');"><div class="authregbtn" >Регистрация</div></a></div><span id="about" class="about">FLATSY</span>' +
+'<a href="javascript:void(0)" onclick="page(\'reg\');"><div class="authregbtn" >Регистрация</div></a><span id="reset_pass"></span></div><span id="about" class="about">FLATSY</span>' +
 '<span onclick="location.href=\'http://flatsy.ru/info/index.html\'" id="faq" class="faq">Справочник</span></div>';
 
 PAGE['reg']=[];
