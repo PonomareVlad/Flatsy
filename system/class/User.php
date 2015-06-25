@@ -265,6 +265,7 @@ class User extends DB{
             $password = Checkdata($pass, true);
             $password = md5(strtolower($password));
             if(DB::update('users',['password'=>$password],'id='.$notify['iduser'])){
+                DB::delete('notifications','type="reset_pass" AND value="' . $hash.'"');
                 return true;
             }
         }
