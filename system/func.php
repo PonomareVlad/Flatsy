@@ -89,6 +89,7 @@ function sendNotify($to,$title,$body){
     $mail->send() or dbg($mail->ErrorInfo);
 }
 function sendPush($title,$body){
+    require_once(ROOT.'/system/class/Pushalot.php');
     $pushalot = new Pushalot('3709b5318a1144018d40674ad5e2bb52');
     $success = $pushalot->sendMessage(array(
         'Title'=>$title,
@@ -98,9 +99,9 @@ function sendPush($title,$body){
         'IsImportant'=>true,
         'IsSilent'=>false,
         'Image'=>'http://flatsy.ru/templates/default/images/icon.png',
-        'Source'=>__FILE__
+        'Source'=>'sendPush()'
     ));
-    return $success;//$pushalot->getError();
+    return $success?'The message was submitted.':$pushalot->getError();
 }
 
 $MONTHS=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
