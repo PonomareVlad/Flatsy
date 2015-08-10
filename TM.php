@@ -17,6 +17,6 @@ if(isset($_GET['gen'])&&$_GET['gen']=='invite') {
         $hash = mysqli_fetch_assoc(DB::select('invite', ['*'], 'hash="' . $hash . '"'));
         $hash = $hash['hash'];
         echo '<br>New Free invite for registrtion:<br>' . $hash;
-        sendNotify('sys.system@mail.ru','[Flatsy] New Invite Generated','New invite code: '.$hash);
+        sendPush('[Flatsy] New Invite Generated','New invite code: '.$hash);
     }
 }

@@ -88,5 +88,19 @@ function sendNotify($to,$title,$body){
     $mail->Body = $body;
     $mail->send() or dbg($mail->ErrorInfo);
 }
+function sendPush($title,$body){
+    $pushalot = new Pushalot('3709b5318a1144018d40674ad5e2bb52');
+    $success = $pushalot->sendMessage(array(
+        'Title'=>$title,
+        'Body'=>$body,
+        'LinkTitle'=>'Flatsy.ru',
+        'Link'=>'http://flatsy.ru',
+        'IsImportant'=>true,
+        'IsSilent'=>false,
+        'Image'=>'http://flatsy.ru/templates/default/images/icon.png',
+        'Source'=>__FILE__
+    ));
+    return $success;//$pushalot->getError();
+}
 
 $MONTHS=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
