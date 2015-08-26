@@ -2,6 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 define('CORE','VERSION');
 require_once('system/core.php');
+require_once('system/func.php');
 $ver=str_split(VERSION);
 $version='Flatsy v.0';
 for($i=0;$i<count($ver);$i++){
@@ -20,3 +21,12 @@ if(isset($_GET['gen'])&&$_GET['gen']=='invite') {
         sendPush('[Flatsy] New Invite Generated','New invite code: '.$hash);
     }
 }
+
+function getIspByIp($ip){
+    $json = file_get_contents("http://ipinfo.io/{$ip}/json");
+    $details = objectToArray(json_decode($json));
+    $isp=explode(' ',$details['org']);
+    return $isp[count($isp)-1];
+}
+
+echo '<br>Your IP: '.$_SERVER['REMOTE_ADDR'].'<br>Your provider: '.getIspByIp($_SERVER['REMOTE_ADDR']);

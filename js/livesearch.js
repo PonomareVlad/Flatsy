@@ -1,38 +1,5 @@
 var LSEARCH=[];
 
-/*function loadStyles(action) {
-    if (LSEARCH[action]['stylesl'] == false) {
-        LSEARCH[action]['stylesl'] = true;
-        document.body.innerHTML += '<style>' +
-        '.search_advice_wrapper{' +
-        'display:none;' +
-        'width: 250px;' +
-        'background-color: rgb(220,220,220);' +
-        'color: rgb(50,50,50);' +
-        '-moz-opacity: 0.95;' +
-        'opacity: 0.95;' +
-        '-ms-filter:"progid:DXImageTransform.Microsoft.Alpha"(Opacity=95);' +
-        'filter: progid:DXImageTransform.Microsoft.Alpha(opacity=95);' +
-        'filter:alpha(opacity=95);' +
-        'z-index:999;' +
-        'position: absolute;' +
-        '}' +
-        '.search_advice_wrapper .advice_variant{' +
-        'cursor: pointer;' +
-        'padding: 5px;' +
-        'text-align: left;}' +
-        '.search_advice_wrapper .advice_variant:hover{' +
-        'color:#FEFFBD;' +
-        'background-color:#818187;}' +
-        '.search_advice_wrapper .active{' +
-        'cursor: pointer;' +
-        'padding: 5px;' +
-        'color:#FEFFBD;' +
-        'background-color:#818187;}' +
-        '</style>';
-    }
-}*/
-
 function loadSearch(input,wrapper,action,callback) {
     if(!LSEARCH[action]){
         LSEARCH[action]=[];

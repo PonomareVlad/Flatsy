@@ -34,6 +34,9 @@ function init_cal(){
     if(!TM['calendar_scroll']){TM['calendar_scroll']=get('calendar_today').offsetLeft-((window.innerWidth-60)/2);}
     get('calendar').scrollLeft=TM['calendar_scroll'];
     get('calendar').onscroll=function(){TM['calendar_scroll']=get('calendar').scrollLeft};
+    get('calendar').className='dragscroll';
+    get('calendar').style.cursor='grab';
+    init_drag();
 }
 
 function gen_cal(offset){
