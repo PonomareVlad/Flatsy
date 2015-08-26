@@ -35,8 +35,8 @@ function init_cal(){
     get('calendar').scrollLeft=TM['calendar_scroll'];
     get('calendar').className='dragscroll';
     get('calendar').style.cursor='grab';
-    init_drag();
-    get('calendar').onscroll=function(){TM['calendar_scroll']=get('calendar').scrollLeft;dragscroll.reset();};
+    get('calendar').onscroll=function(){TM['calendar_scroll']=get('calendar').scrollLeft;};
+    dragscroll.reset();
 }
 
 function gen_cal(offset){
@@ -187,7 +187,7 @@ function page(name,headgen,viewid){
                 get('email').focus();
             }
             if (get('calendar')&&page!='lk') {
-                init_cal();
+                //init_cal();
             }
             if (get('load_pic')) {
                 get('load_pic').style = "display:none";

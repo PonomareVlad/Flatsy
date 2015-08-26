@@ -6,7 +6,6 @@
  * @copyright 2015 asvd <heliosframework@gmail.com> 
  */
 
-function init_drag() {
     (function (root, factory) {
         if (typeof define === 'function' && define.amd) {
             define(['exports'], factory);
@@ -85,4 +84,3 @@ function init_drag() {
 
         exports.reset = reset;
     }));
-}
