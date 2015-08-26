@@ -33,10 +33,10 @@ function init_cal(){
     get('calendar').innerHTML='<ul id="calend">'+gen_cal(-1)+gen_cal(0)+gen_cal(1)+'</ul>';
     if(!TM['calendar_scroll']){TM['calendar_scroll']=get('calendar_today').offsetLeft-((window.innerWidth-60)/2);}
     get('calendar').scrollLeft=TM['calendar_scroll'];
-    get('calendar').onscroll=function(){TM['calendar_scroll']=get('calendar').scrollLeft};
     get('calendar').className='dragscroll';
     get('calendar').style.cursor='grab';
     init_drag();
+    get('calendar').onscroll=function(){TM['calendar_scroll']=get('calendar').scrollLeft;dragscroll.reset();};
 }
 
 function gen_cal(offset){
