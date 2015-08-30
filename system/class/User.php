@@ -205,7 +205,6 @@ class User extends DB{
         $group['count_users']=0;
         while ($user = mysqli_fetch_assoc($users)) {
             if ($user['statususer'] > 2) {
-                $group['count_users'] += 1;
                 if ($user['iduser'] == USER_ID) {
                     if ($firstwave == true) {
                         $group['lvl'] = $user['userlvl'];
@@ -214,7 +213,11 @@ class User extends DB{
                     }
                 }
                 $us = User::get_user($user['iduser']);
+                if(!isset($us['firstname'])){
+                    continue;
+                }
                 $us['lvl'] = $user['userlvl'];
+                $group['count_users'] += 1;
                 $group['users'][] = $us;
             }
         }
