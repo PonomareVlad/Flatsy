@@ -377,9 +377,25 @@ function offline(){
 }
 
 function supports_html5_storage() {
-    try {
+    /*try {
         return 'localStorage' in window && window['localStorage'] !== null;
     } catch (e) {
+        return false;
+    }*/
+    if(TM['storage']){
+        return TM['storage'];
+    }
+    try{
+        if(localStorage){
+            TM['storage']=true;
+            return true;
+        }else{
+            TM['storage']=false;
+            return false;
+        }
+    }
+    catch(err){
+        TM['storage']=false;
         return false;
     }
 }

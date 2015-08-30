@@ -415,7 +415,8 @@ function handler(response) {
                     TM['LOCAL']=true;
                 }
             }
-            localStorage.clear();
+            if(supports_html5_storage()){
+            localStorage.clear();}
             if (response['reset_pass']){
                 alert('Для продолжения перейдите по ссылке, отправленной вам на указанный адрес');
             }
