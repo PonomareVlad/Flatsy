@@ -1355,7 +1355,7 @@ function view(id,type){
             user=group['users'][u];
             source+='<div class="group_tr"><div><div class="account">' +
             '<a href="javascript:void(0)" onclick="page('+user['id']+',\'user\')">' +
-            '<img src="'+user['photo']+'">'+user['lastname']+' '+user['firstname']+'</a></div>';
+            '<img src="http://flatsy.ru'+user['photo']+'">'+user['lastname']+' '+user['firstname']+'</a></div>';
             job=user['lvl']==5?'Администратор':(user['lvl']==3?'Модератор':'Пользователь');
             source+='<div class="job_pos">'+job+'</div><div class="scroll">';
             source+='<div><img src="templates/default/images/'+(user['lvl']>4?'done.png':'n_done.png')+'"></div>';
