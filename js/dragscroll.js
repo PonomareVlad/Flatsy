@@ -43,7 +43,7 @@
                             lastClientX = e.clientX;
                             lastClientY = e.clientY;
 
-                            get('calendar').style.cursor='grabbing';
+                            if(get('calendar')){get('calendar').style.cursor='grabbing';}
 
                             e.preventDefault();
                             e.stopPropagation();
@@ -54,7 +54,7 @@
                         mouseup, el.mu = function () {
                             pushed = 0;
 
-                            get('calendar').style.cursor='grab';
+                            if(get('calendar')){get('calendar').style.cursor='grab';}
 
                         }, 0
                     );
