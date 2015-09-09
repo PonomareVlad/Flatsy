@@ -30,7 +30,9 @@ function Ajax(method,url,callback){
 }
 
 function init_cal(){
-    get('calendar').innerHTML='<ul id="calend">'+gen_cal(-1)+gen_cal(0)+gen_cal(1)+'</ul>';
+    TM['calendar_future']=1;
+    TM['calendar_past']=-1;
+    get('calendar').innerHTML='<ul id="calend">'+gen_cal(TM['calendar_past'])+gen_cal()+gen_cal(TM['calendar_future'])+'</ul>';
     if(!TM['calendar_scroll']){TM['calendar_scroll']=get('calendar_today').offsetLeft-((window.innerWidth-60)/2);}
     get('calendar').scrollLeft=TM['calendar_scroll'];
     get('calendar').className='dragscroll';
@@ -86,6 +88,17 @@ function gen_cal(offset){
         }
     }
     return(cal_view);
+}
+
+function more_cal(direction){
+    if(direction=='future'){
+        TM['calendar_future']+=1;
+        get('calendar').innerHTML=get('calendar').innerHTML+gen_cal(TM['calendar_future']);
+    }
+    if(direction=='past'){
+        TM['calendar_past']-=1;
+        get('calendar').innerHTML=gen_cal(TM['calendar_past'])+get('calendar').innerHTML;
+    }
 }
 
 function io(array,callback,busy){
