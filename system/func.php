@@ -25,15 +25,15 @@ function Checkdata($string,$cls_probels=false){ // Функция обработ
     return $string;
 }
 
-function genHash(){ // Фунуция генерации случайного хэша
-    $chars = 'abdefhiknrstyzABDEFGHKNQRSTYZ23456789';
+function genHash($isNum=false){ // Фунуция генерации случайного хэша
+    $chars = $isNum?'1234567890':'abdefhiknrstyzABDEFGHKNQRSTYZ23456789';
     $numChars = strlen($chars);
     $string = '';
-    $length=rand(8,16);
+    $length=$isNum?8:rand(8,16);
     for ($i = 0; $i < $length; $i++) {
         $string .= substr($chars, rand(1, $numChars) - 1, 1);
     }
-    return md5($string);
+    return $isNum?$string:md5($string);
 }
 
 function objectToArray($d){

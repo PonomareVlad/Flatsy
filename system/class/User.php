@@ -252,7 +252,7 @@ class User extends DB{
     public static function reset_pass($email){
         $user = User::get_user($email,true);
         if($user) {
-            $hash = genHash();
+            $hash = genHash(true);
             if (DB::insert('notifications', ["iduser" => $user['id'], "type" => "reset_pass", "value" => $hash])) {
                 sendNotify(strtolower(Checkdata($email)), '[Flatsy] Password change request', 'You have change password by this link <a href="http://flatsy.ru/?reset_pass=' . $hash . '">http://flatsy.ru/?reset_pass=' . $hash . '</a>');
                 return true;
