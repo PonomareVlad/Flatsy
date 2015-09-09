@@ -2,7 +2,7 @@ function init_comments(id,type){
     TM['comments_loaded']=type;
     TM['CID']=id;
     TM['empty_comments']=false;
-    get('new_comm').focus();
+    //get('new_comm').focus();
     if(!TM['need_restart']) {
         io({"action": "get_comments", "id": id, "type": type}, gen_comments);
     }else{
