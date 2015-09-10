@@ -32,12 +32,13 @@ function Ajax(method,url,callback){
 function init_cal(){
     TM['calendar_future']=1;
     TM['calendar_past']=-1;
+    TM['cal_generation']=false;
     get('calendar').innerHTML='<ul id="calend">'+gen_cal(TM['calendar_past'])+gen_cal()+gen_cal(TM['calendar_future'])+'</ul>';
     if(!TM['calendar_scroll']){TM['calendar_scroll']=get('calendar_today').offsetLeft-((window.innerWidth-60)/2);}
     get('calendar').scrollLeft=TM['calendar_scroll'];
     get('calendar').className='dragscroll';
     get('calendar').style.cursor='grab';
-    get('calendar').onscroll=function(){TM['calendar_scroll']=get('calendar').scrollLeft;};
+    get('calendar').onscroll=function(){TM['calendar_scroll']=get('calendar').scrollLeft;more_cal()};
     dragscroll.reset();
 }
 
@@ -47,7 +48,27 @@ function gen_cal(offset){
         offset=0;
     }
     D1 = new Date();
-    D1last = new Date(D1.getFullYear(),D1.getMonth()+offset+1,0).getDate(); // последний день месяца
+    months=D1.getMonth()+offset+1
+    years=D1.getFullYear();
+    if(months>12){
+        offs=~~(months/12);
+        years+=offs;
+        months-=12*offs;
+    }else
+    if(months<1){
+        if(months<-11){
+            //alert('PRE: '+months);
+            offs=~~(Math.abs(months)/12);
+            years-=offs+1;
+            months+=12*offs;
+            months=12+months
+            //alert('OFFSET: '+offs+' YEAR: '+years+' MONTH: '+months);
+        }else {
+            years -= 1;
+            months += 12;
+        }
+    }
+    D1last = new Date(years,months,0).getDate(); // последний день месяца
     month=["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"]; // название месяца, вместо цифр 0-11
     days=['вс','пн','вт','ср','чт','пт','сб'];
     array=[];
@@ -55,10 +76,16 @@ function gen_cal(offset){
     current_day=100;
     for(var  i = 1; i <= D1last; i++) {
         tmp=array.length;
-        array[tmp]=[i,days[new Date(D1.getFullYear(),D1.getMonth()+offset,i).getDay()],month[D1.getMonth()+offset]];
+        array[tmp]=[i,days[new Date(years,months-1,i).getDay()],month[(months==0?months+11:months-1)]];
         if (offset==0&&i == D1.getDate()) {
             current_day=tmp;
         }
+    }
+    if(months==1){
+        cal_view+='<li class=" calendar_active" id="year_'+years+'">' +
+            '<span class="month"></span><br>' +
+            '<span class="day">'+years+'</span><br>' +
+            '<span class="week_day"></span></li>';
     }
     for(i in array) {
         link=false;
@@ -67,10 +94,12 @@ function gen_cal(offset){
             if(task['finished'] == 0&&task['executor']==TM['UID']&&task['view'] == true){
                 date_finish = task['date_finish'].split(' ');
                 date_finish = date_finish[0].split('-');
-                if(parseInt(date_finish[1])==D1.getMonth()+offset+1){
-                    if(date_finish[2]==array[i][0]){
-                        link=task['id'];//new Date(date_finish[0], date_finish[1] - 1, date_finish[2]).getTime();
-                        break;
+                if(date_finish[0]==years) {
+                    if (parseInt(date_finish[1]) == months) {
+                        if (date_finish[2] == array[i][0]) {
+                            link = task['id'];//new Date(date_finish[0], date_finish[1] - 1, date_finish[2]).getTime();
+                            break;
+                        }
                     }
                 }
             }
@@ -91,13 +120,33 @@ function gen_cal(offset){
 }
 
 function more_cal(direction){
-    if(direction=='future'){
-        TM['calendar_future']+=1;
-        get('calendar').innerHTML=get('calendar').innerHTML+gen_cal(TM['calendar_future']);
-    }
-    if(direction=='past'){
-        TM['calendar_past']-=1;
-        get('calendar').innerHTML=gen_cal(TM['calendar_past'])+get('calendar').innerHTML;
+    if(TM['cal_generation']==false) {
+        TM['cal_generation']=true;
+        if (direction == 'future') {
+            TM['calendar_future'] += 1;
+            get('calend').innerHTML = get('calend').innerHTML + gen_cal(TM['calendar_future']);
+            TM['cal_generation']=false;
+        } else if (direction == 'past') {
+            TM['calendar_past'] -= 1;
+            max = get('calendar').scrollLeftMax;
+            get('calend').innerHTML = gen_cal(TM['calendar_past']) + get('calend').innerHTML;
+            pos = (get('calendar').scrollLeftMax - max) + TM['calendar_scroll'];
+            get('calendar').scrollLeft = pos;
+            TM['cal_generation']=false;
+        } else {
+            max = get('calendar').scrollLeftMax;
+            pos = get('calendar').scrollLeft;
+            if ((max - pos) < 500) {
+                TM['cal_generation']=false;
+                more_cal('future');
+            }else
+            if (pos < 500) {
+                TM['cal_generation']=false;
+                more_cal('past');
+            }else{
+                TM['cal_generation']=false;
+            }
+        }
     }
 }
 
