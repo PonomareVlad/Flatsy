@@ -121,45 +121,45 @@ function getIspByIp($ip){
 }
 
 function session_init($hash){
-    dbg('session_init with hash: '.$hash);
+    //dbg('session_init with hash: '.$hash);
     if(isset($hash)){
         $session=mysqli_fetch_assoc(DB::select('sessions',['*'],'hash="'.$hash.'"'));
         if(isset($session['closed'])){
             session_close($hash);
             $hash = md5(genHash());
-            dbg('Insert new HASH from session_init()');
+            //dbg('Insert new HASH from session_init()');
             if (DB::insert('auth', array('iduser' => USER_ID, 'hash' => $hash))) {
                 //session_init($hash);
                 setcookie('HASH', $hash, 7000000000);
             }
         }
-        dbg('Insert new SESSION from session_init()');
+        //dbg('Insert new SESSION from session_init()');
         DB::insert('sessions',['hash'=>$hash,'iduser'=>USER_ID,'date'=>date('Y-m-d H:i:s'),'last_act'=>date('Y-m-d H:i:s'),'ip'=>$_SERVER['REMOTE_ADDR'],'provider'=>getIspByIp($_SERVER['REMOTE_ADDR']),'closed'=>0]);
     }
 }
 
 function session_update($hash){
-    dbg('session_update with hash: '.$hash);
+    //dbg('session_update with hash: '.$hash);
     if (isset($hash)) {
         $session = mysqli_fetch_assoc(DB::select('sessions', ['*'], 'hash="'.$hash.'"'));
         if (isset($session['last_act'])) {
             if ($session['closed']==1||$session['ip']!==$_SERVER['REMOTE_ADDR']){//||date('U',$session['last_act']) < time() - 1000 * 60 * 15) {
-                dbg('destroying session');
+                //dbg('destroying session');
                 session_close($hash);
                 $hash = md5(genHash());
-                dbg('Insert new HASH from session_update()');
+                //dbg('Insert new HASH from session_update()');
                 if (DB::insert('auth', array('iduser' => USER_ID, 'hash' => $hash))) {
                     session_init($hash);
                     setcookie('HASH', $hash, 7000000000);
                 }
             }
             DB::update('sessions',['last_act'=>date('Y-m-d H:i:s')],'hash="'.$hash.'"');
-            dbg('session time updated');
+            //dbg('session time updated');
         }else{
-            dbg('session not found');
+            //dbg('session not found');
             session_close($hash);
             $hash = md5(genHash());
-            dbg('Insert new HASH from session_update()');
+            //dbg('Insert new HASH from session_update()');
             if (DB::insert('auth', array('iduser' => USER_ID, 'hash' => $hash))) {
                 session_init($hash);
                 setcookie('HASH', $hash, 7000000000);
@@ -169,7 +169,7 @@ function session_update($hash){
 }
 
 function session_close($hash){
-    dbg('session_close with hash: '.$hash);
+    //dbg('session_close with hash: '.$hash);
     if(isset($hash)){
         $session=mysqli_fetch_assoc(DB::select('sessions',['*'],'hash="'.$hash.'"'));
         if(isset($session['closed'])&&$session['closed']==0){
