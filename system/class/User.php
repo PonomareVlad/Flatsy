@@ -13,21 +13,23 @@ class User extends DB{
                 setcookie('HASH', '', time() - 10000); // Удаляем недействительный ключ авторизации
                 //header('location: /'); exit;
                 // BUILD EXCEPTION
+                dbg('HASH not Found!');
                 session_close($hash);
+            }else {
+                dbg('Hash ' . $hash . ' aliased by ID: ' . $USERA['iduser']);
+                $res = DB::select('users', array('*'), 'id=' . $USERA['iduser']); // Запрашиваем данные пользователя
+                $USER = mysqli_fetch_assoc($res); // Переводим ответ БД в массив
+
+                $USER['FULL_NAME'] = $USER['lastname'] . ' ' . $USER['firstname']; // Генерация полного имени для заголовка
+                define('USER_NAME', $USER['FULL_NAME']);
+                define('USER_ID', $USER['id']);
+                define('USER_PIC', 'http://flatsy.ru' . ($USER['photo'] == '' ? '/templates/default/images/avatar.png' : $USER['photo']));
+                dbg('User loaded: ' . USER_ID . ' ' . USER_NAME);
+                session_update($hash);
+
+                // BUILD USER SETTINGS LOAD
+
             }
-
-            $res = DB::select('users', array('*'), 'id='.$USERA['iduser']); // Запрашиваем данные пользователя
-            $USER = mysqli_fetch_assoc($res); // Переводим ответ БД в массив
-
-            $USER['FULL_NAME'] = $USER['lastname'] . ' ' . $USER['firstname']; // Генерация полного имени для заголовка
-            define('USER_NAME', $USER['FULL_NAME']);
-            define('USER_ID', $USER['id']);
-            define('USER_PIC', 'http://flatsy.ru'.($USER['photo'] == '' ? '/templates/default/images/avatar.png' : $USER['photo']));
-
-            session_update($hash);
-
-            // BUILD USER SETTINGS LOAD
-
         }
     }
 
@@ -45,6 +47,8 @@ class User extends DB{
             if ($user['password'] == md5(strtolower(Checkdata($password, true)))) {
 
                 $hash = md5(genHash());
+
+                dbg('Insert new HASH from auth()');
 
                 if (DB::insert('auth', array('iduser' => $user['id'], 'hash' => $hash))) {
 

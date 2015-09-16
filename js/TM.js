@@ -90,6 +90,9 @@ function handler(response) {
                     TM['time_offset']=(secs-response['time'])*(-1000);
                     delete secs;
                 }
+                if(getCookie('HASH')!=TM['HASH']) {
+                    TM['HASH'] = getCookie('HASH');
+                }
             }
             if (response['DB']) {
                 DB = response['DB'];
