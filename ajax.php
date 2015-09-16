@@ -68,7 +68,8 @@ if(defined('USER_ID')) { // Статус авторизации
             $RESPONSE['DB']=$DB;
         }
         if ($QUERY['action'] == 'logout') { // Выход из системы
-            $out = User::logout();
+            //$out = User::logout();
+            $out = session_close($_COOKIE['HASH']);
             if ($out == true) {
                 $RESPONSE['auth'] = false;
             }

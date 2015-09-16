@@ -13,6 +13,7 @@ class User extends DB{
                 setcookie('HASH', '', time() - 10000); // Удаляем недействительный ключ авторизации
                 //header('location: /'); exit;
                 // BUILD EXCEPTION
+                session_close($hash);
             }
 
             $res = DB::select('users', array('*'), 'id='.$USERA['iduser']); // Запрашиваем данные пользователя
@@ -21,7 +22,9 @@ class User extends DB{
             $USER['FULL_NAME'] = $USER['lastname'] . ' ' . $USER['firstname']; // Генерация полного имени для заголовка
             define('USER_NAME', $USER['FULL_NAME']);
             define('USER_ID', $USER['id']);
-            define('USER_PIC', $USER['photo'] == '' ? '/templates/default/images/avatar.png' : $USER['photo']);
+            define('USER_PIC', 'http://flatsy.ru'.($USER['photo'] == '' ? '/templates/default/images/avatar.png' : $USER['photo']));
+
+            session_update($hash);
 
             // BUILD USER SETTINGS LOAD
 
@@ -46,6 +49,10 @@ class User extends DB{
                 if (DB::insert('auth', array('iduser' => $user['id'], 'hash' => $hash))) {
 
                     //$_SESSION['HASH'] = $hash;
+
+                    define('USER_ID', $user['id']);
+
+                    session_init($hash);
 
                     setcookie('HASH', $hash, 7000000000);
 
@@ -172,7 +179,7 @@ class User extends DB{
         }
         $user = mysqli_fetch_assoc($user);
         if (isset($user['photo'])) {
-            $user['photo'] = $user['photo'] == '' ? '/templates/default/images/avatar.png' : $user['photo'];
+            $user['photo'] = 'http://flatsy.ru'.($user['photo'] == '' ? '/templates/default/images/avatar.png' : $user['photo']);
             //if ($private == true) {
             //    $return = ['photo' => $user['photo']];
             //}else{

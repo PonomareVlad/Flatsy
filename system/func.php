@@ -105,3 +105,61 @@ function sendPush($title,$body){
 }
 
 $MONTHS=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+
+function getIspByIp($ip){
+    $json = file_get_contents("http://ipinfo.io/{$ip}/json");
+    $details = objectToArray(json_decode($json));
+    //$isp=explode(' ',$details['org']);
+    //return $isp[count($isp)-1];
+    return $details['org'];
+}
+
+function session_init($hash){
+    if(isset($hash)){
+        $session=mysqli_fetch_assoc(DB::select('sessions',['*'],'hash="'.$hash.'"'));
+        if(isset($session['closed'])){
+            session_close($hash);
+            $hash = md5(genHash());
+            if (DB::insert('auth', array('iduser' => USER_ID, 'hash' => $hash))) {
+                //session_init($hash);
+                setcookie('HASH', $hash, 7000000000);
+            }
+        }
+        DB::insert('sessions',['hash'=>$hash,'iduser'=>USER_ID,'date'=>date('Y-m-d H:i:s'),'last_act'=>date('Y-m-d H:i:s'),'ip'=>$_SERVER['REMOTE_ADDR'],'provider'=>getIspByIp($_SERVER['REMOTE_ADDR']),'closed'=>0]);
+    }
+}
+
+function session_update($hash){
+    if (isset($hash)) {
+        $session = mysqli_fetch_assoc(DB::select('sessions', ['*'], 'hash="'.$hash.'"'));
+        if (isset($session['last_act'])) {
+            if ($session['closed']==1||$session['ip']!==$_SERVER['REMOTE_ADDR']){//||date('U',$session['last_act']) < time() - 1000 * 60 * 15) {
+                session_close($hash);
+                $hash = md5(genHash());
+                if (DB::insert('auth', array('iduser' => USER_ID, 'hash' => $hash))) {
+                    session_init($hash);
+                    setcookie('HASH', $hash, 7000000000);
+                }
+            }
+            DB::update('sessions',['last_act'=>date('Y-m-d H:i:s')],'hash="'.$hash.'"');
+        }else{
+            session_close($hash);
+            $hash = md5(genHash());
+            if (DB::insert('auth', array('iduser' => USER_ID, 'hash' => $hash))) {
+                session_init($hash);
+                setcookie('HASH', $hash, 7000000000);
+            }
+        }
+    }
+}
+
+function session_close($hash){
+    if(isset($hash)){
+        $session=mysqli_fetch_assoc(DB::select('sessions',['*'],'hash="'.$hash.'"'));
+        if(isset($session['closed'])&&$session['closed']==0){
+            DB::update('sessions',['closed'=>1],'hash="'.$hash.'"');
+        }
+        return User::logout();
+    }
+    return false;
+}

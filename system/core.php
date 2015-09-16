@@ -3,7 +3,7 @@
 header("HTTP/1.0 200 OK"); // Возвращаем успешное состояние при любых запросах
 header("Access-Control-Allow-Origin: *"); // Разрешаем CORS
 
-define('VERSION',64);
+define('VERSION',70);
 
 if($_SERVER['HTTP_HOST']=='localhost'){
     readfile(ROOT.'Flatsy.html');

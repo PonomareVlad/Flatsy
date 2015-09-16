@@ -22,11 +22,4 @@ if(isset($_GET['gen'])&&$_GET['gen']=='invite') {
     }
 }
 
-function getIspByIp($ip){
-    $json = file_get_contents("http://ipinfo.io/{$ip}/json");
-    $details = objectToArray(json_decode($json));
-    $isp=explode(' ',$details['org']);
-    return $isp[count($isp)-1];
-}
-
 echo '<br>Your IP: '.$_SERVER['REMOTE_ADDR'].'<br>Your provider: '.getIspByIp($_SERVER['REMOTE_ADDR']);
