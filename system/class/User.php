@@ -62,7 +62,7 @@ class User extends DB{
 
                     $user['FULL_NAME'] = $user['lastname'] . ' ' . $user['firstname'];
 
-                    $user['PHOTO']=$user['photo'] == '' ? '/templates/default/images/avatar.png' : $user['photo'];
+                    $user['PHOTO']='http://flatsy.ru'.($user['photo'] == '' ? '/templates/default/images/avatar.png' : $user['photo']);
 
                     $return=['id'=>$user['id'],'full_name'=>$user['FULL_NAME'],'photo'=>$user['PHOTO'],'hash'=>$hash];
 
