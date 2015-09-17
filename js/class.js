@@ -477,19 +477,27 @@ function upload_pic_show(){
     }
     if(!TM['upl_window']) {
         TM['upl_window']=window.open('','upload_pic',"width=420,height=230,menubar=no,location=no,resizable=no,scrollbars=yes,status=no");
-        TM['upl_window'].document.write('<!DOCTYPE html><html><head><meta charset="utf-8"></head>' +
-        '<body onunload="window.opener.TM[\'upl_window\']=false;"><div id="files"><form enctype="multipart/form-data" action="'+(TM['LOCAL']?'http://flatsy.ru':'')+'/upl.php" method="post"><p>' +
-        '<input type="hidden" name="hash" value="'+TM['HASH']+'">' +
-        '<input type="hidden" name="type" value="userpic">Загрузка нового аватара:<br/><br/>' +
-        '<input class="file" onchange="document.forms[0].submit();" type="file" name="f"><br/><br/><input type="submit" value="Загрузить"></p></form> </div>' +
-        '</body></html>');
+        if(TM['upl_window']) {
+            TM['upl_window'].document.write('<!DOCTYPE html><html><head><meta charset="utf-8"></head>' +
+                '<body onunload="window.opener.TM[\'upl_window\']=false;"><div id="files"><form enctype="multipart/form-data" action="' + (TM['LOCAL'] ? 'http://flatsy.ru' : '') + '/upl.php" method="post"><p>' +
+                '<input type="hidden" name="hash" value="' + TM['HASH'] + '">' +
+                '<input type="hidden" name="type" value="userpic">Загрузка нового аватара:<br/><br/>' +
+                '<input class="file" onchange="document.forms[0].submit();" type="file" name="f"><br/><br/><input type="submit" value="Загрузить"></p></form> </div>' +
+                '</body></html>');
+        }else{
+            alert('Разрешите всплывающие окна для этого сайта');
+        }
     }
     onclick();
 }
 
 function crop(img){
     TM['crop_window']=window.open((TM['LOCAL']?'http://flatsy.ru':'')+'/js/ext/crop.html?'+(TM['LOCAL']?'http://flatsy.ru':'')+img,'crop_pic',"width=800,height=600,menubar=no,location=no,resizable=no,scrollbars=yes,status=no");
-    TM['crop_window'].window.image=(TM['LOCAL']?'http://flatsy.ru':'')+img;
+    if(TM['crop_window']) {
+        TM['crop_window'].window.image = (TM['LOCAL'] ? 'http://flatsy.ru' : '') + img;
+    }else{
+        alert('Разрешите всплывающие окна для этого сайта');
+    }
 }
 
 function crop_save(crop){
