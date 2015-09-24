@@ -4,18 +4,22 @@ define('AJAX','CORE');
 define('ROOT',$_SERVER['DOCUMENT_ROOT'].'/');
 require_once('system/core.php');
 
-$from =date('Y-m-d H:i:s',mktime(0, 0, 0, date("m")  , date("d")-7, date("Y")));
+$provider='AS5468 Yeltsin UrFU, Ural Federal University';
+
+$from =date('Y-m-d H:i:s',mktime(0, 0, 0, date("m")  , date("d")-14, date("Y")));
 echo 'From date: '.$from;
 echo '<br/>Current date: '.date('Y-m-d H:i:s');
 echo('<br>');
 $sessions=DB::select('sessions',['*'],'last_act>"'.$from.'"');
 $byDay=array();
-while($session=mysqli_fetch_assoc(($sessions))){
-    $date=date('Y-m-d', strtotime($session['date']));
-    if(!isset($byDay[$date])){
-        $byDay[$date]=array();
+while($session=mysqli_fetch_assoc(($sessions))) {
+    if ($session['provider'] == $provider) {
+        $date = date('Y-m-d', strtotime($session['date']));
+        if (!isset($byDay[$date])) {
+            $byDay[$date] = array();
+        }
+        $byDay[$date][] = $session;
     }
-    $byDay[$date][]=$session;
 }
 ksort($byDay);
 $days=array_keys($byDay);

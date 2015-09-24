@@ -31,6 +31,8 @@ if(!defined('CORE')) {
     }
 
     //dbg_clean();
+    
+    DB::update('sessions',['closed'=>1],'closed=0 AND last_act<"'.date('Y-m-d H:i:s',mktime(date("H"), date("i")-15, date("s"), date("m")  , date("d"), date("Y"))).'"');
 
     User::init(); // Запуск подсистемы пользователей и проверка статуса авторизации
 
