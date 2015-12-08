@@ -1,399 +1,328 @@
--- phpMyAdmin SQL Dump
--- version 4.2.11
--- http://www.phpmyadmin.net
---
--- Хост: 127.0.0.1
--- Время создания: Мар 08 2015 г., 16:19
--- Версия сервера: 5.6.21
--- Версия PHP: 5.6.3
 
-
---
--- База данных: `tm`
---
-CREATE DATABASE IF NOT EXISTS `tm` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `tm`;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `auth`
---
-
-CREATE TABLE IF NOT EXISTS `auth` (
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+DROP TABLE IF EXISTS `auth`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth` (
+  `hash` varchar(32) NOT NULL COMMENT 'Хэш юзера',
   `iduser` int(10) NOT NULL COMMENT 'ID юзера',
-  `hash` varchar(32) NOT NULL COMMENT 'Хэш юзера'
+  PRIMARY KEY (`hash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Структура таблицы `authkey`
---
+LOCK TABLES `auth` WRITE;
+/*!40000 ALTER TABLE `auth` DISABLE KEYS */;
 
-CREATE TABLE IF NOT EXISTS `authkey` (
-`idkey` int(10) NOT NULL COMMENT 'ID',
+/*!40000 ALTER TABLE `auth` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `authkey`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `authkey` (
+  `idkey` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `key` varchar(19) NOT NULL COMMENT 'Ключ',
   `iduser` int(10) NOT NULL COMMENT 'Кем активирован',
   `whoinvite` varchar(30) NOT NULL COMMENT 'Кому был выдан',
-  `datatime` datetime NOT NULL COMMENT 'Дата активации'
+  `datatime` datetime NOT NULL COMMENT 'Дата активации',
+  PRIMARY KEY (`idkey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Ключи активации';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- --------------------------------------------------------
-
---
--- Структура таблицы `comments`
---
-
-CREATE TABLE IF NOT EXISTS `comments` (
-`id` int(10) NOT NULL,
-  `idobject` int(10) NOT NULL COMMENT 'ID объекта',
-  `type` varchar(30) NOT NULL COMMENT 'Тип объекта',
+LOCK TABLES `authkey` WRITE;
+/*!40000 ALTER TABLE `authkey` DISABLE KEYS */;
+/*!40000 ALTER TABLE `authkey` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `comments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `comments` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `idobject` int(10) NOT NULL COMMENT 'ID объекта содержащего комментарий',
+  `type` varchar(30) NOT NULL COMMENT 'Тип объекта содержащего комментарий',
   `numbercom` int(10) NOT NULL COMMENT 'Порядковый номер комментария',
   `usercom` int(10) NOT NULL COMMENT 'Владелец комментария',
   `comment` varchar(1000) NOT NULL COMMENT 'Комментарий',
-  `datacom` datetime NOT NULL COMMENT 'Дата и время публикации'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Комментарии';
+  `datacom` datetime NOT NULL COMMENT 'Дата и время публикации',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='Комментарии';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+LOCK TABLES `comments` WRITE;
+/*!40000 ALTER TABLE `comments` DISABLE KEYS */;
 
--- --------------------------------------------------------
-
---
--- Структура таблицы `files`
---
-
-CREATE TABLE IF NOT EXISTS `files` (
-`idfile` int(10) NOT NULL COMMENT 'ID файла',
+/*!40000 ALTER TABLE `comments` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `files`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `files` (
+  `idfile` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ID файла',
   `iduser` int(10) NOT NULL COMMENT 'ID пользователя',
   `namefile` varchar(100) NOT NULL COMMENT 'Имя файла',
-  `idobject` int(10) NOT NULL COMMENT 'ID объекта',
-  `type` varchar(30) NOT NULL COMMENT 'Тип объекта',
-  `timeload` datetime NOT NULL COMMENT 'Дата загрузки'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица хранения информации о файлах';
+  `path` varchar(150) NOT NULL,
+  `timeload` datetime NOT NULL COMMENT 'Дата загрузки',
+  `type` varchar(30) NOT NULL,
+  `object` int(11) NOT NULL,
+  PRIMARY KEY (`idfile`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='Таблица хранения информации о файлах';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- --------------------------------------------------------
+LOCK TABLES `files` WRITE;
+/*!40000 ALTER TABLE `files` DISABLE KEYS */;
 
---
--- Структура таблицы `invite`
---
+/*!40000 ALTER TABLE `files` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `groups`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `groups` (
+  `idgroup` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Номер группы',
+  `namegroup` varchar(100) NOT NULL COMMENT 'Имя группы',
+  `creator` int(10) NOT NULL COMMENT 'Создатель',
+  `owner` int(10) NOT NULL COMMENT 'Владелец',
+  PRIMARY KEY (`idgroup`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='Таблица групп';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS `invite` (
-`id` int(10) NOT NULL COMMENT 'Счетчик',
-  `creator` int(10) NOT NULL COMMENT 'Инициатор запроса',
-  `iduser` int(10) NOT NULL COMMENT 'Кого приглашают',
+LOCK TABLES `groups` WRITE;
+/*!40000 ALTER TABLE `groups` DISABLE KEYS */;
+
+/*!40000 ALTER TABLE `groups` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `invite`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `invite` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Счетчик',
+  `creator` int(10) DEFAULT NULL COMMENT 'Инициатор запроса',
+  `iduser` int(10) DEFAULT NULL COMMENT 'Кого приглашают',
   `hash` varchar(64) NOT NULL,
   `type` varchar(64) NOT NULL,
-  `status` int(10) NOT NULL COMMENT 'Статус',
-  `date` datetime NOT NULL COMMENT 'Дата приглашения'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Инвайт в группу';
---
--- Структура таблицы `invitegroup`
---
+  `value` int(11) DEFAULT NULL,
+  `status` int(10) DEFAULT NULL COMMENT 'Статус',
+  `date` datetime DEFAULT NULL COMMENT 'Дата приглашения',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='Инвайт в группу';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS `invitegroup` (
-`id` int(10) NOT NULL,
+LOCK TABLES `invite` WRITE;
+/*!40000 ALTER TABLE `invite` DISABLE KEYS */;
+
+/*!40000 ALTER TABLE `invite` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `invitegroup`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `invitegroup` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
   `iduser` int(10) NOT NULL COMMENT 'ID пользователя',
   `idgroup` int(10) NOT NULL COMMENT 'ID группы',
   `idinviteuser` int(10) NOT NULL COMMENT 'ID приглашающего юзера',
   `status` int(10) NOT NULL COMMENT 'статус пользователя',
-  `date` datetime NOT NULL COMMENT 'дата приглашения'
+  `date` datetime NOT NULL COMMENT 'дата приглашения',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица приглашений в группы';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-
---
--- Структура таблицы `groups`
---
-
-CREATE TABLE IF NOT EXISTS `groups` (
-`idgroup` int(10) NOT NULL COMMENT 'Номер группы',
-  `namegroup` varchar(100) NOT NULL COMMENT 'Имя группы',
-  `creator` int(10) NOT NULL COMMENT 'Создатель',
-  `owner` int(10) NOT NULL COMMENT 'Владелец'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица групп';
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `notifications`
---
-
-CREATE TABLE IF NOT EXISTS `notifications` (
-`idnotification` int(10) NOT NULL,
+LOCK TABLES `invitegroup` WRITE;
+/*!40000 ALTER TABLE `invitegroup` DISABLE KEYS */;
+/*!40000 ALTER TABLE `invitegroup` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `notifications`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `notifications` (
+  `idnotification` int(10) NOT NULL AUTO_INCREMENT,
   `iduser` int(10) NOT NULL COMMENT 'ID пользователя',
   `type` varchar(50) NOT NULL COMMENT 'Тип (текстовое поле)',
-  `value` int(10) NOT NULL COMMENT 'Значение (число)'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Информация об обновлении данных';
+  `value` int(10) NOT NULL COMMENT 'Значение (число)',
+  PRIMARY KEY (`idnotification`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='Информация об обновлении данных';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- --------------------------------------------------------
+LOCK TABLES `notifications` WRITE;
+/*!40000 ALTER TABLE `notifications` DISABLE KEYS */;
 
---
--- Структура таблицы `project`
---
-
-CREATE TABLE IF NOT EXISTS `project` (
-`idproject` int(10) NOT NULL COMMENT 'ID проекта',
+/*!40000 ALTER TABLE `notifications` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `project`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `project` (
+  `idproject` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ID проекта',
   `nameproject` varchar(100) NOT NULL COMMENT 'Имя проекта',
   `date_start` datetime NOT NULL COMMENT 'Дата старта',
   `date_finish` datetime NOT NULL COMMENT 'Дата финиша',
   `fact_finish` datetime NOT NULL COMMENT 'Фактическое завершение проекта',
   `initiator` int(10) NOT NULL COMMENT 'Инициатор',
   `parentproject` int(10) NOT NULL COMMENT 'Родительский проект',
-  `description` varchar(1500) NOT NULL COMMENT 'Описание проекта'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица проектов';
+  `description` varchar(1500) DEFAULT NULL COMMENT 'Описание проекта',
+  PRIMARY KEY (`idproject`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='Таблица проектов';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- --------------------------------------------------------
+LOCK TABLES `project` WRITE;
+/*!40000 ALTER TABLE `project` DISABLE KEYS */;
 
---
--- Структура таблицы `task`
---
+/*!40000 ALTER TABLE `project` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `sessions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sessions` (
+  `hash` varchar(32) NOT NULL,
+  `iduser` int(8) NOT NULL,
+  `date` datetime NOT NULL,
+  `last_act` datetime NOT NULL,
+  `ip` text NOT NULL,
+  `provider` text NOT NULL,
+  `closed` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`hash`)
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS `task` (
-`id` int(10) NOT NULL,
+LOCK TABLES `sessions` WRITE;
+/*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
+
+/*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `task`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `task` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
   `idproject` int(10) NOT NULL COMMENT 'Привязка к проекту',
   `finished` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Статус задачи',
   `name` varchar(500) NOT NULL COMMENT 'Название/Описание',
   `initiator` int(10) NOT NULL COMMENT 'Инициатор',
   `executor` int(10) NOT NULL COMMENT 'Исполнитель',
-  `description` varchar(1000) NOT NULL COMMENT 'Описание(необязательное поле)',
+  `description` varchar(1000) DEFAULT NULL COMMENT 'Описание(необязательное поле)',
   `date_start` datetime NOT NULL COMMENT 'Дата старта',
   `date_finish` datetime NOT NULL COMMENT 'Дедлайн',
   `fact_finish` datetime NOT NULL COMMENT 'Время фактического завершения задачи',
-  `parentask` int(10) NOT NULL COMMENT 'Родительская задача'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Таблица задач';
+  `parentask` int(10) NOT NULL COMMENT 'Родительская задача',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='Таблица задач';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- --------------------------------------------------------
+LOCK TABLES `task` WRITE;
+/*!40000 ALTER TABLE `task` DISABLE KEYS */;
 
---
--- Структура таблицы `useringroup`
---
-
-CREATE TABLE IF NOT EXISTS `useringroup` (
+/*!40000 ALTER TABLE `task` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `useringroup`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `useringroup` (
   `iduser` int(10) NOT NULL COMMENT 'ID юзера',
   `idgroup` int(10) NOT NULL COMMENT 'ID группы',
+  `userlvl` int(10) NOT NULL COMMENT 'Уровень юзера',
   `statususer` int(10) NOT NULL COMMENT 'Статус юзера',
-  `userlvl` int(10) NOT NULL COMMENT 'Уровень юзера'
+  PRIMARY KEY (`iduser`,`idgroup`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- --------------------------------------------------------
+LOCK TABLES `useringroup` WRITE;
+/*!40000 ALTER TABLE `useringroup` DISABLE KEYS */;
 
---
--- Структура таблицы `users`
---
-
-CREATE TABLE IF NOT EXISTS `users` (
-`id` int(10) NOT NULL,
+/*!40000 ALTER TABLE `useringroup` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
   `lastname` varchar(20) NOT NULL COMMENT 'Фамилия',
   `firstname` varchar(20) NOT NULL COMMENT 'Имя',
   `patronymic` varchar(20) NOT NULL COMMENT 'Отчество',
   `password` varchar(32) NOT NULL,
   `mail` varchar(50) NOT NULL,
-  `post` varchar(50) NOT NULL COMMENT 'Должность',
-  `organization` varchar(50) NOT NULL COMMENT 'Организация',
-  `unit` varchar(50) NOT NULL COMMENT 'Подразделение',
-  `phone` varchar(17) NOT NULL COMMENT 'Телефон',
   `last_act` datetime NOT NULL,
   `reg_date` datetime NOT NULL,
-  `photo` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `photo` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- --------------------------------------------------------
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
 
---
--- Структура таблицы `visgroups`
---
-
-CREATE TABLE IF NOT EXISTS `visgroups` (
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `visgroups`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `visgroups` (
   `id` int(10) NOT NULL COMMENT 'Группа',
-  `visidgroup` int(10) NOT NULL COMMENT 'Подчиненная группа'
+  `visidgroup` int(10) NOT NULL COMMENT 'Подчиненная группа',
+  PRIMARY KEY (`id`,`visidgroup`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- --------------------------------------------------------
-
---
--- Структура таблицы `visprojectgroup`
---
-
-CREATE TABLE IF NOT EXISTS `visprojectgroup` (
+LOCK TABLES `visgroups` WRITE;
+/*!40000 ALTER TABLE `visgroups` DISABLE KEYS */;
+/*!40000 ALTER TABLE `visgroups` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `visprojectgroup`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `visprojectgroup` (
   `idgroup` int(10) NOT NULL COMMENT 'ID группы',
-  `idproject` int(10) NOT NULL COMMENT 'ID проекта'
+  `idproject` int(10) NOT NULL COMMENT 'ID проекта',
+  PRIMARY KEY (`idgroup`,`idproject`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Сопровождающие задачу группы';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- --------------------------------------------------------
+LOCK TABLES `visprojectgroup` WRITE;
+/*!40000 ALTER TABLE `visprojectgroup` DISABLE KEYS */;
 
---
--- Структура таблицы `visprojectuser`
---
-
-CREATE TABLE IF NOT EXISTS `visprojectuser` (
+/*!40000 ALTER TABLE `visprojectgroup` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `visprojectuser`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `visprojectuser` (
   `iduser` int(10) NOT NULL COMMENT 'ID юзера',
-  `idproject` int(10) NOT NULL COMMENT 'ID проекта'
+  `idproject` int(10) NOT NULL COMMENT 'ID проекта',
+  PRIMARY KEY (`iduser`,`idproject`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Сопровождающие задачу пользователи';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- --------------------------------------------------------
+LOCK TABLES `visprojectuser` WRITE;
+/*!40000 ALTER TABLE `visprojectuser` DISABLE KEYS */;
 
---
--- Структура таблицы `vistaskuser`
---
-
-CREATE TABLE IF NOT EXISTS `vistaskuser` (
+/*!40000 ALTER TABLE `visprojectuser` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `vistaskuser`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `vistaskuser` (
   `iduser` int(10) NOT NULL COMMENT 'ID юзера',
-  `idtask` int(10) NOT NULL COMMENT 'ID задачи'
+  `idtask` int(10) NOT NULL COMMENT 'ID задачи',
+  PRIMARY KEY (`iduser`,`idtask`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Сопровождающие задачу юзеры';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Индексы сохранённых таблиц
---
+LOCK TABLES `vistaskuser` WRITE;
+/*!40000 ALTER TABLE `vistaskuser` DISABLE KEYS */;
+/*!40000 ALTER TABLE `vistaskuser` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
---
--- Индексы таблицы `auth`
---
-ALTER TABLE `auth`
- ADD PRIMARY KEY (`hash`);
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
---
--- Индексы таблицы `authkey`
---
-ALTER TABLE `authkey`
- ADD PRIMARY KEY (`idkey`);
- 
---
--- Индексы таблицы `comments`
---
-ALTER TABLE `comments`
- ADD PRIMARY KEY (`id`);
-
- 
---
--- Индексы таблицы `files`
---
-ALTER TABLE `files`
- ADD PRIMARY KEY (`idfile`);
-
---
--- Индексы таблицы `groups`
---
-ALTER TABLE `groups`
- ADD PRIMARY KEY (`idgroup`);
-
- --
--- Индексы таблицы `invite`
---
-ALTER TABLE `invite`
- ADD PRIMARY KEY (`id`);
- 
- --
--- Индексы таблицы `invitegroup`
---
-ALTER TABLE `invitegroup`
- ADD PRIMARY KEY (`id`);
- 
---
--- Индексы таблицы `notifications`
---
-ALTER TABLE `notifications`
- ADD PRIMARY KEY (`idnotification`);
-
---
--- Индексы таблицы `project`
---
-ALTER TABLE `project`
- ADD PRIMARY KEY (`idproject`);
-
---
--- Индексы таблицы `task`
---
-ALTER TABLE `task`
- ADD PRIMARY KEY (`id`);
-
---
--- Индексы таблицы `useringroup`
---
-ALTER TABLE `useringroup`
- ADD PRIMARY KEY (`iduser`,`idgroup`);
-
---
--- Индексы таблицы `users`
---
-ALTER TABLE `users`
- ADD PRIMARY KEY (`id`);
-
---
--- Индексы таблицы `visgroups`
---
-ALTER TABLE `visgroups`
- ADD PRIMARY KEY (`id`,`visidgroup`);
-
---
--- Индексы таблицы `visprojectgroup`
---
-ALTER TABLE `visprojectgroup`
- ADD PRIMARY KEY (`idgroup`,`idproject`);
-
---
--- Индексы таблицы `visprojectuser`
---
-ALTER TABLE `visprojectuser`
- ADD PRIMARY KEY (`iduser`,`idproject`);
-
---
--- Индексы таблицы `vistaskuser`
---
-ALTER TABLE `vistaskuser`
- ADD PRIMARY KEY (`iduser`,`idtask`);
-
---
--- AUTO_INCREMENT для сохранённых таблиц
---
-
---
--- AUTO_INCREMENT для таблицы `authkey`
---
-ALTER TABLE `authkey`
-MODIFY `idkey` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ID';
-
---
--- AUTO_INCREMENT для таблицы `comments`
---
-ALTER TABLE `comments`
-MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT для таблицы `files`
---
-
-ALTER TABLE `files`
-MODIFY `idfile` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ID файла';
---
--- AUTO_INCREMENT для таблицы `groups`
---
-ALTER TABLE `groups`
-MODIFY `idgroup` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Номер группы';
-
---
--- AUTO_INCREMENT для таблицы `invite`
---
-ALTER TABLE `invite`
-MODIFY `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Счетчик';
---
--- AUTO_INCREMENT для таблицы `invitegroup`
---
-ALTER TABLE `invitegroup`
-MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT для таблицы `notifications`
---
-ALTER TABLE `notifications`
-MODIFY `idnotification` int(10) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT для таблицы `project`
---
-ALTER TABLE `project`
-MODIFY `idproject` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ID проекта';
---
--- AUTO_INCREMENT для таблицы `task`
---
-ALTER TABLE `task`
-MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT для таблицы `users`
---
-ALTER TABLE `users`
-MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
