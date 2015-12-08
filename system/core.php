@@ -34,6 +34,8 @@ if(!defined('CORE')) {
     
     DB::update('sessions',['closed'=>1],'closed=0 AND last_act<"'.date('Y-m-d H:i:s',mktime(date("H"), date("i")-15, date("s"), date("m")  , date("d"), date("Y"))).'"');
 
+    DB::delete('sessions','last_act<"'.date('Y-m-d H:i:s',mktime(0, 0, 0, date("m")-1  , 0, date("Y"))).'"');
+
     User::init(); // Запуск подсистемы пользователей и проверка статуса авторизации
 
     if (!defined('AJAX')) { // Генерация интерфейса включена
