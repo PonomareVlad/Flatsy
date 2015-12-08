@@ -9,7 +9,6 @@ $provider='AS5468 Yeltsin UrFU, Ural Federal University';
 $from =date('Y-m-d H:i:s',mktime(0, 0, 0, date("m")  , date("d")-14, date("Y")));
 echo 'From date: '.$from;
 echo '<br/>Current date: '.date('Y-m-d H:i:s');
-echo('<br>');
 $sessions=DB::select('sessions',['*'],'last_act>"'.$from.'"');
 $byDay=array();
 while($session=mysqli_fetch_assoc(($sessions))) {
@@ -34,11 +33,11 @@ for($i=0;$i<count($byDay);$i++){
     }
     $byDay[$day]=$users;
 }
-for($i=0;$i<count($byDay);$i++){
+for($i=count($byDay)-1;$i>=0;$i--){
     $day=$days[$i];
     ksort($byDay[$day]);
     $id=array_keys($byDay[$day]);
-    echo('<br/>['.$day.']:');
+    echo('<br/><br/>['.$day.']:');
     //print_r($byDay[$day]);
     for($j=0;$j<count($byDay[$day]);$j++){
         $item=$byDay[$day][$id[$j]];
